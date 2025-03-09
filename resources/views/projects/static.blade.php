@@ -1,13 +1,13 @@
-<style>
-.btn-xs {
-  padding: .25rem .4rem;
-  font-size: .875rem;
-  line-height: .5;
-  border-radius: .2rem; 
-}
+    <style>
+    .btn-xs {
+    padding: .25rem .4rem;
+    font-size: .875rem;
+    line-height: .5;
+    border-radius: .2rem; 
+    }
 
-</style>
-<div class=" d-flex flex-col">
+    </style>
+    <div class=" d-flex flex-col">
         <div class="col-sm border-right-grey">
             <div class="row border-bottom-grey">
                 <div class="col">
@@ -63,7 +63,7 @@
             </div>
             <div class="row border-bottom-grey">
                 <div class="col">
-                        Property Address - {{$project->propertyDetails->property_address ?? ''}} - {{$project->propertyDetails->optional ?? ''}}
+                        Property Address - {{$project->propertyDetails->street_address ?? ''}} @if($project->propertyDetails->optional), {{$project->propertyDetails->optional ?? ''}} @endif
                 </div>
                 <div class="col border-left-grey">
                         Property Type - {{$project->propertyDetails->property_type ?? ''}} 
@@ -74,7 +74,8 @@
                         City - {{$project->propertyDetails->city ?? ''}}
                 </div>
                 <div class="col border-left-grey">
-                        Bed - {{$project->propertyDetails->bedrooms ?? ''}} 
+                        Bed - {{$project->propertyDetails->bedrooms ?? ''}}
+                        <span class="ml-2">Bath - {{$project->propertyDetails->bathrooms ?? ''}}</span>
                 </div>
             </div>
             <div class="row border-bottom-grey">
@@ -82,20 +83,21 @@
                         State - {{$project->propertyDetails->state ?? ''}}
                 </div>
                 <div class="col border-left-grey">
-                        Bath - {{$project->propertyDetails->bathrooms ?? ''}} 
+                    House Size - {{$project->propertyDetails->house_size ?? ''}} 
                 </div>
             </div>
             <div class="row border-bottom-grey">
                 <div class="col">
-                        County - {{$project->propertyDetails->county ?? ''}}
+                        Zipcode - {{$project->propertyDetails->zipcode ?? ''}}
+                        
                 </div>
                 <div class="col border-left-grey">
-                        House Size - {{$project->propertyDetails->house_size ?? ''}} 
+                        Occupied - {{$project->propertyDetails->occupancy_status ?? ''}}
                 </div>
             </div>
             <div class="row border-bottom-grey">
                 <div class="col">
-                        Occupied - {{$project->propertyDetails->occupancy_status ?? ''}}
+                        County - {{$project->propertyDetails->county ?? ''}}                        
                 </div>
                 <div class="col border-left-grey">
                         Lock Box Code - {{$project->propertyDetails->lockboxcode ?? ''}} 
@@ -110,7 +112,16 @@
             </div>
             <div class="row border-bottom-grey">
                 <div class="col">
-                        Asset Manager Details - {{$project->projectContacts->amname ?? ''}}, {{$project->projectContacts->amph ?? ''}}, {{$project->projectContacts->amemail ?? ''}}
+                        Asset Manager Details - 
+                        @if($project->projectContacts->amname)
+                        {{$project->projectContacts->amname ?? ''}}
+                        @endif
+                        @if($project->projectContacts->amph)
+                        , {{$project->projectContacts->amph ?? ''}}
+                        @endif
+                        @if($project->projectContacts->amemail)
+                        , {{$project->projectContacts->amemail ?? ''}}
+                        @endif
                 </div>
             </div>
             <div class="row border-bottom-grey">
@@ -128,7 +139,15 @@
                 <div class="col">
                         Project Coordinators - 
                         @foreach($project->projectMembersWithoutScope as $pm)
-                        {{$pm->name ?? ''}}, {{$pm->mobile}}, {{$pm->email}}
+                            @if($pm->name)
+                            {{$pm->name ?? ''}}
+                            @endif
+                            @if($pm->mobile)
+                            , {{$pm->mobile}}
+                            @endif
+                            @if($pm->email)
+                            , {{$pm->email}}
+                            @endif
                         @endforeach
                 </div>
             </div>

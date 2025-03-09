@@ -19,7 +19,7 @@ return new class extends Migration
     public function down() {
         Schema::table('leads', function (Blueprint $table) {
             // Revert changes if rollback is needed
-            $table->unsignedBigInteger('status_id')->nullable()->after('client_id');
+            // $table->unsignedBigInteger('status_id')->nullable()->after('client_id');
             $table->dropColumn('status_type');
         });
     }

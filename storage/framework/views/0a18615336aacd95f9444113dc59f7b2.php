@@ -1,13 +1,13 @@
-<style>
-.btn-xs {
-  padding: .25rem .4rem;
-  font-size: .875rem;
-  line-height: .5;
-  border-radius: .2rem; 
-}
+    <style>
+    .btn-xs {
+    padding: .25rem .4rem;
+    font-size: .875rem;
+    line-height: .5;
+    border-radius: .2rem; 
+    }
 
-</style>
-<div class=" d-flex flex-col">
+    </style>
+    <div class=" d-flex flex-col">
         <div class="col-sm border-right-grey">
             <div class="row border-bottom-grey">
                 <div class="col">
@@ -68,8 +68,7 @@
             </div>
             <div class="row border-bottom-grey">
                 <div class="col">
-                        Property Address - <?php echo e($project->propertyDetails->property_address ?? ''); ?> - <?php echo e($project->propertyDetails->optional ?? ''); ?>
-
+                        Property Address - <?php echo e($project->propertyDetails->street_address ?? ''); ?> <?php if($project->propertyDetails->optional): ?>, <?php echo e($project->propertyDetails->optional ?? ''); ?> <?php endif; ?>
                 </div>
                 <div class="col border-left-grey">
                         Property Type - <?php echo e($project->propertyDetails->property_type ?? ''); ?> 
@@ -81,7 +80,9 @@
 
                 </div>
                 <div class="col border-left-grey">
-                        Bed - <?php echo e($project->propertyDetails->bedrooms ?? ''); ?> 
+                        Bed - <?php echo e($project->propertyDetails->bedrooms ?? ''); ?>
+
+                        <span class="ml-2">Bath - <?php echo e($project->propertyDetails->bathrooms ?? ''); ?></span>
                 </div>
             </div>
             <div class="row border-bottom-grey">
@@ -90,22 +91,23 @@
 
                 </div>
                 <div class="col border-left-grey">
-                        Bath - <?php echo e($project->propertyDetails->bathrooms ?? ''); ?> 
+                    House Size - <?php echo e($project->propertyDetails->house_size ?? ''); ?> 
                 </div>
             </div>
             <div class="row border-bottom-grey">
                 <div class="col">
-                        County - <?php echo e($project->propertyDetails->county ?? ''); ?>
+                        Zipcode - <?php echo e($project->propertyDetails->zipcode ?? ''); ?>
 
+                        
                 </div>
                 <div class="col border-left-grey">
-                        House Size - <?php echo e($project->propertyDetails->house_size ?? ''); ?> 
+                        Occupied - <?php echo e($project->propertyDetails->occupancy_status ?? ''); ?>
+
                 </div>
             </div>
             <div class="row border-bottom-grey">
                 <div class="col">
-                        Occupied - <?php echo e($project->propertyDetails->occupancy_status ?? ''); ?>
-
+                        County - <?php echo e($project->propertyDetails->county ?? ''); ?>                        
                 </div>
                 <div class="col border-left-grey">
                         Lock Box Code - <?php echo e($project->propertyDetails->lockboxcode ?? ''); ?> 
@@ -120,8 +122,19 @@
             </div>
             <div class="row border-bottom-grey">
                 <div class="col">
-                        Asset Manager Details - <?php echo e($project->projectContacts->amname ?? ''); ?>, <?php echo e($project->projectContacts->amph ?? ''); ?>, <?php echo e($project->projectContacts->amemail ?? ''); ?>
+                        Asset Manager Details - 
+                        <?php if($project->projectContacts->amname): ?>
+                        <?php echo e($project->projectContacts->amname ?? ''); ?>
 
+                        <?php endif; ?>
+                        <?php if($project->projectContacts->amph): ?>
+                        , <?php echo e($project->projectContacts->amph ?? ''); ?>
+
+                        <?php endif; ?>
+                        <?php if($project->projectContacts->amemail): ?>
+                        , <?php echo e($project->projectContacts->amemail ?? ''); ?>
+
+                        <?php endif; ?>
                 </div>
             </div>
             <div class="row border-bottom-grey">
@@ -139,8 +152,18 @@
                 <div class="col">
                         Project Coordinators - 
                         <?php $__currentLoopData = $project->projectMembersWithoutScope; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php echo e($pm->name ?? ''); ?>, <?php echo e($pm->mobile); ?>, <?php echo e($pm->email); ?>
+                            <?php if($pm->name): ?>
+                            <?php echo e($pm->name ?? ''); ?>
 
+                            <?php endif; ?>
+                            <?php if($pm->mobile): ?>
+                            , <?php echo e($pm->mobile); ?>
+
+                            <?php endif; ?>
+                            <?php if($pm->email): ?>
+                            , <?php echo e($pm->email); ?>
+
+                            <?php endif; ?>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
