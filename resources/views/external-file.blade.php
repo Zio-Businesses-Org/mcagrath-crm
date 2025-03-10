@@ -77,6 +77,23 @@
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-6">
+                    <x-forms.label class="mb-12 mt-3" fieldId="file_type"
+                                :fieldLabel="__('File Type')" fieldRequired="true">
+                    </x-forms.label>
+                    <x-forms.input-group>
+                        <select class="form-control" name="file_type" id="file_type"
+                                data-live-search="true">
+                            <option value="">--</option>
+                            @foreach ($filetype as $type)
+                                <option
+                                    value="{{ $type->file_type}}">
+                                    {{ $type->file_type }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </x-forms.input-group>
+                </div>
+                <div class="col-lg-3 col-md-6">
                     <x-forms.text :fieldLabel="__('File Name')" fieldName="tag_name"
                         fieldId="tag_name" :fieldPlaceholder="__('File Name')" fieldRequired="true"/>
                 </div>
@@ -86,7 +103,7 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <x-forms.email fieldId="email" :fieldLabel="__('app.email')"
-                                fieldName="email" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true">
+                                fieldName="email" :fieldPlaceholder="__('placeholders.email')" >
                     </x-forms.email>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -149,11 +166,13 @@ $(document).ready(function() {
         const phone = $('#phone').val();
         const email = $('#email').val();
         const tag_name = $('#tag_name').val();
+        const file_type = $('#file_type').val();
         formData.append('projectid', projectid);
         formData.append('name', name);
         formData.append('email', email);
         formData.append('phone', phone);
         formData.append('tag_name',tag_name);
+        formData.append('file_type',file_type);
         $.easyBlockUI();
     });
     invoiceDropzone.on('uploadprogress', function () {
@@ -226,7 +245,7 @@ $(document).ready(function() {
         file.previewTemplate.appendChild(div);
     });
     $('#save-file').click(function() {
-        if($('#name').val()!=''&&$('#phone').val()!=''&&$('#email').val()!=''&&$('#tag_name').val()!='')
+        if($('#name').val()!=''&&$('#phone').val()!=''&&$('#tag_name').val()!=''&&$('#file_type').val()!='')
         {
             invoiceDropzone.processQueue();
         }
@@ -248,6 +267,7 @@ $(document).ready(function() {
         }
         // console.log($('#phone').val());
     });
+    $("#file_type").selectpicker();
 });
 </script>
 

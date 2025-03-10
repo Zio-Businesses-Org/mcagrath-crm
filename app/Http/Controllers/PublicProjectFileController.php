@@ -10,6 +10,7 @@ use App\Helper\Reply;
 use App\Models\Project;
 use App\Models\ProjectExternalFile;
 use Illuminate\Support\Facades\Cache;
+use App\Models\ExternalFileType;
 
 class PublicProjectFileController extends Controller
 {
@@ -20,6 +21,7 @@ class PublicProjectFileController extends Controller
         $this->pageIcon = 'fa fa-file';
         $this->projectid = $request->query('data');
         $this->projectData = Project::select('id', 'project_short_code', 'property_details_id')->where('id', $this->projectid)->with(['propertyDetails:id,property_address'])->first();
+        $this->filetype = ExternalFileType::all();
         return view('external-file', $this->data);
     }
     public function store(Request $request)
@@ -36,6 +38,7 @@ class PublicProjectFileController extends Controller
                 $file->filename = $fileData->getClientOriginalName();
                 $file->hashname = $filename;
                 $file->size = $fileData->getSize();
+                $file->file_type =  $request->file_type;
                 $file->name = $request->name;
                 $file->phone = $request->phone;
                 $file->email = $request->email;

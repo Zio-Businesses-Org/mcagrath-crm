@@ -16,6 +16,7 @@ use App\Models\OccupancyStatus;
 use App\Models\DelayedBy;
 use App\Models\ContractorType;
 use App\Models\CancelledReason;
+use App\Models\ExternalFileType;
 use App\Http\Requests\StoreStatusSettingRequest;
 use App\Http\Requests\Project\StoreProjectCategory;
 use App\Http\Requests\Project\StoreProjectSubCategory;
@@ -28,6 +29,7 @@ use App\Http\Requests\Project\StoreDelayedBy;
 use App\Http\Requests\Project\StoreCancelledReason;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Project\StoreContractorType;
+use App\Http\Requests\Project\StoreFileType;
 
 class ProjectSettingController extends AccountBaseController
 {
@@ -90,6 +92,10 @@ class ProjectSettingController extends AccountBaseController
                 $this->cancelledreason = CancelledReason::all();
                 $this->view = 'project-settings.ajax.cancelledreason';
                 break;
+        case 'filetype':
+            $this->filetype = ExternalFileType::all();
+            $this->view = 'project-settings.ajax.filetype';
+            break;
         default:
             $this->projectSetting = ProjectSetting::first();
             $this->view = 'project-settings.ajax.sendReminder';
@@ -248,6 +254,10 @@ class ProjectSettingController extends AccountBaseController
     {
         return view('project-settings.create-cancelled-reason-settings-modal', $this->data);
     }
+    public function createFileType()
+    {
+        return view('project-settings.create-file-type-settings-modal', $this->data);
+    }
     
     public function saveProjectCategory(StoreProjectCategory $request)
     {
@@ -318,11 +328,19 @@ class ProjectSettingController extends AccountBaseController
         $ct->save();
         return Reply::success(__('messages.recordSaved'));
     }
+
     public function saveCancelledReason(StoreCancelledReason $request)
     {
         $cr = new CancelledReason();
         $cr->cancelled_reason = $request->cancelled_reason;
         $cr->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
+    public function saveFileType(StoreFileType $request){
+
+        $ft = new ExternalFileType();
+        $ft->file_type = $request->file_type;
+        $ft->save();
         return Reply::success(__('messages.recordSaved'));
     }
 }

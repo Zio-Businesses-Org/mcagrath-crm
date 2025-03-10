@@ -62,7 +62,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
 <?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
 <?php endif; ?>
-        <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+        <!-- <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
 <?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'share'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.button-primary'); ?>
@@ -82,7 +82,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
 <?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
 <?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
-<?php endif; ?>
+<?php endif; ?> -->
 
         <div id="share-actions" style="display: none;" class="mb-3">
             <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
@@ -319,14 +319,14 @@ $deleteFilePermission = user()->permission('delete_project_files');
             <?php $__empty_1 = true; $__currentLoopData = $project->externalFiles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <?php if (isset($component)) { $__componentOriginalee39bd5bb4ef86e72ee6572fcd6f8476 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalee39bd5bb4ef86e72ee6572fcd6f8476 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.external-card','data' => ['fileName' => $file->filename,'dateAdded' => $file->created_at->diffForHumans(),'name' => $file->name,'phone' => $file->phone,'email' => $file->email,'tagname' => $file->tag_name]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.external-card','data' => ['fileName' => $file->filename,'dateAdded' => $file->created_at->diffForHumans(),'name' => $file->name,'phone' => $file->phone,'email' => $file->email,'tagname' => $file->tag_name,'filetype' => $file->file_type]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.external-card'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['fileName' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->filename),'dateAdded' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->created_at->diffForHumans()),'name' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->name),'phone' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->phone),'email' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->email),'tagname' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->tag_name)]); ?> 
+<?php $component->withAttributes(['fileName' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->filename),'dateAdded' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->created_at->diffForHumans()),'name' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->name),'phone' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->phone),'email' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->email),'tagname' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->tag_name),'filetype' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($file->file_type)]); ?> 
                     <?php if($file->icon == 'images'): ?>
                         <img src="<?php echo e($file->file_url); ?>">
                         <input type="checkbox" class="file-checkbox" name="selected_files[]"  data-url="<?php echo e($file->file_url); ?>">

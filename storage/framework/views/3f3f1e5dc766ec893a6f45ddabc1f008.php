@@ -78,6 +78,11 @@
                                aria-controls="nav-cancelledreason"
                                aria-selected="true"><?php echo app('translator')->get('Cancelled Reason'); ?>
                             </a>
+                            <a class="nav-item nav-link f-15 filetype"
+                               href="<?php echo e(route('project-settings.index')); ?>?tab=filetype" role="tab"
+                               aria-controls="nav-filetype"
+                               aria-selected="true"><?php echo app('translator')->get('External File Type'); ?>
+                            </a>
 
                         </div>
                       
@@ -345,6 +350,26 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['id' => 'addCancelledReason','class' => 'cancelledreason-btn d-none mb-2 actionBtn']); ?> <?php echo app('translator')->get('Add Cancelled Reason'); ?>
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+                        <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'plus'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-primary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'addFileType','class' => 'filetype-btn d-none mb-2 actionBtn']); ?> <?php echo app('translator')->get('Add External File Type'); ?>
                          <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>

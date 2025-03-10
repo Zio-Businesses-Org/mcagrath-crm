@@ -145,7 +145,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
     <x-cards.data :title="__('External Files')" class="mt-2">
         <div class="d-flex flex-wrap mt-3" id="task-file-list">
             @forelse($project->externalFiles as $file)
-                <x-cards.external-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()" :name="$file->name" :phone="$file->phone" :email="$file->email" :tagname="$file->tag_name"> 
+                <x-cards.external-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()" :name="$file->name" :phone="$file->phone" :email="$file->email" :tagname="$file->tag_name" :filetype="$file->file_type"> 
                     @if ($file->icon == 'images')
                         <img src="{{ $file->file_url }}">
                         <input type="checkbox" class="file-checkbox" name="selected_files[]"  data-url="{{ $file->file_url }}">

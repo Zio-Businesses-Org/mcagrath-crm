@@ -96,6 +96,59 @@
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-6">
+                    <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'file_type','fieldLabel' => __('File Type'),'fieldRequired' => 'true'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Label::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mb-12 mt-3']); ?>
+                     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal89b295b0763c93abe0143426334eb5d6)): ?>
+<?php $attributes = $__attributesOriginal89b295b0763c93abe0143426334eb5d6; ?>
+<?php unset($__attributesOriginal89b295b0763c93abe0143426334eb5d6); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal89b295b0763c93abe0143426334eb5d6)): ?>
+<?php $component = $__componentOriginal89b295b0763c93abe0143426334eb5d6; ?>
+<?php unset($__componentOriginal89b295b0763c93abe0143426334eb5d6); ?>
+<?php endif; ?>
+                    <?php if (isset($component)) { $__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\InputGroup::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.input-group'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\InputGroup::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                        <select class="form-control" name="file_type" id="file_type"
+                                data-live-search="true">
+                            <option value="">--</option>
+                            <?php $__currentLoopData = $filetype; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option
+                                    value="<?php echo e($type->file_type); ?>">
+                                    <?php echo e($type->file_type); ?>
+
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
+<?php $attributes = $__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7; ?>
+<?php unset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
+<?php $component = $__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7; ?>
+<?php unset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
+<?php endif; ?>
+                </div>
+                <div class="col-lg-3 col-md-6">
                     <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('File Name'),'fieldName' => 'tag_name','fieldId' => 'tag_name','fieldPlaceholder' => __('File Name'),'fieldRequired' => 'true'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -142,7 +195,7 @@
                 <div class="col-lg-3 col-md-6">
                     <?php if (isset($component)) { $__componentOriginal4cff4ad89fa6d28d8e2b88246e322241 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4cff4ad89fa6d28d8e2b88246e322241 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Email::resolve(['fieldId' => 'email','fieldLabel' => __('app.email'),'fieldName' => 'email','fieldPlaceholder' => __('placeholders.email'),'fieldRequired' => 'true'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Forms\Email::resolve(['fieldId' => 'email','fieldLabel' => __('app.email'),'fieldName' => 'email','fieldPlaceholder' => __('placeholders.email')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.email'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -256,11 +309,13 @@ $(document).ready(function() {
         const phone = $('#phone').val();
         const email = $('#email').val();
         const tag_name = $('#tag_name').val();
+        const file_type = $('#file_type').val();
         formData.append('projectid', projectid);
         formData.append('name', name);
         formData.append('email', email);
         formData.append('phone', phone);
         formData.append('tag_name',tag_name);
+        formData.append('file_type',file_type);
         $.easyBlockUI();
     });
     invoiceDropzone.on('uploadprogress', function () {
@@ -333,7 +388,7 @@ $(document).ready(function() {
         file.previewTemplate.appendChild(div);
     });
     $('#save-file').click(function() {
-        if($('#name').val()!=''&&$('#phone').val()!=''&&$('#email').val()!=''&&$('#tag_name').val()!='')
+        if($('#name').val()!=''&&$('#phone').val()!=''&&$('#tag_name').val()!=''&&$('#file_type').val()!='')
         {
             invoiceDropzone.processQueue();
         }
@@ -355,6 +410,7 @@ $(document).ready(function() {
         }
         // console.log($('#phone').val());
     });
+    $("#file_type").selectpicker();
 });
 </script>
 

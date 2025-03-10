@@ -106,6 +106,7 @@ use App\Http\Controllers\TwilioWebhookController;
 use App\Http\Controllers\VendorProjectController;
 use App\Http\Controllers\ClientCategoryController;
 use App\Http\Controllers\ContractorTypeController;
+use App\Http\Controllers\ExternalFileTypeController;
 use App\Http\Controllers\LeadCustomFormController;
 use App\Http\Controllers\UserPermissionController;
 use App\Http\Controllers\VendorEstimateController;
@@ -266,6 +267,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('projectType', ProjectTypeController::class);
     Route::resource('ContractorType', ContractorTypeController::class);
     Route::resource('CancelledReason', CancelledReasonController::class);
+    Route::resource('FileType', ExternalFileTypeController::class);
     Route::resource('WorkOrderStatus', WorkOrderStatusController::class);
     Route::resource('SOWTitle', SOWTitleController::class);
     Route::resource('projectPriority', ProjectPriorityController::class);

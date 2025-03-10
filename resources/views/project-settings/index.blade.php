@@ -69,6 +69,11 @@
                                aria-controls="nav-cancelledreason"
                                aria-selected="true">@lang('Cancelled Reason')
                             </a>
+                            <a class="nav-item nav-link f-15 filetype"
+                               href="{{ route('project-settings.index') }}?tab=filetype" role="tab"
+                               aria-controls="nav-filetype"
+                               aria-selected="true">@lang('External File Type')
+                            </a>
 
                         </div>
                       
@@ -122,6 +127,9 @@
                         </x-forms.button-primary>
                         <x-forms.button-primary icon="plus" id="addCancelledReason"
                                     class="cancelledreason-btn d-none mb-2 actionBtn"> @lang('Add Cancelled Reason')
+                        </x-forms.button-primary>
+                        <x-forms.button-primary icon="plus" id="addFileType"
+                                    class="filetype-btn d-none mb-2 actionBtn"> @lang('Add External File Type')
                         </x-forms.button-primary>
                     </div>
 

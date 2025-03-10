@@ -138,6 +138,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::get('project-settings/create-occupancy-status', [ProjectSettingController::class, 'createOccupancyStatus'])->name('project-settings.createOccupancyStatus');
     Route::get('project-settings/create-contractor-type', [ProjectSettingController::class, 'createContractorType'])->name('project-settings.createContractorType');
     Route::get('project-settings/create-cancelled-reason', [ProjectSettingController::class, 'createCancelledReason'])->name('project-settings.createCancelledReason');
+    Route::get('project-settings/create-file-type', [ProjectSettingController::class, 'createFileType'])->name('project-settings.createFileType');
     Route::get('project-settings/import-subcategory', [ProjectSettingController::class, 'importSubCategory'])->name('project-settings.importSubCategory');
     Route::post('project-settings/save-project-category', [ProjectSettingController::class, 'saveProjectCategory'])->name('project-settings.saveProjectCategory');
     Route::post('project-settings/save-project-subcategory', [ProjectSettingController::class, 'saveProjectSubCategory'])->name('project-settings.saveProjectSubCategory');
@@ -148,6 +149,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::post('project-settings/save-delayed-by', [ProjectSettingController::class, 'saveDelayedBy'])->name('project-settings.saveDelayedBy');
     Route::post('project-settings/save-contractor-type', [ProjectSettingController::class, 'saveContractorType'])->name('project-settings.saveContractorType');
     Route::post('project-settings/save-cancelled-reason', [ProjectSettingController::class, 'saveCancelledReason'])->name('project-settings.saveCancelledReason');
+    Route::post('project-settings/save-file-type', [ProjectSettingController::class, 'saveFileType'])->name('project-settings.saveFileType');
     Route::resource('project-settings', ProjectSettingController::class);
     Route::post('project-settings/{id?}', [ProjectSettingController::class, 'statusUpdate'])->name('project-settings.statusUpdate');
     Route::put('project-settings/change-status/{id?}', [ProjectSettingController::class, 'changeStatus'])->name('project-settings.changeStatus');
