@@ -2957,7 +2957,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         <div class="col-lg-4 col-md-3">
                         <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Invoiced Amount'),'fieldReadOnly' => true,'fieldName' => 'iamt','fieldId' => 'iamt','fieldPlaceholder' => __('Invoiced Amount'),'fieldValue' => currency_format($project->latestInvoice?->total, $project->currency_id)] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Invoiced Amount'),'fieldReadOnly' => true,'fieldName' => 'iamt','fieldId' => 'iamt','fieldPlaceholder' => __('Invoiced Amount'),'fieldValue' => currency_format($project->totalInvoiceAmount, $project->currency_id)] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.text'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>

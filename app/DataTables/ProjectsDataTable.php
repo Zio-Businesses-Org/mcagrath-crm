@@ -342,13 +342,7 @@ class ProjectsDataTable extends BaseDataTable
         
          $datatables->editColumn('total', function ($row){
             
-            if ($row->latestInvoice?->total)
-            {
-             return currency_format($row->latestInvoice?->total, $row->currency_id);
-            }
-            else {
-                return 'N/A';
-            }
+            return currency_format($row->invoices_sum_total ?? 0, $row->currency_id);
         });
         $datatables->editColumn('rinspectiondt', function ($row){
             return '
@@ -507,6 +501,11 @@ class ProjectsDataTable extends BaseDataTable
             projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
            ( select count("id") from pinned where pinned.project_id = projects.id and pinned.user_id = ' . user()->id . ') as pinned_project'
             );
+
+        $model = $model->withSum(['invoices' => function ($query) {
+            $query->whereIn('status', ['paid', 'unpaid']);
+        }], 'total');
+        
         if ($request->pinned == 'pinned') {
             $model->join('pinned', 'pinned.project_id', 'projects.id');
             $model->where('pinned.user_id', user()->id);

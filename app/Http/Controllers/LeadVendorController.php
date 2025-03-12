@@ -90,7 +90,7 @@ class LeadVendorController extends AccountBaseController
                 $vnotes->created_by=user()->name;
                 $vnotes->save();
                 Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->id));
-                $redirectUrl = route('lead-contact.index');
+                $redirectUrl = route('vendortrack.index');
                 return Reply::successWithData(__('Saved And Mail Send'), ['redirectUrl' => $redirectUrl]);
             }
             catch (Exception){
@@ -125,7 +125,7 @@ class LeadVendorController extends AccountBaseController
             $vnotes->notes_content=$request->notes;
             $vnotes->created_by=user()->name;
             $vnotes->save();
-            $redirectUrl = route('lead-contact.index');
+            $redirectUrl = route('vendortrack.index');
             return Reply::successWithData(__('Saved'), ['redirectUrl' => $redirectUrl]);
         }
     }

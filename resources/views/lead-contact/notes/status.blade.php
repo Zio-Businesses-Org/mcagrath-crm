@@ -61,7 +61,7 @@
                 if (response.statusLeads && response.statusLeads.length > 0) {
                     response.statusLeads.forEach(function (statusLead) {
                         statusLeadDropdown.append(
-                            `<option value="${statusLead.id}">${statusLead.status}</option>`
+                            `<option value="${statusLead.status}">${statusLead.status}</option>`
                         );
                     });
                 }

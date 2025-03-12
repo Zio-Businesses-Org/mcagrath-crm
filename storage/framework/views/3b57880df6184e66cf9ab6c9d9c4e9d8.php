@@ -192,7 +192,7 @@
                 if (response.companyTypes && response.companyTypes.length > 0) {
                     response.companyTypes.forEach(function (companyType) {
                         companyTypeDropdown.append(
-                            `<option value="${companyType.id}">${companyType.type}</option>`
+                            `<option value="${companyType.type}">${companyType.type}</option>`
                         );
                     });
                 }

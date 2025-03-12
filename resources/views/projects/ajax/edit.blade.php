@@ -966,7 +966,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         <div class="col-lg-4 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Invoiced Amount')" fieldReadOnly
                                       fieldName="iamt" fieldId="iamt"
-                                      :fieldPlaceholder="__('Invoiced Amount')" :fieldValue="currency_format($project->latestInvoice?->total, $project->currency_id)"/>
+                                      :fieldPlaceholder="__('Invoiced Amount')" :fieldValue="currency_format($project->totalInvoiceAmount, $project->currency_id)"/>
                         </div>
                         <div class="col-lg-4 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Vendor Amount')"

@@ -254,8 +254,16 @@ class Project extends BaseModel
         return $this->hasOne(Invoice::class, 'project_id')
                     ->whereIn('status', ['paid', 'unpaid'])
                     ->latest('id')
-                    ->select(['project_id', 'created_at', 'total']);// equivalent to orderByDesc('id') and limits the results to one.
+                    ->select(['project_id', 'created_at']);// equivalent to orderByDesc('id') and limits the results to one.
     }
+
+    public function getTotalInvoiceAmountAttribute()
+    {
+        return $this->invoices()
+                    ->whereIn('status', ['paid', 'unpaid'])
+                    ->sum('total'); // This returns a single value, NOT a collection
+    }
+
     
     public function contracts(): HasMany
     {

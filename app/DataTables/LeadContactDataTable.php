@@ -4,7 +4,7 @@ namespace App\DataTables;
 
 use App\Helper\Common;
 use Carbon\Carbon;
-use App\Models\LeadStatus;
+// use App\Models\LeadStatus;
 use App\Models\CustomField;
 use App\Models\CustomFieldGroup;
 use App\Models\Lead;
@@ -25,7 +25,7 @@ class LeadContactDataTable extends BaseDataTable
     /**
      * @var LeadStatus[]|\Illuminate\Database\Eloquent\Collection
      */
-    private $status;
+    // private $status;
 
     public function __construct()
     {
@@ -36,7 +36,7 @@ class LeadContactDataTable extends BaseDataTable
         $this->addFollowUpPermission = user()->permission('add_lead_follow_up');
         $this->changeLeadStatusPermission = user()->permission('change_deal_stages');
         $this->viewLeadFollowUpPermission = user()->permission('view_lead_follow_up');
-        $this->status = LeadStatus::get();
+        // $this->status = LeadStatus::get();
     }
 
     /**
@@ -104,11 +104,11 @@ class LeadContactDataTable extends BaseDataTable
         $datatables->addColumn('export_email', fn($row) => $row->client_email);
         $datatables->addColumn('lead_value', fn($row) => currency_format($row->value, $row->currency_id));
         $datatables->addColumn('name', fn($row) => $row->client_name);
-        $datatables->addColumn('added_by', fn($row) => $row->addedBy->name ?? '--');
+        $datatables->addColumn('added_by', fn($row) => $row->addedBy->name_salutation ?? '--');
         $datatables->addColumn('email', fn($row) => $row->client_email);
-        $datatables->addColumn('category_name', fn($row) => $row->category?->category_name);
+        // $datatables->addColumn('category_name', fn($row) => $row->category?->category_name);
         // Add new columns for the additional fields
-        $datatables->addColumn('status_type',fn($row)=>$row->status_type ?? '--');
+        $datatables->addColumn('status_name',fn($row)=>$row->status_type ?? '--');
         $datatables->addColumn('position', fn($row) => $row->position ?? '--');
         $datatables->addColumn('poc', fn($row) => $row->poc ?? '--');
         $datatables->addColumn('last_called_date', fn($row) => $row->last_called_date ? Carbon::parse($row->last_called_date)->translatedFormat($this->company->date_format) : '--');
@@ -155,7 +155,7 @@ class LeadContactDataTable extends BaseDataTable
      */
     public function query(Lead $model)
     {
-        $leadContact = $model->with(['category'])
+        $leadContact = $model->with(['category','addedBy'])
             ->select(
                 'leads.id',
                 'leads.added_by',
@@ -208,13 +208,13 @@ class LeadContactDataTable extends BaseDataTable
             $endDate = companyToDateString($this->request()->endDate);
             $leadContact = $leadContact->having(DB::raw('DATE(leads.`updated_at`)'), '<=', $endDate);
         }
-        //newly Add date filtering for new date fields
+        // //newly Add date filtering for new date fields
 
-        if ($this->request()->status_type != 'all' && $this->request()->status_type != '') {
-            $leadContact = $leadContact->where('status_type', $this->request()->status_type);
-        }
+        // if ($this->request()->status_type != 'all' && $this->request()->status_type != '') {
+        //     $leadContact = $leadContact->where('status_type', $this->request()->status_type);
+        // }
         
-        //till here
+        // //till here
 
         if ($this->request()->category_id != 'all' && $this->request()->category_id != '') {
             $leadContact = $leadContact->where('category_id', $this->request()->category_id);
@@ -232,10 +232,7 @@ class LeadContactDataTable extends BaseDataTable
             $leadContact = $leadContact->where(function ($query) {
                 $query->where('leads.client_name', 'like', '%' . request('searchText') . '%')
                     ->orWhere('leads.client_email', 'like', '%' . request('searchText') . '%')
-                    ->orwhere('leads.mobile', 'like', '%' . request('searchText') . '%')
-                    //newly added
-                    ->orWhere('leads.position', 'like', '%' . request('searchText') . '%')
-                    ->orWhere('leads.poc', 'like', '%' . request('searchText') . '%');
+                    ->orwhere('leads.mobile', 'like', '%' . request('searchText') . '%');
             });
         }
 
@@ -294,16 +291,16 @@ class LeadContactDataTable extends BaseDataTable
 
             __('app.email') . ' ' . __('modules.lead.email') => ['data' => 'export_email', 'name' => 'email', 'title' => __('app.lead') . ' ' . __('modules.lead.email'), 'exportable' => true, 'visible' => false],
             __('modules.lead.email') => ['data' => 'email', 'name' => 'leads.client_email', 'title' => __('modules.lead.email')],
-            __('modules.lead.leadCategory') => ['data' => 'category_name', 'name' => 'category_name', 'exportable' => true, 'visible' => false, 'title' => __('modules.lead.leadCategory')],
+            // __('modules.lead.leadCategory') => ['data' => 'category_name', 'name' => 'category_name', 'exportable' => true, 'visible' => false, 'title' => __('modules.lead.leadCategory')],
            //newly added
            __('modules.lead.position') => ['data' => 'position', 'name' => 'leads.position', 'title' => __('modules.lead.position')],
            __('modules.lead.poc') => ['data' => 'poc', 'name' => 'leads.poc', 'title' => __('modules.lead.poc')],
            __('modules.lead.lastCalledDate') => ['data' => 'last_called_date', 'name' => 'leads.last_called_date', 'title' => __('modules.lead.lastCalledDate')],
            __('modules.lead.nextFollowUpDate') => ['data' => 'next_follow_up_date', 'name' => 'leads.next_follow_up_date', 'title' => __('modules.lead.nextFollowUpDate')],
-           __('modules.lead.status') => ['data' => 'status_type', 'name' => 'leads.status', 'title' => __('modules.lead.status')],
+           __('modules.lead.status') => ['data' => 'status_name', 'name' => 'leads.status_type', 'title' => __('modules.lead.status')],
 
            //till here
-            __('app.addedBy') => ['data' => 'added_by', 'name' => 'added_by', 'exportable' => true, 'title' => __('app.addedBy')],
+            __('app.addedBy') => ['data' => 'added_by', 'name' => 'leads.added_by', 'exportable' => true, 'title' => __('app.addedBy')],
             __('app.createdOn') => ['data' => 'created_at', 'name' => 'leads.created_at', 'title' => __('app.createdOn')],
         ];
 
