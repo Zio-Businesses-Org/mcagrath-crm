@@ -277,7 +277,7 @@
                                     fieldName="payment_methods[]" 
                                     fieldId="credit_card" 
                                     fieldValue="credit_card"
-                                    :checked="in_array('credit card', $paymentMethods)"/>
+                                    :checked="in_array('credit card', $paymentMethods) || in_array('credit_card', $paymentMethods)"/>
                                 </div>
                                 <div class="col-lg-4">
                                     <x-forms.checkbox 

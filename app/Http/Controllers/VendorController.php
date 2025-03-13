@@ -148,13 +148,16 @@ class VendorController extends AccountBaseController
        // $vendor->wc_insurance_expiry_date=($request->wc_ins_exp!=$vendor->wc_insurance_expiry_date&&!empty(trim($request->wc_ins_exp)))?companyToYmd($request->wc_ins_exp):null;
        $vendor->contractor_type=$request->contracttype;
         $vendor->status=$request->status;
-        $vendor->payment_methods=$request->payment_methods;
+        $vendor->payment_methods=json_encode($request->payment_methods);
+        \Log::info($request->payment_methods);
         $vendor->gl_insurance_policy_number=$request->gl_ins_pn;
         $vendor->wc_insurance_policy_number=$request->wc_ins_pn;
         $vendor->county=$request->county;
         $vendor->license_check=$request->has('license_check')?1:0;
         $vendor->gl_insurance_check=$request->has('gl_insurance_check')?1:0;
         $vendor->wc_check=$request->has('wc_check')?1:0;
+        $vendor->coverage_cities = $request->cc;
+        $vendor->distance_covered = $request->dc;
         if($request->wc_ins_exp!=$vendor->wc_insurance_expiry_date&&!empty(trim($request->wc_ins_exp)))
         {
             
