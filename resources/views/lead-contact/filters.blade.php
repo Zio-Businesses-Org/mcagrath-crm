@@ -1,31 +1,13 @@
-<x-filters.filter-box>
-    <!-- DATE START -->
-    <div class="select-box d-flex pr-2 border-right-grey border-right-grey-sm-0">
-        <p class="mb-0 pr-2 f-14 text-dark-grey d-flex align-items-center">@lang('app.duration')</p>
-        <div class="select-status d-flex">
-            <input type="text" class="position-relative text-dark form-control border-0 p-2 text-left f-14 f-w-500 border-additional-grey"
-                id="datatableRange" placeholder="@lang('placeholders.dateRange')">
-        </div>
-    </div>
-    <!-- DATE END -->
-
-    <!-- CLIENT START -->
-    <div class="select-box d-flex py-2 px-lg-2 px-md-2 px-0 border-right-grey border-right-grey-sm-0">
-        <p class="mb-0 pr-2 f-14 text-dark-grey d-flex align-items-center">@lang('modules.invoices.type')</p>
-        <div class="select-status">
-            <select class="form-control select-picker" name="type" id="type">
-                <option value="all">@lang('modules.lead.all')</option>
-                <option {{ request('type') == 'lead' ? 'selected' : '' }} value="lead">@lang('modules.lead.lead')
-                </option>
-                <option {{ request('type') == 'client' ? 'selected' : '' }} value="client">
-                    @lang('modules.lead.client')</option>
-            </select>
-        </div>
-    </div>
-    <!-- CLIENT END -->
-
-    <!-- SEARCH BY TASK START -->
-    <div class="task-search d-flex  py-1 px-lg-3 px-0 border-right-grey align-items-center">
+<style>
+    .dropdown-mod{
+        position :static;  
+    } 
+    .button-wrapper::-webkit-scrollbar {
+        display: none; /* Hides the scrollbar */
+    }
+</style>
+<x-filters.filter-box-moded>
+    <div class="task-search d-flex  py-1 px-lg-3 px-0 align-items-center">
         <form class="w-100 mr-1 mr-lg-0 mr-md-1 ml-md-1 ml-0 ml-lg-0">
             <div class="input-group bg-grey rounded">
                 <div class="input-group-prepend">
@@ -38,108 +20,65 @@
             </div>
         </form>
     </div>
-
-    
-    <!-- SEARCH BY TASK END -->
-
-    <!-- RESET START -->
     <div class="select-box d-flex py-1 px-lg-2 px-md-2 px-0">
         <x-forms.button-secondary class="btn-xs d-none" id="reset-filters" icon="times-circle">
             @lang('app.clearFilters')
         </x-forms.button-secondary>
     </div>
-    <!-- RESET END -->
-
-    <!-- MORE FILTERS START -->
-    <x-filters.more-filter-box>
-
-        <div class="more-filter-items">
-            <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.dateFilterOn')</label>
-            <div class="select-filter mb-4">
-                <select class="form-control select-picker" name="date_filter_on" id="date_filter_on">
-                    <option value="created_at">@lang('app.createdOn')</option>
-                    <option value="updated_at">@lang('app.updatedOn')</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="more-filter-items">
-            <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                for="usr">@lang('modules.lead.leadCategory')</label>
-            <div class="select-filter mb-4">
-                <div class="select-others">
-                    <select class="form-control select-picker" id="filter_category_id" data-live-search="true" data-container="body" data-size="8">
-                        <option value="all">@lang('app.all')</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                        @endforeach
-                    </select>
+</x-filters.filter-box-moded>
+<div class="container-fluid d-flex position-relative border-bottom-grey mt-1">
+    <!-- Left Scroll Button -->
+    <button class="btn btn-dark" id="scrollLeftBtn" style="display: none; left: 0;">&#9664;</button>
+    <!-- Scrollable Button Wrapper -->
+    <div id="buttonWrapper" class="button-wrapper d-flex overflow-auto flex-nowrap my-2">
+    @foreach ($clientFilter as $filter)
+    <!-- Buttons in a horizontal line -->
+        <div class="task_view mx-1">
+            
+            <div class="taskView text-darkest-grey f-w-500">@if($filter->status=='active')<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>@endif{{$filter->name}}</div>
+            <div class="dropdown dropdown-mod">
+                <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"
+                    type="link" id="dropdownMenuLink-{{$filter->id}}" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-options-vertical icons"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-mod" 
+                    aria-labelledby="dropdownMenuLink-{{$filter->id}}" tabindex="0" >
+                        @if($filter->status=='inactive')
+                        <a class="dropdown-item apply-filter-client" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="bi bi-save2 mr-2"></i>
+                            @lang('Apply')
+                        </a>
+                         @endif
+                        <a class="dropdown-item edit-filter-client" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="fa fa-edit mr-2"></i>
+                            @lang('app.edit')
+                        </a>
+                        <a class="dropdown-item delete-row-client" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="fa fa-trash mr-2"></i>
+                            @lang('app.delete')
+                        </a>
+                        @if($filter->status=='active')
+                        <a class="dropdown-item clear-filter" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="bi bi-save2 mr-2"></i>
+                            @lang('Clear')
+                        </a>
+                        @endif
                 </div>
             </div>
         </div>
-
-        <div class="more-filter-items">
-            <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('modules.lead.leadSource')</label>
-            <div class="select-filter mb-4">
-                <div class="select-others">
-                    <select class="form-control select-picker" id="filter_source_id" data-live-search="true" data-container="body" data-size="8">
-                        <option value="all">@lang('app.all')</option>
-                        @foreach ($sources as $source)
-                            <option value="{{ $source->id }}">{{ $source->type }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="more-filter-items">
-            <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.addedBy')</label>
-            <div class="select-filter mb-4">
-                <div class="select-others">
-                <select class="form-control select-picker" id="filter_addedBy" data-live-search="true" data-container="body" data-size="8">
-                    <option value="all">@lang('app.all')</option>
-                    @foreach ($employees as $item)
-                        <x-user-option :user="$item"  />
-                    @endforeach
-                </select>
-                </div>
-            </div>
-        </div>
-
-    </x-filters.more-filter-box>
-    <!-- MORE FILTERS END -->
-</x-filters.filter-box>
+        @endforeach
+    </div>
+    <!-- Right Scroll Button -->
+    <button class="btn btn-dark" id="scrollRightBtn" style="display: none; right: 0;">&#9654;</button>
+</div>
 
 @push('scripts')
     <script>
-        $('#type, #followUp, #agent_id, #filter_category_id, #filter_source_id, #filter_status_id, #date_filter_on, #min, #max, #filter_addedBy')
-            .on('change keyup', function() {
-                if ($('#type').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else if ($('#min').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else if ($('#max').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else if ($('#filter_category_id').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else if ($('#filter_source_id').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else if ($('#date_filter_on').val() != "created_at") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else if ($('#filter_addedBy').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else {
-                    $('#reset-filters').addClass('d-none');
-                    showTable();
-                }
-            });
 
         $('#search-text-field').on('keyup', function() {
             if ($('#search-text-field').val() != "") {
@@ -150,9 +89,6 @@
 
         $('#reset-filters,#reset-filters-2').click(function() {
             $('#filter-form')[0].reset();
-
-            $('.filter-box #status').val('not finished');
-            $('.filter-box #date_filter_on').val('created_at');
             $('.filter-box .select-picker').selectpicker("refresh");
             $('#reset-filters').addClass('d-none');
             showTable();

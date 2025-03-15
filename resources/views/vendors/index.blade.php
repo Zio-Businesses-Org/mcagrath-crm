@@ -36,54 +36,54 @@
     </div>
 </x-filters.filter-box-moded>
 <div class="container-fluid d-flex position-relative border-bottom-grey">
-<!-- Left Scroll Button -->
-<button class="btn btn-dark" id="scrollLeftBtn" style="display: none; left: 0;">&#9664;</button>
-<!-- Scrollable Button Wrapper -->
-<div id="buttonWrapper" class="button-wrapper d-flex overflow-auto flex-nowrap my-2">
-@foreach ($vendorFilter as $filter)
-<!-- Buttons in a horizontal line -->
-    <div class="task_view mx-1">
-        
-        <div class="taskView text-darkest-grey f-w-500">@if($filter->status=='active')<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>@endif{{$filter->name}}</div>
-        <div class="dropdown dropdown-mod">
-            <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"
-                type="link" id="dropdownMenuLink-{{$filter->id}}" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <i class="icon-options-vertical icons"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right dropdown-mod" 
-                aria-labelledby="dropdownMenuLink-{{$filter->id}}" tabindex="0" >
-                @if($filter->status=='inactive')
-                    <a class="dropdown-item apply-filter" href="javascript:;"
-                        data-row-id="{{$filter->id}}">
-                        <i class="bi bi-save2 mr-2"></i>
-                        @lang('Apply')
-                    </a>
-                @endif
-                    <a class="dropdown-item edit-filter-vendor" href="javascript:;"
-                        data-row-id="{{$filter->id}}">
-                        <i class="fa fa-edit mr-2"></i>
-                        @lang('app.edit')
-                    </a>
-                    <a class="dropdown-item delete-row" href="javascript:;"
-                        data-row-id="{{$filter->id}}">
-                        <i class="fa fa-trash mr-2"></i>
-                        @lang('app.delete')
-                    </a>
-                    @if($filter->status=='active')
-                        <a class="dropdown-item clear-filter" href="javascript:;"
+    <!-- Left Scroll Button -->
+    <button class="btn btn-dark" id="scrollLeftBtn" style="display: none; left: 0;">&#9664;</button>
+    <!-- Scrollable Button Wrapper -->
+    <div id="buttonWrapper" class="button-wrapper d-flex overflow-auto flex-nowrap my-2">
+    @foreach ($vendorFilter as $filter)
+    <!-- Buttons in a horizontal line -->
+        <div class="task_view mx-1">
+            
+            <div class="taskView text-darkest-grey f-w-500">@if($filter->status=='active')<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>@endif{{$filter->name}}</div>
+            <div class="dropdown dropdown-mod">
+                <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"
+                    type="link" id="dropdownMenuLink-{{$filter->id}}" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-options-vertical icons"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-mod" 
+                    aria-labelledby="dropdownMenuLink-{{$filter->id}}" tabindex="0" >
+                    @if($filter->status=='inactive')
+                        <a class="dropdown-item apply-filter" href="javascript:;"
                             data-row-id="{{$filter->id}}">
                             <i class="bi bi-save2 mr-2"></i>
-                            @lang('Clear')
+                            @lang('Apply')
                         </a>
                     @endif
+                        <a class="dropdown-item edit-filter-vendor" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="fa fa-edit mr-2"></i>
+                            @lang('app.edit')
+                        </a>
+                        <a class="dropdown-item delete-row" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="fa fa-trash mr-2"></i>
+                            @lang('app.delete')
+                        </a>
+                        @if($filter->status=='active')
+                            <a class="dropdown-item clear-filter" href="javascript:;"
+                                data-row-id="{{$filter->id}}">
+                                <i class="bi bi-save2 mr-2"></i>
+                                @lang('Clear')
+                            </a>
+                        @endif
+                </div>
             </div>
         </div>
+        @endforeach
     </div>
-    @endforeach
-</div>
-<!-- Right Scroll Button -->
-<button class="btn btn-dark" id="scrollRightBtn" style="display: none; right: 0;">&#9654;</button>
+    <!-- Right Scroll Button -->
+    <button class="btn btn-dark" id="scrollRightBtn" style="display: none; right: 0;">&#9654;</button>
 </div>
 
 @endsection

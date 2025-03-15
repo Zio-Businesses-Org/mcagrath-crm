@@ -65,7 +65,7 @@ function refreshFeeMethods() {
 
             response.feeMethods.forEach(function (method) {
                 feeMethodDropdown.append(
-                    `<option value="${method.id}">${method.fee_method}</option>`
+                    `<option value="${method.fee_method}">${method.fee_method}</option>`
                 );
             });
 

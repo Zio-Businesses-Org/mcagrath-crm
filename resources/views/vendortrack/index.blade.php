@@ -104,17 +104,14 @@
     <div class="content-wrapper">
         <!-- Add Task Export Buttons Start -->
         <div class="d-grid d-lg-flex d-md-flex action-bar">
-            <div id="table-actions" class="flex-grow-1 align-items-center"> 
-
-     <!-- Add Vendor Lead Button -->
-    
-                    <x-forms.link-primary class="mr-3 openRightModal float-left mb-2 mb-lg-0 mb-md-0" icon="plus"
-                    :link="route('lead-vendor.handle')" id="addVendorLead">
-                    @lang('Add Vendor Lead')
-                    </x-forms.link-primary>
-                    <x-forms.button-secondary class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 d-sm-bloc d-none d-lg-block" icon="file-upload" id="importLeadVendor">
-                        @lang('app.importExcel')
-                    </x-forms.button-secondary> 
+            <div id="table-actions" class="flex-grow-1 align-items-center">     
+                <x-forms.link-primary class="mr-3 openRightModal float-left mb-2 mb-lg-0 mb-md-0" icon="plus"
+                :link="route('lead-vendor.handle')" id="addVendorLead">
+                @lang('Add Vendor Lead')
+                </x-forms.link-primary>
+                <x-forms.button-secondary class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 d-sm-bloc d-none d-lg-block" icon="file-upload" id="importLeadVendor">
+                    @lang('app.importExcel')
+                </x-forms.button-secondary> 
             </div>
             <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
                 <a href="{{ route('vendors.index') }}" class="btn btn-secondary f-14 btn-active" data-toggle="tooltip"

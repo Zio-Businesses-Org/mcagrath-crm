@@ -163,6 +163,7 @@ use App\Http\Controllers\VendorChangeNotificationController;
 use App\Http\Controllers\ProjectVendorCustomFilterController;
 use App\Http\Controllers\EmployeeShiftChangeRequestController;
 use App\Http\Controllers\VendorContractorLicenseDocController;
+use App\Http\Controllers\LeadClientCustomFilterController; 
 
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
@@ -1001,6 +1002,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('vendor-filter', VendorCustomFilterController::class);
     Route::post('vendor-filter/change-status/{id}', [VendorCustomFilterController::class, 'changestatus'])->name('vendor-filter.change-status');
     Route::post('vendor-filter/clear/{id}', [VendorCustomFilterController::class, 'clear'])->name('vendor-filter.clear');
+
+    //Lead-Client-custom-filter
+    Route::resource('lead-client-filter', LeadClientCustomFilterController::class);
+    Route::post('lead-client-filter/change-status/{id}', [LeadClientCustomFilterController::class, 'changestatus'])->name('lead-client-filter.change-status');
+    Route::post('lead-client-filter/clear/{id}', [LeadClientCustomFilterController::class, 'clear'])->name('lead-client-filter.clear');
 
     //Lead-Vendor-custom-filter 
     Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);

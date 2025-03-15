@@ -11,6 +11,8 @@ use App\Models\Lead;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\DB;
+use App\Models\ClientLeadCustomFilter;
+use Exception;
 
 class LeadContactDataTable extends BaseDataTable
 {
@@ -187,43 +189,6 @@ class LeadContactDataTable extends BaseDataTable
             }
         }
 
-        if ($this->request()->startDate !== null && $this->request()->startDate != 'null' && $this->request()->startDate != '' && request()->date_filter_on == 'created_at') {
-            $startDate = companyToDateString($this->request()->startDate);
-
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`created_at`)'), '>=', $startDate);
-        }
-
-        if ($this->request()->endDate !== null && $this->request()->endDate != 'null' && $this->request()->endDate != '' && request()->date_filter_on == 'created_at') {
-            $endDate = companyToDateString($this->request()->endDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`created_at`)'), '<=', $endDate);
-        }
-
-
-        if ($this->request()->startDate !== null && $this->request()->startDate != 'null' && $this->request()->startDate != '' && request()->date_filter_on == 'updated_at') {
-            $startDate = companyToDateString($this->request()->startDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`updated_at`)'), '>=', $startDate);
-        }
-
-        if ($this->request()->endDate !== null && $this->request()->endDate != 'null' && $this->request()->endDate != '' && request()->date_filter_on == 'updated_at') {
-            $endDate = companyToDateString($this->request()->endDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`updated_at`)'), '<=', $endDate);
-        }
-        // //newly Add date filtering for new date fields
-
-        // if ($this->request()->status_type != 'all' && $this->request()->status_type != '') {
-        //     $leadContact = $leadContact->where('status_type', $this->request()->status_type);
-        // }
-        
-        // //till here
-
-        if ($this->request()->category_id != 'all' && $this->request()->category_id != '') {
-            $leadContact = $leadContact->where('category_id', $this->request()->category_id);
-        }
-
-        if ($this->request()->source_id != 'all' && $this->request()->source_id != '') {
-            $leadContact = $leadContact->where('source_id', $this->request()->source_id);
-        }
-
         if ($this->viewLeadPermission == 'all' && $this->request()->filter_addedBy != 'all' && $this->request()->filter_addedBy != '') {
             $leadContact = $leadContact->where('leads.added_by', $this->request()->filter_addedBy);
         }
@@ -235,8 +200,41 @@ class LeadContactDataTable extends BaseDataTable
                     ->orwhere('leads.mobile', 'like', '%' . request('searchText') . '%');
             });
         }
+        if ($this->request()->searchText == ''){
+            $leadContact = self::customFilter($leadContact);
+        }
 
         return $leadContact->groupBy('leads.id');
+    }
+
+    public function customFilter($leadContact)
+    {
+        try{
+            $customfilter = ClientLeadCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
+
+            if($customfilter->last_called_start_date!=''&& $customfilter->last_called_end_date!='')
+            {
+                $leadContact->whereBetween(DB::raw('DATE(leads.`last_called_date`)'), [$customfilter->last_called_start_date, $customfilter->last_called_end_date]);
+            }
+            if($customfilter->next_follow_start_date!=''&& $customfilter->next_follow_end_date!='')
+            {
+                $leadContact->whereBetween(DB::raw('DATE(leads.`next_follow_up_date`)'), [$customfilter->next_follow_start_date, $customfilter->next_follow_end_date]);
+            }
+            if($customfilter->company_type!='')
+            {
+                $leadContact->whereIn('leads.company_type', $customfilter->company_type)->get();
+            }
+            if($customfilter->client_lead_status!='')
+            {
+                $leadContact->whereIn('leads.status_type', $customfilter->client_lead_status)->get();
+            }
+            if($customfilter->added_by!='')
+            {
+                $leadContact->whereIn('leads.added_by', $customfilter->added_by)->get();
+            }
+        }
+        catch (Exception){}
+        return $leadContact;
     }
 
     /**

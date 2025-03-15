@@ -64,7 +64,7 @@ function refreshPaymentMethods() {
 
             response.paymentMethods.forEach(function (method) {
                 paymentMethodDropdown.append(
-                    `<option value="${method.id}">${method.payment_method}</option>`
+                    `<option value="${method.payment_method}">${method.payment_method}</option>`
                 );
             });
 

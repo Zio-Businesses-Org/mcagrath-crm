@@ -22,6 +22,7 @@ use App\Models\LeadPipeline;
 use Illuminate\Http\Request;
 use App\Models\PipelineStage;
 use App\Models\LeadCustomForm;
+use App\Models\ClientLeadCustomFilter;
 use App\DataTables\DealsDataTable;
 use Illuminate\Support\Facades\Log;
 use App\DataTables\LeadNotesDataTable;
@@ -58,9 +59,10 @@ class LeadContactController extends AccountBaseController
         abort_403(!in_array($viewPermission, ['all']));
 
         if (!request()->ajax()) {
-            $this->categories = LeadCategory::get();
-            $this->sources = LeadSource::get();
-            $this->employees = User::allEmployees(null, 'active');
+            $this->clientFilter = ClientLeadCustomFilter::where('user_id', user()->id)->get();
+            $this->allEmployees = User::allEmployees(null, true, 'all');
+            $this->statusLeads = StatusLead::all();
+            $this->companyTypes = CompanyType::all();
         }
 
         return $dataTable->render('lead-contact.index', $this->data);
@@ -201,6 +203,7 @@ class LeadContactController extends AccountBaseController
         //$this->salutations = Salutation::cases();
         $this->statusLeads = StatusLead::all();//newly added status
         $this->companyTypes =CompanyType::all();
+        
         $this->view = 'lead-contact.ajax.create';
 
         if (request()->ajax()) {
@@ -326,11 +329,11 @@ class LeadContactController extends AccountBaseController
        $this->companyTypes = CompanyType::all(); // Ensure company types are fetched
 
        // Format dates for the view
-        $this->selectedStatus = $this->leadContact->statusLead ? $this->leadContact->statusLead->id : null;
-        $this->leadContact->last_called_date = $this->leadContact->last_called_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->last_called_date)->format('m-d-Y') : null;
-        $this->leadContact->next_follow_up_date = $this->leadContact->next_follow_up_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->next_follow_up_date)->format('m-d-Y') : null;
-        $this->leadContact->on_board_date = $this->leadContact->on_board_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->on_board_date)->format('m-d-Y') : null;
-        $this->leadContact->rejected_date = $this->leadContact->rejected_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->rejected_date)->format('m-d-Y') : null;
+        // $this->selectedStatus = $this->leadContact->statusLead ? $this->leadContact->statusLead->id : null;
+        $this->leadContact->last_called_date = $this->leadContact->last_called_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->last_called_date)->format(company()->date_format) : null;
+        $this->leadContact->next_follow_up_date = $this->leadContact->next_follow_up_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->next_follow_up_date)->format(company()->date_format) : null;
+        $this->leadContact->on_board_date = $this->leadContact->on_board_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->on_board_date)->format(company()->date_format) : null;
+        $this->leadContact->rejected_date = $this->leadContact->rejected_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->rejected_date)->format(company()->date_format) : null;
         $this->leadContact->comments = $this->leadContact->comments ?? '';
         $this->pageTitle = __('modules.leadContact.updateTitle');
         $this->salutations = Salutation::cases();
