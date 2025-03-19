@@ -22,6 +22,7 @@ use App\Models\VendorContract;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
 use Illuminate\Http\Request;
+use App\Models\ExpenseStatus;
 
 class ExpenseController extends AccountBaseController
 {
@@ -56,7 +57,6 @@ class ExpenseController extends AccountBaseController
     public function changeStatus(Request $request)
     {
         abort_403(user()->permission('approve_expenses') != 'all');
-
         $expenseId = $request->expenseId;
         $status = $request->status;
         $expense = Expense::findOrFail($expenseId);
@@ -231,6 +231,7 @@ class ExpenseController extends AccountBaseController
         $this->employees = User::allEmployees();
         $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Ensure fee methods are loaded
         $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Ensure payment methods are loaded
+        $this->expenseStatus = ExpenseStatus::all();
         $this->pageTitle = __('modules.expenses.updateExpense');
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
@@ -288,9 +289,9 @@ class ExpenseController extends AccountBaseController
         $expense->description = trim_editor($request->description);
         $expense->vendor_id = $request->vendor_id;
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
-        $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
-        $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null;
-
+        $expense->wo_status = $request->wo_status;
+        $expense->bid_approved_amt = $request->bid_approved_amount;
+        $expense->change_amt = $request->change_order_amount;
         $expense->project_id = ($request->project_id > 0) ? $request->project_id : null;
 
 

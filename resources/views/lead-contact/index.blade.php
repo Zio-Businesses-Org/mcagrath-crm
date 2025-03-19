@@ -42,10 +42,10 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                         @lang('app.importExcel')
                 </x-forms.button-secondary>  -->
             </div>
-            <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
+            <!-- <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
                     <a class="btn btn-secondary f-14" data-toggle="tooltip" id="custom-filter"
                         data-original-title="@lang('Custom Filter')"><i class="side-icon bi bi-filter"></i></a>
-            </div>
+            </div> -->
             <x-datatable.actions>
                 <div class="select-status mr-3 pl-3">
                     <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>

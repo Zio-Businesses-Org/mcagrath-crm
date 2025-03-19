@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\DB;
+use App\Models\ExpenseStatus;
 
 class ExpensesDataTable extends BaseDataTable
 {
@@ -42,6 +43,7 @@ class ExpensesDataTable extends BaseDataTable
 
         $datatables = datatables()->eloquent($query);
         $datatables->addIndexColumn();
+        $expenseStatus = ExpenseStatus::all();
         $datatables->addColumn('check', fn($row) => $this->checkBox($row));
         $datatables->addColumn('action', function ($row) {
 
@@ -124,7 +126,7 @@ class ExpensesDataTable extends BaseDataTable
         $datatables->editColumn('project_id', function ($row) {
             return $row->project->project_short_code;
         });
-        $datatables->editColumn('status', function ($row) {
+        $datatables->editColumn('status', function ($row) use ($expenseStatus){
             if (
                 $this->approveExpensePermission != 'none'
                 && (
@@ -135,50 +137,17 @@ class ExpensesDataTable extends BaseDataTable
                 )
             ) {
 
-
                 $status = '<select class="form-control select-picker change-expense-status" data-expense-id="' . $row->id . '">';
-                $status .= '<option ';
 
-                if ($row->status == 'pending') {
-                    $status .= 'selected';
+                foreach ($expenseStatus as $item) {
+                    $selected = ($item->status == $row->status) ? 'selected' : '';
+
+                    $status .= '<option value="' . $item->status . '" ' . $selected . '>' . $item->status . '</option>';
                 }
-
-                $status .= ' value="pending" data-content="<i class=\'fa fa-circle mr-2 text-yellow\'></i> ' . __('app.pending') . '">' . __('app.pending') . '</option>';
-                $status .= '<option ';
-
-                if ($row->status == 'approved') {
-                    $status .= 'selected';
-                }
-
-                $status .= ' value="approved" data-content="<i class=\'fa fa-circle mr-2 text-light-green\'></i> ' . __('app.approved') . '"' . __('app.approved') . '</option>';
-                $status .= '<option ';
-
-                if ($row->status == 'rejected') {
-                    $status .= 'selected';
-                }
-
-                $status .= ' value="rejected" data-content="<i class=\'fa fa-circle mr-2 text-red\'></i> ' . __('app.rejected') . '">' . __('app.rejected') . '</option>';
 
                 $status .= '</select>';
 
-            }
-            else {
-                if ($row->status == 'pending') {
-                    $class = 'text-yellow';
-                    $status = __('app.pending');
 
-                }
-                else if ($row->status == 'approved') {
-                    $class = 'text-light-green';
-                    $status = __('app.approved');
-
-                }
-                else {
-                    $class = 'text-red';
-                    $status = __('app.rejected');
-                }
-
-                $status = '<i class="fa fa-circle mr-1 ' . $class . ' f-10"></i> ' . $status;
             }
 
             return $status;
@@ -241,9 +210,9 @@ class ExpensesDataTable extends BaseDataTable
     public function query()
     {
         $request = $this->request();
-
+        
         $model = Expense::with('currency', 'user', 'user.employeeDetail', 'user.employeeDetail.designation', 'user.session', 'projectvendor')
-    ->select('expenses.id', 'expenses.project_id', 'expenses.item_name', 'expenses.category_id','expenses.vendor_id', 'expenses.created_at', 'expenses.pay_date', 'expenses.user_id', 'expenses.payment_method',  'expenses.additional_fee','expenses.price', 'users.salutation', 'users.name', 'expenses.purchase_date', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
+         ->select('expenses.id', 'expenses.project_id', 'expenses.item_name', 'expenses.category_id','expenses.vendor_id', 'expenses.created_at', 'expenses.pay_date', 'expenses.user_id', 'expenses.payment_method',  'expenses.additional_fee','expenses.price', 'users.salutation', 'users.name', 'expenses.purchase_date', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
 
     
             ->join('users', 'users.id', 'expenses.user_id')

@@ -3,99 +3,101 @@
 @endphp
 
 <div class="modal-header">
-    <h5 class="modal-title" id="modelHeading">@lang('Expense Additional Fee Type')</h5>
+    <h5 class="modal-title" id="modelHeading">@lang('Expense Status')</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">×</span>
     </button>
 </div>
-
 <div class="modal-body">
-    <!-- Additional Fee Method Table -->
     <x-table class="table-bordered" headType="thead-light">
         <x-slot name="thead">
             <th>#</th>
-            <th>@lang('Fee Type')</th>
+            <th>@lang('Statuss')</th>
             <th class="text-right">@lang('app.action')</th>
         </x-slot>
 
-        @forelse($feeMethods ?? [] as $key => $item) 
+        @forelse($status ?? [] as $key => $item) 
+
             <tr id="row-{{ $item->id }}">
                 <td>{{ $key + 1 }}</td>
-                <td data-row-id="{{ $item->id }}" contenteditable="true">{{ $item->fee_method }}</td>
+                <td data-row-id="{{ $item->id }}" contenteditable="true">{{ $item->status }}</td>
                 <td class="text-right">
-                    @if ($deleteExpenseCategoryPermission == 'all' || ($deleteExpenseCategoryPermission == 'added' && $item->added_by == user()->id))
-                        <x-forms.button-secondary data-row-id="{{ $item->id }}" icon="trash" class="delete-row-fee-type">
-                            @lang('app.delete')
-                        </x-forms.button-secondary>
-                    @endif
+                   
+                    <x-forms.button-secondary data-row-id="{{ $item->id }}" icon="trash" class="delete-row-exp-status">
+                        @lang('app.delete')
+                    </x-forms.button-secondary>
                 </td>
             </tr>
         @empty
-            <x-cards.no-record-found-list colspan="3" />
+            <x-cards.no-record-found-list colspan="4" />
         @endforelse
     </x-table>
 
-    <!-- Add New Fee Method -->
-    <x-form id="createFeeMethod">
+    <x-form id="createExpenseStatus">
         <div class="row border-top-grey">
             <div class="col-sm-12">
-                <x-forms.text fieldId="fee_method" :fieldLabel="__('Fee Method')" fieldName="fee_method"
-                    fieldRequired="true" :fieldPlaceholder="__('Enter a fee method')">
+                <x-forms.text fieldId="status" :fieldLabel="__('Status')" fieldName="status"
+                    fieldRequired="true" :fieldPlaceholder="__('Enter a Status Name')">
                 </x-forms.text>
             </div>
         </div>
     </x-form>
 </div>
-
 <div class="modal-footer">
     <x-forms.button-cancel data-dismiss="modal" class="border-0 mr-3">@lang('app.close')</x-forms.button-cancel>
-    <x-forms.button-primary id="save-fee-method" icon="check">@lang('app.save')</x-forms.button-primary>
+    <x-forms.button-primary id="save-status" icon="check">@lang('app.save')</x-forms.button-primary>
 </div>
+
+
 
 <script>
 
-// ✅ Function to refresh the fee method dropdown
-function refreshFeeMethods() {
+// ✅ Function to refresh the payment method dropdown
+function refreshStatus() {
     $.ajax({
-        url: "{{ route('expenseAdditionalFee.list') }}", // ✅ Fetch latest data
+        url: "{{ route('expenseStatus.list') }}", // ✅ Fetch latest data
         type: "GET",
         success: function (response) {
-            let feeMethodDropdown = $('#fee_method_id');
-            feeMethodDropdown.html('<option value="">-- Select Fee Method --</option>');
+            let StatusDropdown = $('#status_id');
+            StatusDropdown.html('<option value="">--</option>');
 
-            response.feeMethods.forEach(function (method) {
-                feeMethodDropdown.append(
-                    `<option value="${method.fee_method}">${method.fee_method}</option>`
+            response.statusDrop.forEach(function (method) {
+                StatusDropdown.append(
+                    `<option value="${method.status}">${method.status}</option>`
                 );
             });
 
-            feeMethodDropdown.selectpicker('refresh'); // ✅ Refresh dropdown
+            StatusDropdown.selectpicker('refresh'); // ✅ Refresh dropdown
         }
     });
 }
 
+// // ✅ Refresh dropdown on page load
+// $(document).ready(function () {
+//     refreshStatus();
+// });
 
-// ✅ Update dropdown after adding a new fee method
-$('#save-fee-method').click(function () {
-    let formData = $('#createFeeMethod').serialize();
+// ✅ Update dropdown after adding a new payment method
+$('#save-status').click(function () {
+    let formData = $('#createExpenseStatus').serialize();
 
     $.easyAjax({
-        url: "{{ route('expenseAdditionalFee.store') }}",
+        url: "{{ route('expenseStatus.store') }}",
         type: "POST",
         data: formData,
         success: function (response) {
             if (response.status === 'success') {
-                refreshFeeMethods(); // ✅ Refresh dropdown after adding
+                refreshStatus(); // ✅ Refresh dropdown after adding
                 $(MODAL_LG).modal('hide'); // ✅ Close modal
             }
         }
     });
 });
 
-// ✅ Delete Fee Method and Refresh Dropdown
-$('body').off('click', '.delete-row-fee-type').on('click', '.delete-row', function () {
+// ✅ Delete Payment Method and Refresh Dropdown
+$('body').on('click', '.delete-row-exp-status', function () {
     var id = $(this).data('row-id');
-    var url = "{{ route('expenseAdditionalFee.destroy', ':id') }}".replace(':id', id);
+    var url = "{{ route('expenseStatus.destroy', ':id') }}".replace(':id', id);
     var token = "{{ csrf_token() }}";
 
     Swal.fire({
@@ -117,7 +119,7 @@ $('body').off('click', '.delete-row-fee-type').on('click', '.delete-row', functi
                 success: function(response) {
                     if (response.status == "success") {
                         $('#row-' + id).fadeOut();
-                        refreshFeeMethods(); // ✅ Refresh dropdown after deletion
+                        refreshStatus(); // ✅ Refresh dropdown after deletion
                     }
                 }
             });
@@ -125,26 +127,24 @@ $('body').off('click', '.delete-row-fee-type').on('click', '.delete-row', functi
     });
 });
 
-// ✅ Update Fee Method and Refresh Dropdown
+// ✅ Update Payment Method and Refresh Dropdown
 $('body').off('blur', '[contenteditable=true]').on('blur', '[contenteditable=true]', function () {
     let id = $(this).data('row-id');
     let value = $(this).text().trim();
-    //this is changed
-    let url = "{{ route('expenseAdditionalFee.update', '') }}/" + id;
-
+    let url = "{{ route('expenseStatus.update', '') }}/"+id;
     let token = "{{ csrf_token() }}";
 
     $.easyAjax({
         url: url,
         type: "PUT",
         data: {
-            'fee_method': value,
+            'status': value,
             '_token': token,
             '_method': 'PUT'
         },
         success: function(response) {
             if (response.status == 'success') {
-                refreshFeeMethods(); // ✅ Refresh dropdown after update
+                refreshStatus(); // ✅ Refresh dropdown after update
             }
         }
     });

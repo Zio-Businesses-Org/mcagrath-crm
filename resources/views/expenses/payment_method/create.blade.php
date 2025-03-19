@@ -23,7 +23,7 @@
                 <td data-row-id="{{ $item->id }}" contenteditable="true">{{ $item->payment_method }}</td>
                 <td class="text-right">
                     @if ($deleteExpenseCategoryPermission == 'all' || ($deleteExpenseCategoryPermission == 'added' && $item->added_by == user()->id))
-                        <x-forms.button-secondary data-row-id="{{ $item->id }}" icon="trash" class="delete-row">
+                        <x-forms.button-secondary data-row-id="{{ $item->id }}" icon="trash" class="delete-row-payment">
                             @lang('app.delete')
                         </x-forms.button-secondary>
                     @endif
@@ -96,7 +96,7 @@ $('#save-payment').click(function () {
 });
 
 // ✅ Delete Payment Method and Refresh Dropdown
-$('body').off('click', '.delete-row').on('click', '.delete-row', function () {
+$('body').off('click', '.delete-row-payment').on('click', '.delete-row', function () {
     var id = $(this).data('row-id');
     var url = "{{ route('expensePaymentMethod.destroy', ':id') }}".replace(':id', id);
     var token = "{{ csrf_token() }}";
@@ -119,6 +119,7 @@ $('body').off('click', '.delete-row').on('click', '.delete-row', function () {
                 },
                 success: function(response) {
                     if (response.status == "success") {
+                        $('#row-' + id).fadeOut();
                         refreshPaymentMethods(); // ✅ Refresh dropdown after deletion
                     }
                 }

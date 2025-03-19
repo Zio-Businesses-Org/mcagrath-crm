@@ -31,7 +31,7 @@
                                    :fieldLabel="__('modules.invoices.invoiceNumber')" fieldRequired="true">
                     </x-forms.label>
                     <x-forms.input-group>
-                        <input type="text" name="invoice_number" id="invoice_number" class="form-control height-35 f-15 readonly-background" readonly
+                        <input type="text" name="invoice_number" id="invoice_number" class="form-control height-35 f-15 readonly-background"
                                value="{{ $invoice->invoice_number }}">
                     </x-forms.input-group>
                 </div>
@@ -43,7 +43,7 @@
                     <x-forms.label fieldId="due_date" :fieldLabel="__('modules.invoices.invoiceDate')">
                     </x-forms.label>
                     <div class="input-group">
-                        <input type="text" id="invoice_date" name="issue_date" readonly
+                        <input type="text" id="invoice_date" name="issue_date"
                                class="px-6 position-relative text-dark font-weight-normal form-control height-35 rounded p-0 text-left f-15"
                                placeholder="@lang('placeholders.date')"
                                value="{{ $invoice->issue_date->translatedFormat(company()->date_format) }}">
@@ -794,11 +794,11 @@
             });
         });
 
-        // const dp1 = datepicker('#invoice_date', {
-        //     position: 'bl',
-        //     dateSelected: new Date("{{ str_replace('-', '/', $invoice->issue_date) }}"),
-        //     ...datepickerConfig
-        // });
+        const dp1 = datepicker('#invoice_date', {
+            position: 'bl',
+            dateSelected: new Date("{{ str_replace('-', '/', $invoice->issue_date) }}"),
+            ...datepickerConfig
+        });
         const dp2 = datepicker('#due_date', {
             position: 'bl',
             dateSelected: new Date("{{ str_replace('-', '/', $invoice->due_date) }}"),

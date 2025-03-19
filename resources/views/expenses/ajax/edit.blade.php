@@ -74,11 +74,12 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')"
                             :fieldValue="$expense->price" />
                     </div>
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Pending Amount')" fieldName="pending_amount"
+                         fieldId="pending_amount" fieldReadOnly :fieldValue="floatval($expense->bid_approved_amt) - floatval($expense->price)"/>
 
-
-
-                    <!---->
-                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-6 col-lg-3">
                         <x-forms.label class="mt-3" fieldId="payment_method_id" :fieldLabel="__('Payment Method')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -98,9 +99,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             </x-slot>
                         </x-forms.input-group>
                     </div>
-
-                    <!---->
-                    <div class="col-md-4">
+                    <div class="col-md-6 col-lg-3">
                         <x-forms.label class="mt-3" fieldId="additional_fee_id" :fieldLabel="__('Additional Fee Type')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -119,10 +118,6 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             </x-slot>
                         </x-forms.input-group>
                     </div>
-                    
-                    
-                    
-
                     <div class="col-md-6 col-lg-3 d-none">
                         <input type="hidden" id="currency_id" name="currency_id" value="{{$expense->currency_id}}">
                         <x-forms.select :fieldLabel="__('modules.invoices.currency')" fieldName="currency"
@@ -151,7 +146,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                     </div>
 
                     @if (user()->permission('add_expenses') == 'all')
-                        <div class="col-md-6 col-lg-4 d-none">
+                        <div class="col-md-6 col-lg-3 d-none">
                             <x-forms.label class="mt-3" fieldId="user_id" :fieldLabel="__('app.employee')">
                             </x-forms.label>
                             <x-forms.input-group>
@@ -167,8 +162,8 @@ $approveExpensePermission = user()->permission('approve_expenses');
                     @else
                         <input type="hidden" name="user_id" value="{{ user()->id }}">
                     @endif
-
-                    <div class="col-lg-4 col-md-6">
+                    
+                    <div class="col-lg-3 col-md-6">
                         <x-forms.label class="mt-3" fieldId="category_id"
                             :fieldLabel="__('modules.expenses.expenseCategory')">
                         </x-forms.label>
@@ -209,12 +204,23 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             )
                         )
                         <div class="col-lg-3 col-md-6">
-                            <x-forms.select :fieldLabel="__('app.status')" fieldName="status" fieldId="status">
-                                <option @selected ($expense->status == 'approved') value="approved">@lang('app.approved')</option>
-                                <option @selected($expense->status == 'pending') value="pending">@lang('app.pending')</option>
-                                <option @selected($expense->status == 'rejected') value="rejected">@lang('app.rejected')
-                                </option>
-                            </x-forms.select>
+                            <x-forms.label class="mt-3" fieldId="status_id" :fieldLabel="__('Status')">
+                            </x-forms.label>
+                            <x-forms.input-group>
+                                <select name="status" id="status_id" class="form-control select-picker">
+                                    <option value=''>--</option>
+                                    @foreach ($expenseStatus as $status)
+                                        <option @selected($status->status == $expense->status) value="{{ $status->status }}">
+                                            {{ $status->status }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <x-slot name="append">
+                                    <button id="addExpenseStatus" type="button"
+                                        class="btn btn-outline-secondary border-grey" data-toggle="tooltip"
+                                        data-original-title="{{ __('Add Expense Status') }}">@lang('app.add')</button>
+                                </x-slot>
+                            </x-forms.input-group>
                         </div>
                     @endif
 
@@ -294,123 +300,128 @@ $approveExpensePermission = user()->permission('approve_expenses');
 
 <script>
 
-    $(document).ready(function() {
+$(document).ready(function() {
+    var pendingAmount = 0;
+    $('#addPaymentMethod').click(function () {
+        const url = "{{ route('expensePaymentMethod.create') }}";
+        $.ajaxModal(MODAL_LG, url);
+    });
+    $('#addAdditionalFee').click(function() {
+        const url = "{{ route('expenseAdditionalFee.create') }}";
+        $.ajaxModal(MODAL_LG, url);
+    });
+    $('#addExpenseStatus').click(function() {
+        const url = "{{ route('expenseStatus.create') }}";
+        $.ajaxModal(MODAL_LG, url);
+    });
 
-        $('#addPaymentMethod').click(function () {
-            const url = "{{ route('expensePaymentMethod.create') }}";
-            $.ajaxModal(MODAL_LG, url);
-        });
+    if($('#project_id').val() != ''){
+        $('#currency').prop('disabled', true);
+    }
 
-        $('#addAdditionalFee').click(function() {
-            const url = "{{ route('expenseAdditionalFee.create') }}";
-            $.ajaxModal(MODAL_LG, url);
-        });
-
-        if($('#project_id').val() != ''){
-            $('#currency').prop('disabled', true);
-        }
-
-        $('.custom-date-picker').each(function(ind, el) {
-            datepicker(el, {
-                position: 'bl',
-                ...datepickerConfig
-            });
-        });
-
-        quillMention(null, '#description');
-
-        const dp1 = datepicker('#pay_date', {
+    $('.custom-date-picker').each(function(ind, el) {
+        datepicker(el, {
             position: 'bl',
             ...datepickerConfig
         });
+    });
 
+    quillMention(null, '#description');
+
+    const dp1 = datepicker('#pay_date', {
+        position: 'bl',
+        ...datepickerConfig
+    });
+
+    let categoryId = $('#expense_category_id').val();
+    let userId = $('#user_id').val();
+    getExpenseCategoryEmp(userId, categoryId);
+
+
+    $('#user_id').change(function() {
+        let userId = $(this).val();
         let categoryId = $('#expense_category_id').val();
+
+        getEmployeeProjectCat(userId, categoryId);
+    });
+
+    $('#expense_category_id').change(function() {
+        let categoryId = $(this).val();
         let userId = $('#user_id').val();
         getExpenseCategoryEmp(userId, categoryId);
-
-
-        $('#user_id').change(function() {
-            let userId = $(this).val();
-            let categoryId = $('#expense_category_id').val();
-
-            getEmployeeProjectCat(userId, categoryId);
-        });
-
-        $('#expense_category_id').change(function() {
-            let categoryId = $(this).val();
-            let userId = $('#user_id').val();
-            getExpenseCategoryEmp(userId, categoryId);
-        });
-
-        function getEmployeeProjectCat(userId, categoryId) {
-            const url = "{{ route('expenses.get_employee_projects') }}";
-
-            $.easyAjax({
-                url: url,
-                type: "GET",
-                data: {'userId' : userId, 'categoryId' : categoryId},
-                success: function(response) {
-                    $('#project_id').html('<option value="">--</option>'+response.data);
-                    $('#project_id').selectpicker('refresh')
-                    $('#expense_category_id').html('<option value="">--</option>'+response.category);
-                    $('#expense_category_id').selectpicker('refresh')
-                }
-            });
-
-        }
-
-        function getExpenseCategoryEmp(userId, categoryId) {
-            const url = "{{ route('expenses.get_category_employees') }}";
-
-            $.easyAjax({
-                url: url,
-                type: "GET",
-                data: {'categoryId' : categoryId, 'userId' : userId},
-                success: function(response) {
-                    $('#user_id').html('<option value="">--</option>'+response.employees);
-                    $('#user_id').selectpicker('refresh')
-                }
-            });
-        }
-
-        $('#save-expense-form').click(function() {
-            let note = document.getElementById('description').children[0].innerHTML;
-            document.getElementById('description-text').value = note;
-            var user = $('#description span[data-id]').map(function(){
-                            return $(this).attr('data-id')
-                        }).get();
-            var mention_user_id  =  $.makeArray(user);
-            $('#mentionUserId').val(mention_user_id.join(','));
-            const url = "{{ route('expenses.update', $expense->id) }}";
-            var data = $('#save-expense-data-form').serialize();
-
-            $.easyAjax({
-                url: url,
-                container: '#save-expense-data-form',
-                type: "POST",
-                disableButton: true,
-                blockUI: true,
-                buttonSelector: "#save-expense-form",
-                data: data,
-                file: true,
-                success: function(response) {
-                    if (response.status == 'success') {
-                        window.location.href = response.redirectUrl;
-                    }
-                }
-            });
-        });
-
-        $('#addExpenseCategory').click(function() {
-            const url = "{{ route('expenseCategory.create') }}";
-            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_LG, url);
-        });
-
-        <x-forms.custom-field-filejs/>
-
-        init(RIGHT_MODAL);
     });
+
+    function getEmployeeProjectCat(userId, categoryId) {
+        const url = "{{ route('expenses.get_employee_projects') }}";
+
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            data: {'userId' : userId, 'categoryId' : categoryId},
+            success: function(response) {
+                $('#project_id').html('<option value="">--</option>'+response.data);
+                $('#project_id').selectpicker('refresh')
+                $('#expense_category_id').html('<option value="">--</option>'+response.category);
+                $('#expense_category_id').selectpicker('refresh')
+            }
+        });
+
+    }
+
+    function getExpenseCategoryEmp(userId, categoryId) {
+        const url = "{{ route('expenses.get_category_employees') }}";
+
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            data: {'categoryId' : categoryId, 'userId' : userId},
+            success: function(response) {
+                $('#user_id').html('<option value="">--</option>'+response.employees);
+                $('#user_id').selectpicker('refresh')
+            }
+        });
+    }
+
+    $('#save-expense-form').click(function() {
+        let note = document.getElementById('description').children[0].innerHTML;
+        document.getElementById('description-text').value = note;
+        var user = $('#description span[data-id]').map(function(){
+                        return $(this).attr('data-id')
+                    }).get();
+        var mention_user_id  =  $.makeArray(user);
+        $('#mentionUserId').val(mention_user_id.join(','));
+        const url = "{{ route('expenses.update', $expense->id) }}";
+        var data = $('#save-expense-data-form').serialize();
+
+        $.easyAjax({
+            url: url,
+            container: '#save-expense-data-form',
+            type: "POST",
+            disableButton: true,
+            blockUI: true,
+            buttonSelector: "#save-expense-form",
+            data: data,
+            file: true,
+            success: function(response) {
+                if (response.status == 'success') {
+                    window.location.href = response.redirectUrl;
+                }
+            }
+        });
+    });
+
+    $('#addExpenseCategory').click(function() {
+        const url = "{{ route('expenseCategory.create') }}";
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+    });
+
+    <x-forms.custom-field-filejs/>
+
+    init(RIGHT_MODAL);
+
+        
+    
 
     $('body').on("change", '#currency, #project_id', function() {
         if ($('#project_id').val() != '') {
@@ -473,6 +484,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                     if (response.status === 'success') {
                         $('#wo_status').val(response.data.wo_status);
                         $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                        pendingAmount = (parseFloat(response.data.bid_approved_amount) || 0);
                         $('#change_order_amount').val(response.data.change_order_amount);
                         $('#link_status').val(response.data.link_status);
                     } else {
@@ -487,4 +499,14 @@ $approveExpensePermission = user()->permission('approve_expenses');
         }
     });
 
+    $('body').on("input", '#price', function (){
+        if($('#vendor_id').val()!=''){
+        pendingAmount = parseFloat("{{$expense->projectvendor->bid_approved_amount}}");
+        var price= parseFloat($(this).val()) || 0; 
+        amt = pendingAmount - price;
+        $('#pending_amount').val(amt);
+        }
+    });
+    
+});
 </script>

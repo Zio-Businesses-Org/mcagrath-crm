@@ -133,8 +133,13 @@
                     @else
                         <input type="hidden" name="user_id" value="{{ user()->id }}">
                     @endif
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Pending Amount')" fieldName="pending_amount"
+                         fieldId="pending_amount" fieldReadOnly/>
 
-                    <div class="col-md-4">
+                    </div>
+
+                    <div class="col-md-3">
                         <x-forms.label class="mt-3" fieldId="category_id" :fieldLabel="__('modules.expenses.expenseCategory')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -157,7 +162,7 @@
                         </x-forms.input-group>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <x-forms.label class="mt-3" fieldId="payment_method" :fieldLabel="__('Payment Method')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -175,7 +180,7 @@
                         </x-forms.input-group>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <x-forms.label class="mt-3" fieldId="fee_method" :fieldLabel="__('Additional Fee Type')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -252,7 +257,7 @@
 
 <script>
     $(document).ready(function() {
-
+        var pendingAmount = 0;
         quillMention(null, '#description');
 
         $('.custom-date-picker').each(function(ind, el) {
@@ -321,8 +326,7 @@
                 success: function(response) {
                     $('#project_id').html('<option value="">--</option>' + response.data);
                     $('#project_id').selectpicker('refresh')
-                    $('#expense_category_id').html('<option value="">--</option>' + response
-                        .category);
+                    $('#expense_category_id').html('<option value="">--</option>' + response.category);
                     $('#expense_category_id').selectpicker('refresh')
                 }
             });
@@ -379,6 +383,7 @@
     $('body').on("change", '#vendor_id', function () {
     var vendorId = $('#vendor_id').val();
     var projectId = $('#project_id').val();
+    
         if (vendorId && projectId) {
             var url = "{{ route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__']) }}";
             url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
@@ -391,6 +396,8 @@
                     if (response.status === 'success') {
                         $('#wo_status').val(response.data.wo_status);
                         $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                        pendingAmount = (parseFloat(response.data.bid_approved_amount) || 0);
+                        // console.log(pendingAmount);
                         $('#change_order_amount').val(response.data.change_order_amount);
                         $('#link_status').val(response.data.link_status);
                     } else {
@@ -402,6 +409,13 @@
                     $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
                 }
             });
+        }
+    });
+    $('body').on("input", '#price', function (){
+        if($('#vendor_id').val()!=''){
+        var price= parseFloat($(this).val()) || 0; 
+        amt = pendingAmount - price;
+        $('#pending_amount').val(amt);
         }
     });
     @if (isset($projectName))

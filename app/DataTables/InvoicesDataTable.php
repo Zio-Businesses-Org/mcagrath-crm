@@ -354,7 +354,8 @@ class InvoicesDataTable extends BaseDataTable
         $datatables->editColumn(
             'issue_date',
             function ($row) {
-                return $row->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format);
+                //return $row->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format);
+                return $row->issue_date->translatedFormat($this->company->date_format);
             }
         );
         $datatables->editColumn(
