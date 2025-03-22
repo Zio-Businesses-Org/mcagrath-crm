@@ -44,9 +44,9 @@ $deleteFilePermission = user()->permission('delete_project_files');
         <x-forms.button-primary icon="plus" id="generate-link" class="type-btn mb-3 mr-3">
             @lang('Generate Link')
         </x-forms.button-primary>
-        <!-- <x-forms.button-primary icon="share" id="share-link" class="type-btn mb-3">
+        <x-forms.button-primary icon="share" id="share-link" class="type-btn mb-3">
             @lang('Click Here For File Sharing')
-        </x-forms.button-primary> -->
+        </x-forms.button-primary>
 
         <div id="share-actions" style="display: none;" class="mb-3">
             <x-forms.button-primary id="share-selected" class="mr-2">
