@@ -113,11 +113,11 @@ $projectArchived = $project->trashed();
                         <!--</li>-->
                     @endif
 
-                    @if (in_array('expenses', user_modules()) && ($viewExpensePermission == 'all' || ($viewExpensePermission == 'added' && user()->id == $project->added_by) || ($viewExpensePermission == 'owned' && user()->id == $project->client_id)))
+                    <!-- @if (in_array('expenses', user_modules()) && ($viewExpensePermission == 'all' || ($viewExpensePermission == 'added' && user()->id == $project->added_by) || ($viewExpensePermission == 'owned' && user()->id == $project->client_id))) -->
                         <li>
                             <x-tab :href="route('projects.show', $project->id).'?tab=expenses'" :text="__('app.menu.expenses')" class="expenses" ajax="false" />
                         </li>
-                    @endif
+                    <!-- @endif -->
 
                     @if ($viewMiroboardPermission == 'all' && $project->enable_miroboard &&
                     ((in_array('client', user_roles()) && $project->client_access && $project->client_id == user()->id)
