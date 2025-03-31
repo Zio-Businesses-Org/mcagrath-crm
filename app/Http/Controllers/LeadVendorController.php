@@ -268,5 +268,52 @@ class LeadVendorController extends AccountBaseController
 
         return Reply::success(__('messages.updateSuccess'));
     }
+
+    /**
+     * XXXXXXXXXXX
+     *
+     * @return array
+     */
+    public function applyQuickAction(Request $request)
+    {
+        
+        switch ($request->action_type) {
+        case 'delete':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+                // Delete Vendor Leads
+                Vendor::destroy($item);
+            }
+
+            return Reply::success(__('messages.deleteSuccess'));
+        case 'change-follow-up':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+                
+                $vendor = Vendor::findOrFail($item);
+                $vendor->nxt_date=$request->nxt_follow_up_action == null ? null : companyToYmd($request->nxt_follow_up_action);
+                $vendor->save();
+            }
+
+            return Reply::success(__('messages.updateSuccess'));
+        
+        case 'change-created-by':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+            
+                $vendor = Vendor::findOrFail($item);
+                $vendor->created_by=$request->member;
+                $vendor->save();
+            }
+
+            return Reply::success(__('messages.updateSuccess'));
+
+        default:
+            return Reply::error(__('messages.selectAction'));
+        }
+    }
    
 }

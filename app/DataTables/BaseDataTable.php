@@ -51,4 +51,9 @@ class BaseDataTable extends DataTable
         return '<input type="checkbox" class="select-table-row" id="datatable-row-' . $row->id . '"  name="datatable_ids[]" value="' . $row->id . '" onclick="dataTableRowCheck(' . $row->id . ')">';
     }
 
+    public function checkBoxProject($row): string
+    {
+        return '<input type="checkbox" class="select-table-row" id="datatable-row-' . $row->id . '"  name="datatable_ids[]" value="' . $row->id . '" >';
+    }
+
 }

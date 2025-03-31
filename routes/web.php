@@ -578,6 +578,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
     // deals route
     Route::get('lead-handle', [LeadVendorController::class, 'handle'])->name('lead-vendor.handle');
+    Route::post('apply-quick-action', [LeadVendorController::class, 'applyQuickAction'])->name('leads.apply_quick_action');
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::post('vendors/vendor-list/{id}', [VendorController::class, 'vendorList'])->name('vendors.vendors_list');
     Route::post('vendors/vendor-list-expense/{id}', [VendorController::class, 'vendorListExpenses'])->name('vendors.vendors_list_expense');
@@ -1016,6 +1017,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     //Vendor Change Notification
     Route::resource('change-notification', VendorChangeNotificationController::class);
     Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
+    Route::post('projectvendors/removelink/{id}', [VendorChangeNotificationController::class, 'removeLink'])->name('projectvendorschangenotify.removelink');
 
     //Vendor Work Order Status
     Route::resource('vendor-work-status', VendorWorkOrderStatusController::class);

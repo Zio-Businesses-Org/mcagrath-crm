@@ -113,6 +113,31 @@
                     @lang('app.importExcel')
                 </x-forms.button-secondary> 
             </div>
+            <x-datatable.actions>
+                <div class="select-status mr-3 pl-3">
+                    <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
+                        <option value="">@lang('app.selectAction')</option>
+                        <option value="change-created-by">@lang('Change Created By')</option>
+                        <option value="change-follow-up">@lang('Change Next Follow Up Date')</option>
+                        <option value="delete">@lang('app.delete')</option>
+                    </select>
+                </div>
+                <div class="select-status mr-3 d-none quick-action-field" id="change-created-by-action">
+                        <select class="form-control select-picker" name="member"
+                                data-live-search="true" data-container="body" data-size="8">
+                            @foreach ($allEmployees as $category)
+                                <option value="{{ $category->name }}" >
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                </div>
+                <div class="select-status mr-3 d-none quick-action-field" id="change-follow-up-action">
+                    <input type="text" class="form-control custom-date-picker date-picker height-35 f-14"
+                    placeholder="Next Follow Up Date" name="nxt_follow_up_action"
+                    id="nxt_follow_up_action"/>
+                </div>
+            </x-datatable.actions>
             <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
                 <a href="{{ route('vendors.index') }}" class="btn btn-secondary f-14 btn-active" data-toggle="tooltip"
                     data-original-title="@lang('Vendors')"><i class="side-icon bi bi-list-ul"></i></a>
@@ -331,6 +356,13 @@
     $(document).ready(function () {
     var startDate = '';
     var endDate = '';
+
+    $('.custom-date-picker').each(function(ind, el) {
+        datepicker(el, {
+            position: 'bl',
+            ...datepickerConfig
+        });
+    });
 
     $('#customRange').daterangepicker({
         autoUpdateInput: false,
@@ -568,6 +600,88 @@
             $('#reset-filters').addClass('d-none');
             showTable();
         });    
+        $('#quick-action-type').change(function() {
+            const actionValue = $(this).val();
+            if (actionValue != '') {
+                $('#quick-action-apply').removeAttr('disabled');
+
+                if (actionValue == 'change-follow-up') {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-follow-up-action').removeClass('d-none');
+                } 
+                else if(actionValue =='change-created-by')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-created-by-action').removeClass('d-none');
+                    
+                }
+                else {
+                    $('.quick-action-field').addClass('d-none');
+                }
+            } else {
+                $('#quick-action-apply').attr('disabled', true);
+                $('.quick-action-field').addClass('d-none');
+            }
+        });
+
+        $('#quick-action-apply').click(function() {
+            const actionValue = $('#quick-action-type').val();
+            if (actionValue == 'delete') {
+                Swal.fire({
+                    title: "@lang('messages.sweetAlertTitle')",
+                    text: "@lang('messages.recoverRecord')",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: "@lang('messages.confirmDelete')",
+                    cancelButtonText: "@lang('app.cancel')",
+                    customClass: {
+                        confirmButton: 'btn btn-primary mr-3',
+                        cancelButton: 'btn btn-secondary'
+                    },
+                    showClass: {
+                        popup: 'swal2-noanimation',
+                        backdrop: 'swal2-noanimation'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        applyQuickAction();
+                    }
+                });
+
+            } else {
+                applyQuickAction();
+            }
+        });
+        const applyQuickAction = () => {
+            var rowdIds = $("#vendorstrack-table input:checkbox:checked").map(function() {
+                return $(this).val();
+            }).get().filter(value => value !== "on");
+
+            var url = "{{ route('leads.apply_quick_action') }}?row_ids=" + rowdIds;
+            
+            
+            $.easyAjax({
+                url: url,
+                container: '#quick-action-form',
+                type: "POST",
+                disableButton: true,
+                buttonSelector: "#quick-action-apply",
+                data: $('#quick-action-form').serialize(),
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                        resetActionButtons();
+                        deSelectAll();
+                        $('#quick-action-apply').attr('disabled', 'disabled');
+                        $('#change-status-action').addClass('d-none');
+                        $('#change-member-action').addClass('d-none');
+                        $('#quick-action-form').hide();
+                    }
+                }
+            })
+        };
         
         $('body').on('click', '.send-proposal', function() {
             const id = $(this).data('user-send');
@@ -639,6 +753,43 @@
             $('#datatableRange').data('daterangepicker').setEndDate("{{ request('end') }}");
                 showTable();
             @endif
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Select All Checkbox Functionality
+            $('body').on("change", "#new-select-all-table", function () {
+                $("#vendorstrack-table .select-table-row").prop("checked", this.checked);
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                   // $(".select-picker").selectpicker("refresh");
+                    $("#quick-action-type,#change-created-by-action").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                
+            });
+            $('body').on("change", ".select-table-row", function () {
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                    $("#quick-action-type,#change-created-by-action").selectpicker("refresh");
+                    //$(".select-picker").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                 
+            });
+
+            // Individual Checkbox Click - Control Select All Checkbox
+            // $(document).on("change", ".select-table-row", function () {
+            //     let allChecked = $("#project_datatable .select-table-row").length === $("#project_datatable .select-table-row:checked").length;
+            //     $("#select-all-checkbox").prop("checked", allChecked);
+            // });
         });
 
     </script>
