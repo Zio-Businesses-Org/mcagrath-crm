@@ -146,7 +146,7 @@ class LeadVendorController extends AccountBaseController
             $this->state=Locations::select('state')->distinct()->get();
             $this->county=Locations::select('county')->distinct()->get();
             $this->city=Locations::select('city')->distinct()->get();
-            $this->allEmployees = User::allEmployees(null, true, 'all');
+            $this->allEmployees = User::allEmployees(null, null, 'all');
             $this->leadsource=LeadSource::all();
         }
         return $dataTable->render('vendortrack.index', $this->data);
