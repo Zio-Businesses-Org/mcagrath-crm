@@ -50,8 +50,25 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                 <div class="select-status mr-3 pl-3">
                     <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
                         <option value="">@lang('app.selectAction')</option>
+                        <option value="change-created-by">@lang('Change Created By')</option>
+                        <option value="change-follow-up">@lang('Change Next Follow Up Date')</option>
                         <option value="delete">@lang('app.delete')</option>
                     </select>
+                </div>
+                <div class="select-status mr-3 d-none quick-action-field" id="change-created-by-action">
+                        <select class="form-control select-picker" name="member"
+                                data-live-search="true" data-container="body" data-size="8">
+                            @foreach ($allEmployees as $category)
+                                <option value="{{ $category->id }}" >
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                </div>
+                <div class="select-status mr-3 d-none quick-action-field" id="change-follow-up-action">
+                    <input type="text" class="form-control custom-date-picker date-picker height-35 f-14"
+                    placeholder="Next Follow Up Date" name="nxt_follow_up_action"
+                    id="nxt_follow_up_action"/>
                 </div>
             </x-datatable.actions>
         </div>
@@ -165,6 +182,13 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
         var endDateNext = '';
         var startDateLast = '';
         var endDateLast = '';
+
+        $('.custom-date-picker').each(function(ind, el) {
+            datepicker(el, {
+                position: 'bl',
+                ...datepickerConfig
+            });
+        });
 
         $('#customRange,#customRange1').daterangepicker({
             autoUpdateInput: false,
@@ -398,7 +422,17 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                 if (actionValue == 'change-agent') {
                     $('.quick-action-field').addClass('d-none');
                     $('#change-agent-action').removeClass('d-none');
-                } else {
+                } 
+                else if (actionValue == 'change-follow-up') {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-follow-up-action').removeClass('d-none');
+                } 
+                else if(actionValue =='change-created-by')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-created-by-action').removeClass('d-none');
+                    
+                }else {
                     $('.quick-action-field').addClass('d-none');
                 }
             } else {
@@ -484,7 +518,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
         const applyQuickAction = () => {
             var rowdIds = $("#lead-contact-table input:checkbox:checked").map(function() {
                 return $(this).val();
-            }).get();
+            }).get().filter(value => value !== "on");
 
             var url = "{{ route('lead-contact.apply_quick_action') }}?row_ids=" + rowdIds;
 
@@ -523,6 +557,43 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                 var url = "{{ route('lead-contact.import') }}";
                 $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
                 $.ajaxModal(MODAL_LG, url);
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Select All Checkbox Functionality
+            $('body').on("change", "#new-select-all-table", function () {
+                $("#lead-contact-table .select-table-row").prop("checked", this.checked);
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                   // $(".select-picker").selectpicker("refresh");
+                    $("#quick-action-type,#change-created-by-action").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                
+            });
+            $('body').on("change", ".select-table-row", function () {
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                    $("#quick-action-type,#change-created-by-action").selectpicker("refresh");
+                    //$(".select-picker").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                 
+            });
+
+            // Individual Checkbox Click - Control Select All Checkbox
+            // $(document).on("change", ".select-table-row", function () {
+            //     let allChecked = $("#project_datatable .select-table-row").length === $("#project_datatable .select-table-row:checked").length;
+            //     $("#select-all-checkbox").prop("checked", allChecked);
+            // });
         });
 
     </script>

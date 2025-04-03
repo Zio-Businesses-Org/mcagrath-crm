@@ -52,7 +52,7 @@ class LeadContactDataTable extends BaseDataTable
 
         $datatables = datatables()->eloquent($query);
         $datatables->addIndexColumn();
-        $datatables->addColumn('check', fn($row) => $this->checkBox($row));
+        $datatables->addColumn('check', fn($row) => $this->checkBoxProject($row));
         $datatables->addColumn('action', function ($row) {
             $action = '<div class="task_view">
 
@@ -276,7 +276,7 @@ class LeadContactDataTable extends BaseDataTable
         $data = [
 
             'check' => [
-                'title' => '<input type="checkbox" name="select_all_table" id="select-all-table" onclick="selectAllTable(this)">',
+                'title' => '<input type="checkbox" name="new_select_all_table" id="new-select-all-table"/>',
                 'exportable' => false,
                 'orderable' => false,
                 'searchable' => false

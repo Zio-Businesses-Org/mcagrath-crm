@@ -34,7 +34,7 @@ class LeadClientCustomFilterController extends AccountBaseController
 
     public function edit($id)
     {
-        $this->allEmployees = User::allEmployees(null, true, 'all');
+        $this->allEmployees = User::allEmployees(null, null, 'all');
         $this->statusLeads = StatusLead::all();
         $this->companyTypes = CompanyType::all();
         $this->filter = ClientLeadCustomFilter::findOrFail($id);

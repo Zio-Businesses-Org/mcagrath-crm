@@ -60,7 +60,7 @@ class LeadContactController extends AccountBaseController
 
         if (!request()->ajax()) {
             $this->clientFilter = ClientLeadCustomFilter::where('user_id', user()->id)->get();
-            $this->allEmployees = User::allEmployees(null, true, 'all');
+            $this->allEmployees = User::allEmployees(null, null, 'all');
             $this->statusLeads = StatusLead::all();
             $this->companyTypes = CompanyType::all();
         }
@@ -428,9 +428,37 @@ class LeadContactController extends AccountBaseController
 
     public function applyQuickAction(Request $request)
     {
-        Lead::whereIn('id', explode(',', $request->row_ids))->delete();
+        
+        switch ($request->action_type) {
+            case 'delete':
+                Lead::whereIn('id', explode(',', $request->row_ids))->delete();
 
-        return Reply::success(__('messages.deleteSuccess'));
+                return Reply::success(__('messages.deleteSuccess'));
+
+            case 'change-follow-up':
+                $items = explode(',', $request->row_ids);
+    
+                foreach ($items as $item) {
+                    
+                    $lead = Lead::findOrFail($item);
+                    $lead->next_follow_up_date=$request->nxt_follow_up_action == null ? null : companyToYmd($request->nxt_follow_up_action);
+                    $lead->save();
+                }
+    
+                return Reply::success(__('messages.updateSuccess'));
+            
+            case 'change-created-by':
+                $items = explode(',', $request->row_ids);
+    
+                foreach ($items as $item) {
+                
+                    $lead = Lead::findOrFail($item);
+                    $lead->added_by=$request->member;
+                    $lead->save();
+                }
+    
+                return Reply::success(__('messages.updateSuccess'));
+        }
     }
 
     public function importLead()
