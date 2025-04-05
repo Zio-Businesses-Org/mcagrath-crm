@@ -53,7 +53,7 @@
                                        @php
                                         $sowData = $item->sowname($sow); // Get the related model instance
                                        @endphp
-                                        {{ $sowData->sow_title }}- {{ $sowData->category }} - {{ $sowData->sub_category }}<br/>
+                                        {{ $sowData?->sow_title }}- {{ $sowData?->category }} - {{ $sowData?->sub_category }}<br/>
                                     @endforeach
                                 @endif
                             </td>
