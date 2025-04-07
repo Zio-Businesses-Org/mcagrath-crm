@@ -181,14 +181,14 @@ class ExpenseController extends AccountBaseController
         $expense->change_amt = $request->change_order_amount;
         $expense->additional_fee = $request->fee_method_id;
         $expense->payment_method = $request->payment_method; // Store the name
-
+        $expense->status = 'Pending';
         if ($userRole[0] == 'admin') {
-            $expense->status = 'approved';
+            $expense->status = 'Paid';
             $expense->approver_id = user()->id;
         }
 
         if ($request->has('status')) {
-            $expense->status = $request->status;
+            
             $expense->approver_id = user()->id;
         }
 
