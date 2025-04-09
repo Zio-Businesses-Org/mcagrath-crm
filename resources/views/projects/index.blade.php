@@ -125,10 +125,18 @@ $deleteProjectPermission = user()->permission('delete_projects');
 
             @if (!in_array('client', user_roles()))
                 <x-datatable.actions>
+                    <input type="hidden" id="member_type" name="member_type"/>
                     <div class="select-status mr-3 pl-3">
                         <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
                             <option value="">@lang('app.selectAction')</option>
                             <option value="change-status">@lang('modules.tasks.changeStatus')</option>
+                            <option value="change-project-manager">@lang('Change Project Manager')</option>
+                            <option value="change-project-coordinator">@lang('Change Project Coordinator')</option>
+                            <option value="change-project-estimator">@lang('Change Project Estimator')</option>
+                            <option value="change-accounting-analyst">@lang('Change Accounting Analyst')</option>
+                            <option value="change-escalation-manager">@lang('Change Escalation Manager')</option>
+                            <option value="change-project-scheduler">@lang('Change Project Scheduler')</option>
+                            <option value="change-vendor-recruiter">@lang('Change Vendor Recruiter')</option>
                             <option value="archive">@lang('app.archive')</option>
                             <option value="delete">@lang('app.delete')</option>
                         </select>
@@ -137,6 +145,16 @@ $deleteProjectPermission = user()->permission('delete_projects');
                         <select name="status" class="form-control select-picker">
                             @foreach ($projectStatus as $status)
                                  <option value="{{ $status->status_name }}">{{ $status->status_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="select-status mr-3 d-none quick-action-field" id="change-member-action">
+                        <select class="form-control select-picker" name="member"
+                                data-live-search="true" data-container="body" data-size="8">
+                            @foreach ($allEmployees as $category)
+                                <option value="{{ $category->id }}" >
+                                    {{ $category->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -670,7 +688,57 @@ $deleteProjectPermission = user()->permission('delete_projects');
                 if (actionValue == 'change-status') {
                     $('.quick-action-field').addClass('d-none');
                     $('#change-status-action').removeClass('d-none');
-                } else {
+                } 
+                else if(actionValue =='change-project-manager')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('project-manager');
+                    
+                }
+                else if(actionValue =='change-project-coordinator')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('project-coordinator');
+                    
+                }
+                else if(actionValue =='change-project-estimator')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('project-estimator');
+                    
+                }
+                else if(actionValue =='change-accounting-analyst')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('accounting-analyst');
+                    
+                }
+                else if(actionValue =='change-escalation-manager')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('escalation-manager');
+                    
+                }
+                else if(actionValue =='change-project-scheduler')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('project-scheduler');
+                    
+                }
+                else if(actionValue =='change-vendor-recruiter')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('vendor-recruiter');
+                    
+                }
+                else {
                     $('.quick-action-field').addClass('d-none');
                 }
             } else {
@@ -802,10 +870,11 @@ $deleteProjectPermission = user()->permission('delete_projects');
         const applyQuickAction = () => {
             var rowdIds = $("#projects-table input:checkbox:checked").map(function() {
                 return $(this).val();
-            }).get();
+            }).get().filter(value => value !== "on");
 
             var url = "{{ route('projects.apply_quick_action') }}?row_ids=" + rowdIds;
-
+            
+            
             $.easyAjax({
                 url: url,
                 container: '#quick-action-form',
@@ -815,11 +884,12 @@ $deleteProjectPermission = user()->permission('delete_projects');
                 data: $('#quick-action-form').serialize(),
                 success: function(response) {
                     if (response.status == 'success') {
-                        showTable();
+                        window.location.reload();
                         resetActionButtons();
                         deSelectAll();
                         $('#quick-action-apply').attr('disabled', 'disabled');
                         $('#change-status-action').addClass('d-none');
+                        $('#change-member-action').addClass('d-none');
                         $('#quick-action-form').hide();
                     }
                 }
@@ -834,6 +904,43 @@ $deleteProjectPermission = user()->permission('delete_projects');
 
             $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
             $.ajaxModal(MODAL_LG, url);
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Select All Checkbox Functionality
+            $('body').on("change", "#new-select-all-table", function () {
+                $("#projects-table .select-table-row").prop("checked", this.checked);
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                   // $(".select-picker").selectpicker("refresh");
+                    $("#quick-action-type,#change-member-action,#change-status-action").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                
+            });
+            $('body').on("change", ".select-table-row", function () {
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                    $("#quick-action-type,#change-member-action,#change-status-action").selectpicker("refresh");
+                    //$(".select-picker").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                 
+            });
+
+            // Individual Checkbox Click - Control Select All Checkbox
+            // $(document).on("change", ".select-table-row", function () {
+            //     let allChecked = $("#project_datatable .select-table-row").length === $("#project_datatable .select-table-row:checked").length;
+            //     $("#select-all-checkbox").prop("checked", allChecked);
+            // });
         });
 
     </script>

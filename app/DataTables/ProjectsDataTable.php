@@ -51,7 +51,7 @@ class ProjectsDataTable extends BaseDataTable
         $datatables = datatables()->eloquent($query);
         $datatables->addIndexColumn();
 
-        $datatables->addColumn('check', fn($row) => $this->checkBox($row));
+        $datatables->addColumn('check', fn($row) => $this->checkBoxProject($row));
         $datatables->addColumn('action', function ($row) {
             $memberIds = $row->members->pluck('user_id')->toArray();
 
@@ -719,6 +719,7 @@ class ProjectsDataTable extends BaseDataTable
     public function html()
     {
         $dataTable = $this->setBuilder('projects-table', 2)
+        
             ->parameters(
                 [
                     'initComplete' => 'function () {
@@ -749,11 +750,9 @@ class ProjectsDataTable extends BaseDataTable
      */
     protected function getColumns()
     {
-
-
         $data = [
             'check' => [
-                'title' => '<input type="checkbox" name="select_all_table" id="select-all-table" onclick="selectAllTable(this)">',
+                'title' => '<input type="checkbox" name="new_select_all_table" id="new-select-all-table"/>',
                 'exportable' => false,
                 'orderable' => false,
                 'searchable' => false,
@@ -827,6 +826,7 @@ class ProjectsDataTable extends BaseDataTable
         //         ->searchable(false)
         //         ->addClass('text-right pr-20')
         // ];
+        
 
         return array_merge($data, CustomFieldGroup::customFieldsDataMerge(new Project()));
     }

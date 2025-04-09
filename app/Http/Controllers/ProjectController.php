@@ -148,15 +148,94 @@ class ProjectController extends AccountBaseController
             $this->archiveRecords($request);
 
             return Reply::success(__('messages.projectArchiveSuccessfully'));
+
         case 'change-status':
             $this->changeStatus($request);
-
             return Reply::success(__('messages.updateSuccess'));
+
+        case 'change-project-manager':
+            $this->change_project_manager($request);
+            return Reply::success(__('messages.updateSuccess'));
+
+        case 'change-project-coordinator':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+
+                $project = Project::withTrashed()->findOrFail($item);
+                $project->project_coordinator_id = $request->member;
+                $project->save();
+            }
+            return Reply::success(__('messages.updateSuccess'));
+
+        case 'change-project-estimator':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+
+                $project = Project::withTrashed()->findOrFail($item);
+                $$project->est_users()->sync($request->member);
+            }
+            return Reply::success(__('messages.updateSuccess'));    
+
+        case 'change-accounting-analyst':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+
+                $project = Project::withTrashed()->findOrFail($item);
+                $$project->acct_users()->sync($request->member);
+            }
+            return Reply::success(__('messages.updateSuccess'));
+        
+        case 'change-escalation-manager':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+
+                $project = Project::withTrashed()->findOrFail($item);
+                $$project->emanager_users()->sync($request->member);
+            }
+            return Reply::success(__('messages.updateSuccess'));
+
+        case 'change-project-scheduler':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+
+                $project = Project::withTrashed()->findOrFail($item);
+                $project->project_scheuler_id = $request->member;
+                $project->save();
+            }
+            return Reply::success(__('messages.updateSuccess'));
+
+        case 'change-vendor-recruiter':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+
+                $project = Project::withTrashed()->findOrFail($item);
+                $project->vendor_recruiter_id = $request->member;
+                $project->save();
+            }
+            return Reply::success(__('messages.updateSuccess'));
+
         default:
             return Reply::error(__('messages.selectAction'));
         }
     }
 
+    protected function change_project_manager($request)
+    {
+        $items = explode(',', $request->row_ids);
+
+        foreach ($items as $item) {
+
+            $project = Project::withTrashed()->findOrFail($item);
+            $project->projectMembers()->sync($request->member);
+        }
+
+    }
     protected function deleteRecords($request)
     {
         abort_403(user()->permission('delete_projects') != 'all');
@@ -1999,7 +2078,7 @@ class ProjectController extends AccountBaseController
 
         $responseBody = $response->getBody()->getContents();
         $data = json_decode($responseBody, true);
-        Log::info($data);
+        
         if (json_last_error() !== JSON_ERROR_NONE) {
             Log::error('Error decoding JSON response: ' . json_last_error_msg());
             return redirect()->back()->with('error', 'Error processing geocoding data. Please try again.');
