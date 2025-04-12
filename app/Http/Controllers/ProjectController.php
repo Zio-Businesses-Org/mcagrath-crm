@@ -220,6 +220,30 @@ class ProjectController extends AccountBaseController
             }
             return Reply::success(__('messages.updateSuccess'));
 
+        case 'change-follow-up':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+                
+                $project = Project::withTrashed()->findOrFail($item);
+                $project->nxt_follow_up_date = $request->nxt_follow_up_action == null ? null : companyToYmd($request->nxt_follow_up_action);
+                $project->save();
+            }
+
+            return Reply::success(__('messages.updateSuccess'));
+            
+        case 'change-follow-up-time':
+            $items = explode(',', $request->row_ids);
+
+            foreach ($items as $item) {
+                
+                $project = Project::withTrashed()->findOrFail($item);
+                $project->nxt_follow_up_time = $request->nxt_follow_up_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->nxt_follow_up_time)->format('H:i:s');
+                $project->save();
+            }
+
+            return Reply::success(__('messages.updateSuccess'));
+
         default:
             return Reply::error(__('messages.selectAction'));
         }

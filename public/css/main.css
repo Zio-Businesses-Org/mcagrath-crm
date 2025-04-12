@@ -19464,5 +19464,16 @@ body.dark-theme .card-body::-webkit-scrollbar-thumb {
   background-color: #585858;
   border: 3px solid #262f3a;
 }
-
+.bootstrap-datetimepicker-widget{
+  background-color:rgb(255, 255, 255) !important;
+}
+.bootstrap-datetimepicker-widget table {
+  width: 100%;
+  margin: 0;
+}
+.bootstrap-datetimepicker-widget table td,
+.bootstrap-datetimepicker-widget table th {
+  text-align: center;
+  border-radius: 4px;
+}
 /*# sourceMappingURL=main.css.map*/

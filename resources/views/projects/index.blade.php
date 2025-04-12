@@ -137,6 +137,8 @@ $deleteProjectPermission = user()->permission('delete_projects');
                             <option value="change-escalation-manager">@lang('Change Escalation Manager')</option>
                             <option value="change-project-scheduler">@lang('Change Project Scheduler')</option>
                             <option value="change-vendor-recruiter">@lang('Change Vendor Recruiter')</option>
+                            <option value="change-follow-up">@lang('Change Next Follow Up Date')</option>
+                            <option value="change-follow-up-time">@lang('Change Next Follow Up Time')</option>
                             <option value="archive">@lang('app.archive')</option>
                             <option value="delete">@lang('app.delete')</option>
                         </select>
@@ -157,6 +159,16 @@ $deleteProjectPermission = user()->permission('delete_projects');
                                 </option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="select-status mr-3 d-none quick-action-field" id="change-follow-up-action">
+                        <input type="text" class="form-control custom-bulk-action-date-picker date-picker height-35 f-14"
+                        placeholder="Next Follow Up Date" name="nxt_follow_up_action"
+                        id="nxt_follow_up_action"/>
+                    </div>
+                    <div class="select-status mr-3 d-none quick-action-field" id="nxt-follow-up-time">
+                        <input type="text" class="form-control height-35 f-14"
+                        placeholder="Next Follow Up Time" name="nxt_follow_up_time"
+                        id="nxt_follow_up_time"/>
                     </div>
                 </x-datatable.actions>
             @endif
@@ -424,6 +436,7 @@ $deleteProjectPermission = user()->permission('delete_projects');
         var endDate = '';
         var startDatenxt = '';
         var endDatenxt = '';
+        var firstOpen = true;
 
         $('#customRange,#nxtRange').daterangepicker({
             autoUpdateInput: false,
@@ -459,6 +472,26 @@ $deleteProjectPermission = user()->permission('delete_projects');
             document.getElementById('endDate').value=endDate;
             
             $(this).val(picker.startDate.format('{{ company()->moment_date_format }}') + ' - ' + picker.endDate.format('{{ company()->moment_date_format }}'));
+            
+        });
+        $('.custom-bulk-action-date-picker').each(function(ind, el) {
+            datepicker(el, {
+                position: 'bl',
+                ...datepickerConfig
+            });
+        });
+        
+        $('#nxt_follow_up_time').datetimepicker({
+            @if (company()->time_format == 'H:i')
+                showMeridian: false,
+            @endif
+            useCurrent: false,
+            format: "hh:mm A"
+            }).on('dp.show', function() {
+            if(firstOpen) {
+                time = moment().startOf('day');
+                firstOpen = false;
+            } 
             
         });
         
@@ -736,6 +769,18 @@ $deleteProjectPermission = user()->permission('delete_projects');
                     $('.quick-action-field').addClass('d-none');
                     $('#change-member-action').removeClass('d-none');
                     $('#member_type').val('vendor-recruiter');
+                    
+                }
+                else if(actionValue =='change-follow-up')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-follow-up-action').removeClass('d-none');
+                    
+                }
+                else if(actionValue =='change-follow-up-time')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#nxt-follow-up-time').removeClass('d-none');
                     
                 }
                 else {
