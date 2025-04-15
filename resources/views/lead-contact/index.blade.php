@@ -507,7 +507,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                         },
                         success: function(response) {
                             if (response.status == "success") {
-                                showTable();
+                                window.location.reload();
                             }
                         }
                     });
