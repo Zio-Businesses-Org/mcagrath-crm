@@ -66,7 +66,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                         </select>
                 </div>
                 <div class="select-status mr-3 d-none quick-action-field" id="change-follow-up-action">
-                    <input type="text" class="form-control custom-date-picker date-picker height-35 f-14"
+                    <input type="text" class="form-control custom-date-picker-bulk date-picker height-35 f-14"
                     placeholder="Next Follow Up Date" name="nxt_follow_up_action"
                     id="nxt_follow_up_action"/>
                 </div>
@@ -183,7 +183,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
         var startDateLast = '';
         var endDateLast = '';
 
-        $('.custom-date-picker').each(function(ind, el) {
+        $('.custom-date-picker-bulk').each(function(ind, el) {
             datepicker(el, {
                 position: 'bl',
                 ...datepickerConfig

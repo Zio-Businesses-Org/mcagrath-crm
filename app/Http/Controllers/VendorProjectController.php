@@ -26,6 +26,7 @@ class VendorProjectController extends AccountBaseController
         if (!request()->ajax()) {
             $this->clients = User::allClients();
             $this->allEmployees = User::allEmployees(null, true, 'all');
+            $this->allEmployeesInactive = User::allEmployees(null, null, 'all');
             $this->vendor =  VendorContract::all();
             // $this->projectvendor = ProjectVendor::all();
             $this->projectStatus = ProjectStatusSetting::where('status', 'active')->get();

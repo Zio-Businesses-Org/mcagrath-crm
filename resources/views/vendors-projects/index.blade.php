@@ -129,6 +129,30 @@
         <a class="btn btn-secondary f-14 float-right mb-3" data-toggle="tooltip" id="custom-filter"
         data-original-title="@lang('Custom Filter')"><i class="side-icon bi bi-filter"></i></a>
         <div id="table-actions" class="flex-grow-1 align-items-center mb-2 mb-lg-0 mb-md-0"></div>
+        <x-datatable.actions>
+            <div class="select-status mr-3 pl-3">
+                <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
+                    <option value="">@lang('app.selectAction')</option>
+                    <option value="change-project-coordinator">@lang('Change Project Coordinator')</option>
+                    <option value="change-follow-up">@lang('Change Next Follow Up Date')</option>
+                </select>
+            </div>
+            <div class="select-status mr-3 d-none quick-action-field" id="change-project-coordinator-action">
+                    <select class="form-control select-picker" name="member"
+                            data-live-search="true" data-container="body" data-size="8">
+                        @foreach ($allEmployeesInactive as $category)
+                            <option value="{{ $category->name }}" >
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+            </div>
+            <div class="select-status mr-3 d-none quick-action-field" id="change-follow-up-action">
+                <input type="text" class="form-control custom-date-picker date-picker height-35 f-14"
+                placeholder="Next Follow Up Date" name="nxt_follow_up_action"
+                id="nxt_follow_up_action"/>
+            </div>
+        </x-datatable.actions>
         <div class="d-flex flex-column w-tables rounded mt-3 bg-white table-responsive">
 
             {!! $dataTable->table(['class' => 'table table-hover border-0 w-100']) !!}
@@ -522,5 +546,98 @@ $('#reset-filters,#reset-filters-2').click(function() {
     $('#reset-filters').addClass('d-none');
     showTable();
 });    
+$('#quick-action-type').change(function() {
+    const actionValue = $(this).val();
+    if (actionValue != '') {
+        $('#quick-action-apply').removeAttr('disabled');
+
+        if (actionValue == 'change-follow-up') {
+            $('.quick-action-field').addClass('d-none');
+            $('#change-follow-up-action').removeClass('d-none');
+        } 
+        else if(actionValue =='change-project-coordinator')
+        {
+            $('.quick-action-field').addClass('d-none');
+            $('#change-project-coordinator-action').removeClass('d-none');
+            
+        }
+        else {
+            $('.quick-action-field').addClass('d-none');
+        }
+    } else {
+        $('#quick-action-apply').attr('disabled', true);
+        $('.quick-action-field').addClass('d-none');
+    }
+});
+
+$('#quick-action-apply').click(function() {
+    
+    applyQuickAction();
+});
+const applyQuickAction = () => {
+    var rowdIds = $("#vendorstrack-table input:checkbox:checked").map(function() {
+        return $(this).val();
+    }).get().filter(value => value !== "on");
+
+    var url = "{{ route('leads.apply_quick_action') }}?row_ids=" + rowdIds;
+    
+    
+    $.easyAjax({
+        url: url,
+        container: '#quick-action-form',
+        type: "POST",
+        disableButton: true,
+        buttonSelector: "#quick-action-apply",
+        data: $('#quick-action-form').serialize(),
+        success: function(response) {
+            if (response.status == 'success') {
+                window.location.reload();
+                resetActionButtons();
+                deSelectAll();
+                $('#quick-action-apply').attr('disabled', 'disabled');
+                $('#change-status-action').addClass('d-none');
+                $('#change-member-action').addClass('d-none');
+                $('#quick-action-form').hide();
+            }
+        }
+    })
+};
+</script>
+<script>
+    $(document).ready(function () {
+        // Select All Checkbox Functionality
+        $('body').on("change", "#new-select-all-table", function () {
+            $("#vendors-projects-table .select-table-row").prop("checked", this.checked);
+            if ($(".select-table-row:checked").length > 0){
+                $("#quick-action-form").fadeIn();
+                $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                $("#quick-actions").find("button").removeClass("disabled");
+                // $(".select-picker").selectpicker("refresh");
+                $("#quick-action-type,#change-member-action,#change-status-action").selectpicker("refresh");
+            } else {
+                $("#quick-action-form").fadeOut();
+            }
+            
+        });
+        $('body').on("change", ".select-table-row", function () {
+            if ($(".select-table-row:checked").length > 0){
+                $("#quick-action-form").fadeIn();
+                $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                $("#quick-actions").find("button").removeClass("disabled");
+                $("#quick-action-type,#change-member-action,#change-status-action").selectpicker("refresh");
+                //$(".select-picker").selectpicker("refresh");
+            } else {
+                $("#quick-action-form").fadeOut();
+            }
+                
+        });
+
+        // Individual Checkbox Click - Control Select All Checkbox
+        // $(document).on("change", ".select-table-row", function () {
+        //     let allChecked = $("#project_datatable .select-table-row").length === $("#project_datatable .select-table-row:checked").length;
+        //     $("#select-all-checkbox").prop("checked", allChecked);
+        // });
+    });
+
 </script>
 @endpush

@@ -29,7 +29,7 @@ class VendorProjectDataTable extends BaseDataTable
         $sow_name=[];
         $datatables = datatables()->eloquent($query);
         $datatables->addIndexColumn();
-      
+        $datatables->addColumn('check', fn($row) => $this->checkBoxProject($row));
         
         $datatables->editColumn('id', fn($row) => $row->id);
         $datatables->editColumn('client_id', fn($row) => $row->client?->id ? view('components.client', ['user' => $row->client]) : '');
@@ -163,7 +163,7 @@ class VendorProjectDataTable extends BaseDataTable
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
        
-        $datatables->rawColumns(array_merge(['project','members']));
+        $datatables->rawColumns(array_merge(['project','members','check']));
         return $datatables;
     }
 
@@ -279,7 +279,13 @@ class VendorProjectDataTable extends BaseDataTable
     protected function getColumns()
     {
         $data = [
-            
+            'check' => [
+                'title' => '<input type="checkbox" name="new_select_all_table" id="new-select-all-table"/>',
+                'exportable' => false,
+                'orderable' => false,
+                'searchable' => false,
+                'visible' => !in_array('client', user_roles())
+            ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('modules.projects.members') => ['data' => 'members', 'name' => 'members', 'exportable' => false, 'width' => '15%', 'title' => __('modules.projects.members')],
