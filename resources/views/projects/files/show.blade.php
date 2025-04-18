@@ -5,7 +5,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
 @endphp
 
 @forelse($files as $file)
-    <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
+    <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()" :userName="$file->user->name">
         @if ($file->icon == 'images')
             <img src="{{ $file->file_url }}">
         @else

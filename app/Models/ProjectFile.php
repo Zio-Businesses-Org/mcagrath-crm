@@ -68,5 +68,9 @@ class ProjectFile extends BaseModel
     {
         return $this->belongsTo(Project::class);
     }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'added_by')->withoutGlobalScope(ActiveScope::class);
+    }
 
 }

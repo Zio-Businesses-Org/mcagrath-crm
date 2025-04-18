@@ -40,6 +40,14 @@ class VendorProjectDataTable extends BaseDataTable
         $datatables->editColumn('project_status', fn($row) => $row->project->status);
         $datatables->editColumn('created_at', fn($row) => $row->created_at?Carbon::parse($row->created_at)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('updated_at', fn($row) => $row->updated_at?Carbon::parse($row->updated_at)->translatedFormat($this->company->date_format):'N/A');
+        $datatables->editColumn('nxtfollowdt', function ($row){
+            return '
+                    <div class="media align-items-center justify-content-center mr-3">
+                    <td> '. $row->project->nxt_follow_up_date?->translatedFormat($this->company->date_format) . '</td> 
+                    <td> '. ($row->project->nxt_follow_up_time ? Carbon::createFromFormat('H:i:s', $row->nxt_follow_up_time)->format($this->company->time_format) : null) . '</td>
+                    </div>
+                      ';
+        });
         $datatables->editColumn('inspection_date', fn($row) => $row->inspection_date?Carbon::parse($row->inspection_date)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('inspection_time', fn($row) => $row->inspection_time?Carbon::parse($row->inspection_time)->translatedFormat($this->company->time_format):'N/A');
         $datatables->editColumn('re_inspection_date', fn($row) => $row->re_inspection_date?Carbon::parse($row->re_inspection_date)->translatedFormat($this->company->date_format):'N/A');
@@ -73,7 +81,9 @@ class VendorProjectDataTable extends BaseDataTable
             if ($row->public) {
                 return '--';
             }
-
+            $roleMembers = [
+                0 => $row->project->project_coordinator,
+            ];           
             $members = '<div class="position-relative">';
             if (count($row->project?->members) > 0) {
                 foreach ($row->project?->members as $key => $member) {
@@ -117,6 +127,17 @@ class VendorProjectDataTable extends BaseDataTable
                         $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
                     }
 
+                }
+            }
+            $members .= '<br/>';
+            foreach ($roleMembers as $key => $member) {
+                
+                if ($member) {
+                    $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
+                    $position = $key > 0 ? 'position-absolute' : '';
+                    $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left: ' . ($key * 13) . 'px">
+                                    <a href="' . route('employees.show', $member->id) . '">' . $img . '</a>
+                                 </div>';
                 }
             }
             if (count($row->project?->members) > 4) {
@@ -163,7 +184,7 @@ class VendorProjectDataTable extends BaseDataTable
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
        
-        $datatables->rawColumns(array_merge(['project','members','check']));
+        $datatables->rawColumns(array_merge(['project','members','check','nxtfollowdt']));
         return $datatables;
     }
 
@@ -174,7 +195,7 @@ class VendorProjectDataTable extends BaseDataTable
     public function query(ProjectVendor $model)
     {
         $request = $this->request();
-        $users = ProjectVendor::with(['client', 'project','vendors','project.members'])
+        $users = ProjectVendor::with(['client', 'project','vendors','project.members','project.project_coordinator'])
         ->leftJoin('projects', 'projects.id', '=', 'project_vendors.project_id')
         ->leftJoin('property_details', 'property_details.id', '=', 'projects.property_details_id') 
         ->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')// Join projects table
@@ -182,7 +203,8 @@ class VendorProjectDataTable extends BaseDataTable
         ->leftJoin('project_accountings', 'project_accountings.project_id', 'projects.id')
         ->leftJoin('project_emanagers', 'project_emanagers.project_id', 'projects.id')
         ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
-        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status','projects.client_id','projects.category_id','project_category.category_name')
+        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status','projects.client_id'
+        ,'projects.category_id','project_category.category_name','projects.nxt_follow_up_date','projects.nxt_follow_up_time','projects.project_coordinator_id','projects.project_scheduler_id','projects.vendor_recruiter_id')
         ->groupBy('project_vendors.id');
         $users = $users->orderBy('id', 'desc');
         $users = self::customFilter($users);
@@ -305,6 +327,7 @@ class VendorProjectDataTable extends BaseDataTable
             __('Project Category') => ['data' => 'category_name', 'name' => 'category_name', 'title' => __('Project Category')],
             __('Link Sent Date') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Link Sent Date')],
             __('Due Date') => ['data' => 'due_date', 'name' => 'due_date', 'title' => __('Due Date')],
+            __('Next Follow Up Date & Time') => ['data' => 'nxtfollowdt', 'name' => 'nxtfollowdt', 'title' => __('Next Follow Up Date & Time'), 'width' => '12%'],
             __('Inspection Date') => ['data' => 'inspection_date', 'name' => 'inspection_date', 'title' => __('Inspection Date')],
             __('Inspection Time') => ['data' => 'inspection_time', 'name' => 'inspection_time', 'title' => __('Inspection Time')],
             __('Re Inspection Date') => ['data' => 're_inspection_date', 'name' => 're_inspection_date', 'title' => __('Re Inspection Date')],

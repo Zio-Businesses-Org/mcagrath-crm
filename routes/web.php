@@ -960,6 +960,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
     //Project - Vendors
     Route::resource('vendorproject', VendorProjectController::class);
+    Route::post('vendorproject/apply-quick-action', [VendorProjectController::class, 'applyQuickAction'])->name('vendorproject.apply_quick_action');
 
     //Vendor Estimate Files
     Route::get('vendor-estimates-files/download/{id}', [VendorEstimateFilesController::class, 'download'])->name('vendor-estimates-files.download');

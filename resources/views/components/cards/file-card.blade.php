@@ -1,3 +1,4 @@
+@props(['userName' => null])
  <div {{ $attributes->merge(['class' => 'card bg-white border-grey file-card mr-3 mb-3']) }} >
      <div class="card-horizontal">
          <div class="card-img mr-0">
@@ -12,6 +13,9 @@
              </div>
              <div class="card-date f-11 text-lightest">
                  {{ $dateAdded }}
+             </div>
+             <div class="card-date f-11 text-lightest">
+                 {{ $userName ?? '' }}
              </div>
          </div>
      </div>

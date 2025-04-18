@@ -88,7 +88,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
             <div class="d-flex flex-wrap mt-3" id="task-file-list">
                 @forelse($project->files as $file)
 
-                    <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
+                    <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()" :userName="$file->user->name">
                         @if ($file->icon == 'images')
                             <img src="{{ $file->file_url }}">
                             <input type="checkbox" class="file-checkbox" name="selected_files[]"  data-url="{{ $file->file_url }}">
