@@ -148,7 +148,7 @@ class ProjectFileController extends AccountBaseController
 
             $key = Str::random(10);
 
-            Cache::put('shared_files_' . $key, $files, GlobalSetting::SIGNED_ROUTE_EXPIRY);
+            Cache::put('shared_files_' . $key, $files, now()->addDays(3));
 
             $url = url()->temporarySignedRoute(
                 'shared.files.access',
