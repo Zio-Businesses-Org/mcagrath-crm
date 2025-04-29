@@ -52,9 +52,9 @@ class ProjectVendorRemoved extends BaseNotification
     {
         $build = parent::build();
         $content = __('Please note that the work order # ') . $this->vendor->project->project_short_code .' for Property Address - '. $this->vendor->project->propertyDetails->property_address .' has been re-assigned or cancelled with you. If you have any questions, please call the office immediately';
-
+        $subject = $this->vendor->project->project_short_code . 'and Cancellation Notice' ;
         return $build
-            ->subject($this->vendor->project->project_short_code)
+            ->subject($subject)
             ->markdown('mail.removed', [
                 'content' => $content,
                 'notifiableName'=>$this->vendor->vendor_name,
