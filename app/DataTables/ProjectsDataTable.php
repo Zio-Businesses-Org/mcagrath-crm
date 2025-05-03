@@ -360,6 +360,10 @@ class ProjectsDataTable extends BaseDataTable
                     </div>
                       ';
         });
+        $datatables->orderColumn('nxtfollowdt', function ($query, $order) {
+            $query->orderBy('nxt_follow_up_date', $order)
+                  ->orderBy('nxt_follow_up_time', $order);
+        });        
         $datatables->editColumn('wsdt', function ($row){
             return '
                     <div class="media align-items-center justify-content-center mr-3">
@@ -479,7 +483,7 @@ class ProjectsDataTable extends BaseDataTable
         }
 
         $model = $model
-            ->with('members', 'members.user', 'client', 'client.clientDetails', 'currency', 'client.session', 'mentionUser','projectvendortable')
+            ->with('members', 'members.user', 'client', 'client.clientDetails', 'currency', 'client.session', 'mentionUser','projectvendortable','acct_users','emanager_users','est_users','vendor_recruiter','project_scheduler','project_coordinator')
             ->leftJoin('project_members', 'project_members.project_id', 'projects.id')
             ->leftJoin('users', 'project_members.user_id', 'users.id')
             ->leftJoin('project_estimators', 'project_estimators.project_id', 'projects.id')
