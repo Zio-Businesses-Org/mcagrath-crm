@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/css/datepicker.min.css') }}">
     <!-- Simple Line Icons -->
     <link rel="stylesheet" href="{{ asset('vendor/css/simple-line-icons.css') }}">
-
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Allura&family=Dancing+Script&family=Pacifico&display=swap" rel="stylesheet">
     <!-- Template CSS -->
     <link type="text/css" rel="stylesheet" media="all" href="{{ asset('css/main.css') }}">
 
@@ -86,6 +86,12 @@
     <style>
         #logo {
             height: 100px;
+        }
+         #preview {
+            min-height: 60px; /* Ensures enough space for canvas */
+            padding: 10px;
+            white-space: nowrap;
+            display: inline-block;
         }
 
     </style>
@@ -351,7 +357,7 @@
                                     <div class="modal-body">
                                         <x-form id="acceptEstimate">
                                             <div class="row">
-                                                <div class="col-sm-12 bg-grey p-4 signature">
+                                                <div class="col-sm-12 bg-grey p-4 signature d-none">
                                                     <x-forms.label fieldId="signature-pad" fieldRequired="true" :fieldLabel="__('modules.estimates.signature')" />
                                                     <div class="signature_wrap wrapper border-0 form-control">
                                                         <canvas id="signature-pad" class="signature-pad rounded" width=400 height=150></canvas>
@@ -361,11 +367,27 @@
                                                     <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.estimates.signature')" fieldName="image"
                                                         fieldId="image" :popover="('messages.fileFormat.ImageFile')" fieldRequired="true" />
                                                 </div>
+                                                <div class="col-sm-12 p-4 generate-sign">
+                                                    <div class="mb-3">
+                                                        <x-forms.text :fieldLabel="__('Enter Your Name')" fieldName="nameInput" fieldId="nameInput"  />
+                                                    </div>
+
+                                                    <x-forms.button-primary id="generateBtn" icon="check">@lang('Generate Signatures')</x-forms.button-primary><br/>
+
+                                                    <x-forms.select fieldId="signatureSelect" :fieldLabel="__('Choose Signature Style')" fieldName="signatureSelect" fieldRequired="true">
+                                                    </x-forms.select>
+                                                    
+                                                    <div class="mt-4">
+                                                        <h5>Preview:</h5>
+                                                        <div id="preview" class="signature-option"></div>
+                                                    </div>
+                                                </div>
                                                 <div class="col-sm-12 mt-3">
-                                                    <x-forms.button-secondary id="undo-signature" class="signature">@lang('modules.estimates.undo')</x-forms.button-secondary>
-                                                    <x-forms.button-secondary class="ml-2 signature" id="clear-signature">@lang('modules.estimates.clear')</x-forms.button-secondary>
-                                                    <x-forms.button-secondary class="ml-2" id="toggle-pad-uploader">@lang('modules.estimates.uploadSignature')
-                                                    </x-forms.button-secondary>
+                                                    <x-forms.button-secondary id="undo-signature" class="signature d-none">@lang('modules.estimates.undo')</x-forms.button-secondary>
+                                                    <x-forms.button-secondary class="ml-2 signature d-none" id="clear-signature">@lang('modules.estimates.clear')</x-forms.button-secondary>
+                                                    <x-forms.button-secondary class="ml-2" id="toggle-pad-uploader">@lang('modules.estimates.uploadSignature')</x-forms.button-secondary>
+                                                    <x-forms.button-secondary class="ml-2" id="toggle-draw-sign">@lang('Draw Sign')</x-forms.button-secondary>
+                                                    <x-forms.button-secondary class="ml-2" id="toggle-generate-sign">@lang('Generate Sign')</x-forms.button-secondary>
                                                 </div>
                                                 
                                             </div>
@@ -380,10 +402,10 @@
                         </div>
                     </div>
                     <x-form-actions>
-                        <x-forms.link-primary class="mb-2" link="javascript:;" data-toggle="modal"
-                                              data-target="#signature-modal" icon="check">@lang('app.sign')
+                        <x-forms.link-primary class="" link="javascript:;" data-toggle="modal"
+                            data-target="#signature-modal" icon="check">@lang('app.sign')
                         </x-forms.link-primary>
-                        <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0">@lang('app.cancel')
+                        <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0 ml-3">@lang('app.cancel')
                         </x-forms.button-cancel>
                     </x-form-actions>
                 </div>
@@ -398,11 +420,13 @@
 
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-var fieldIds = ['#gl_ins_exp', '#wc_ins_exp', '#license_exp'];
+    var fieldIds = ['#gl_ins_exp', '#wc_ins_exp', '#license_exp'];
+    
      $(fieldIds.join(',')).on('keydown input', function(event) {
     // Allow backspace, delete, tab, and arrow keys for navigation
-    var allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'];
+        var allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'];
 
         if (allowedKeys.includes(event.key)) {
             this.readOnly = false;
@@ -521,7 +545,11 @@ var fieldIds = ['#gl_ins_exp', '#wc_ins_exp', '#license_exp'];
 <script>
     
     var canvas = document.getElementById('signature-pad');
-
+    const fonts = ['Great Vibes', 'Dancing Script', 'Allura', 'Pacifico'];
+    const nameInput = document.getElementById('nameInput');
+    const preview = document.getElementById('preview');
+    const select = $('#signatureSelect');
+    const generateBtn = document.getElementById('generateBtn');
     var signaturePad = new SignaturePad(canvas, {
         backgroundColor: 'rgb(255, 255, 255)' // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
     });
@@ -539,80 +567,158 @@ var fieldIds = ['#gl_ins_exp', '#wc_ins_exp', '#license_exp'];
             signaturePad.fromData(data);
         }
     });
+
+    function generateOptions(name) {
+      select.empty(); // Clear existing options
+      fonts.forEach(font => {
+        const option = `<option value="${font}" data-content="<span class='signature-option' style='font-family: ${font};'>${name}</span>">${font}</option>`;
+        select.append(option);
+      });
+      select.selectpicker('refresh');
+      updatePreview(select.val(), name);
+    }
+
+    function updatePreview(font, name) {
+      preview.style.fontFamily = `'${font}', cursive`;
+      preview.textContent = name;
+    }
+
+    // On "Generate Signatures" button click
+    generateBtn.addEventListener('click', function () {
+      const newName = nameInput.value.trim() || ' ';
+      generateOptions(newName);
+    });
+
+    // When dropdown option is changed
+    select.on('changed.bs.select', function () {
+      updatePreview($(this).val(), nameInput.value.trim());
+    });
+
+    // Optional: initialize empty
+    $(document).ready(function () {
+      select.selectpicker(); // initialize once
+    });
     $('#toggle-pad-uploader').click(function () {
-        var text = $('.signature').hasClass('d-none') ? '{{ __("modules.estimates.uploadSignature") }}' : '{{ __("app.sign") }}';
+        $('.upload-image').removeClass('d-none');
+        $('.generate-sign').addClass('d-none');
+        $('.signature').addClass('d-none');
+    });
+    $('#toggle-draw-sign').click(function () {
 
-        $(this).html(text);
-
-        $('.signature').toggleClass('d-none');
-        $('.upload-image').toggleClass('d-none');
+        $('#clear-signature').addClass('d-none');
+        $('#undo-signature').addClass('d-none');
+        $('.signature').removeClass('d-none');
+        $('.generate-sign').addClass('d-none');
+        $('.upload-image').addClass('d-none');
+    });
+    $('#toggle-generate-sign').click(function () {
+        $('.generate-sign').removeClass('d-none');
+        $('.upload-image').addClass('d-none');
+        $('.signature').addClass('d-none');
     });
 </script>
 <script>
-$('#save-signature').click(function () {
+function submit(signature,signature_type)
+{
     var id="{{$id}}";
-    var signature = signaturePad.toDataURL('image/png');
-    var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
+    $.easyAjax({
+
+        url: "{{route('front.vendor.save')}}",
+        container: '#save-lead-data-form',
+        type: "POST",
+        file: true,
+        disableButton: true,
+        blockUI: true,
+        // data: $('#save-lead-data-form').serialize()+ '&' + $.param({signature: signature, signature_type: signature_type}),
+        data:{
+            signature:signature,
+            signature_type:signature_type,
+            details:$('#save-lead-data-form').serialize(),
+            id:id,
+            contract_start:"{{$startdate}}",
+            contract_end:"{{$enddate}}"
+        },
+        success: function(response) {
+            $('#signature-modal').modal('hide');
+            setTimeout(() => {
+            history.back();
+            }, 2000);
+        }
+    });
+}
+$('#save-signature').click(function () {
+    
+    // var signature = signaturePad.toDataURL('image/png');
+    // var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
     var checkboxes = document.querySelectorAll('input[name="payment_methods[]"]');
     var isChecked = Array.prototype.slice.call(checkboxes).some(x => x.checked);
-    if (signaturePad.isEmpty() && !$('.signature').hasClass('d-none')) {
-            Swal.fire({
-                icon: 'error',
-                text: '{{ __('messages.signatureRequired') }}',
+    
+    if (signaturePad.isEmpty() && !$('.signature').hasClass('d-none') && !select.val()) {
+        Swal.fire({
+            icon: 'error',
+            text: '{{ __('messages.signatureRequired') }}',
 
-                customClass: {
-                    confirmButton: 'btn btn-primary',
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-            });
-            return false;
-        }
-        if (!isChecked) {
-                $('#signature-modal').modal('hide');
-                Swal.fire({
-                icon: 'error',
-                text: '{{ __('Payment Method Required') }}',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        });
+        return false;
+    }
+    if (!isChecked) {
 
-                customClass: {
-                    confirmButton: 'btn btn-primary',
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-                });
-                return false;
-        }
+        $('#signature-modal').modal('hide');
+        Swal.fire({
+        icon: 'error',
+        text: '{{ __('Payment Method Required') }}',
+
+        customClass: {
+            confirmButton: 'btn btn-primary',
+        },
+        showClass: {
+            popup: 'swal2-noanimation',
+            backdrop: 'swal2-noanimation'
+        },
+        buttonsStyling: false
+        });
+        return false;
+    }
         
-    $.easyAjax({
-                url: "{{route('front.vendor.save')}}",
-                container: '#save-lead-data-form',
-                type: "POST",
-                file: true,
-                disableButton: true,
-                blockUI: true,
-                // data: $('#save-lead-data-form').serialize()+ '&' + $.param({signature: signature, signature_type: signature_type}),
-                data:{
-                    signature:signature,
-                    signature_type:signature_type,
-                    details:$('#save-lead-data-form').serialize(),
-                    id:id,
-                    contract_start:"{{$startdate}}",
-                    contract_end:"{{$enddate}}"
-                },
-                success: function(response) {
-                    $('#signature-modal').modal('hide');
-                   setTimeout(() => {
-                    history.back();
-                   }, 2000);
-                }
-            });
+    if(!$('.signature').hasClass('d-none'))
+    {
+        var signature = signaturePad.toDataURL('image/png');
+        var signature_type = 'signature';
+        submit(signature,signature_type);
+    }
+    else if (!$('.upload-image').hasClass('d-none'))
+    {
+        var signature = '';
+        var signature_type = 'upload';
+        submit(signature,signature_type);
+    }
+    else
+    {
+        var signature_type = 'signature';
+        html2canvas(document.getElementById('preview'), {
+            backgroundColor: '#ffffff',
+            useCORS: true,
+            scale: 2 
+            }).then(function(canvas) {
+            var signaturegenerate = canvas.toDataURL('image/png');
+            submit(signaturegenerate,signature_type);
+        });
+        
+    }
+    
+    
+    
 });
+
+
 </script>
 
 </html>
