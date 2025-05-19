@@ -19,6 +19,7 @@
                     <x-slot name="thead">
                         <th class="pl-20">#</th>
                         <th>@lang('Vendor Name')</th>
+                        <th>@lang('Company Name')</th>
                         <th>@lang('app.mobile')</th>
                         <th>@lang('app.email')</th>
                         <th>@lang('Project Amount')</th>
@@ -37,6 +38,9 @@
                             <td>
                                 <a href="javascript:;" class="sow-detail text-darkest-grey f-w-500"
                                     data-sow-id="{{ $item->id }}">{{ $item->vendor_name }}</a>
+                            </td>
+                            <td>
+                                {{ $item->vendors->company_name ?? ''}}
                             </td>
                             <td>
                                 {{$item->vendor_phone}}

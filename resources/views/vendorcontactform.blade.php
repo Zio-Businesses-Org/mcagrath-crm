@@ -123,7 +123,7 @@
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.tel fieldId="vendor_mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="vendor_mobile"
+                            <x-forms.tel fieldId="vendor_mobile" :fieldLabel="__('Mobile (Text) #')" fieldName="vendor_mobile"
                             :fieldPlaceholder="__('placeholders.mobile')" fieldRequired="true"></x-forms.tel>
                         </div>
 
@@ -161,7 +161,7 @@
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.office')" fieldName="office"
+                            <x-forms.text :fieldLabel="__('Office (Call) #')" fieldName="office"
                                 fieldId="office" fieldRequired="true" />
                         </div>
 
@@ -345,66 +345,60 @@
                                 </div>
                             </div>                                     
                         </div>
-                        
-                        <div id="signature-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog d-flex justify-content-center align-items-center modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modelHeading">@lang('modules.estimates.cpatureAndConfirmation')</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <x-form id="acceptEstimate">
-                                            <div class="row">
-                                                <div class="col-sm-12 bg-grey p-4 signature d-none">
-                                                    <x-forms.label fieldId="signature-pad" fieldRequired="true" :fieldLabel="__('modules.estimates.signature')" />
-                                                    <div class="signature_wrap wrapper border-0 form-control">
-                                                        <canvas id="signature-pad" class="signature-pad rounded" width=400 height=150></canvas>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-12 p-4 d-none upload-image">
-                                                    <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.estimates.signature')" fieldName="image"
-                                                        fieldId="image" :popover="('messages.fileFormat.ImageFile')" fieldRequired="true" />
-                                                </div>
-                                                <div class="col-sm-12 p-4 generate-sign">
-                                                    <div class="mb-3">
-                                                        <x-forms.text :fieldLabel="__('Enter Your Name')" fieldName="nameInput" fieldId="nameInput"  />
-                                                    </div>
+                        <div class="container mt-4">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="generate-sign-tab" data-bs-toggle="tab" data-bs-target="#generate_sign"
+                                        type="button" role="tab" aria-controls="generate_sign" aria-selected="true">Generate Sign</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="draw-sign-tab" data-bs-toggle="tab" data-bs-target="#draw_sign"
+                                        type="button" role="tab" aria-controls="draw_sign" aria-selected="false">Draw Sign</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="upload-sign-tab" data-bs-toggle="tab" data-bs-target="#upload_sign"
+                                        type="button" role="tab" aria-controls="upload_sign" aria-selected="false">Upload Sign</button>
+                                </li>
+                                
+                            </ul>
 
-                                                    <x-forms.button-primary id="generateBtn" icon="check">@lang('Generate Signatures')</x-forms.button-primary><br/>
-
-                                                    <x-forms.select fieldId="signatureSelect" :fieldLabel="__('Choose Signature Style')" fieldName="signatureSelect" fieldRequired="true">
-                                                    </x-forms.select>
-                                                    
-                                                    <div class="mt-4">
-                                                        <h5>Preview:</h5>
-                                                        <div id="preview" class="signature-option"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-12 mt-3">
-                                                    <x-forms.button-secondary id="undo-signature" class="signature d-none">@lang('modules.estimates.undo')</x-forms.button-secondary>
-                                                    <x-forms.button-secondary class="ml-2 signature d-none" id="clear-signature">@lang('modules.estimates.clear')</x-forms.button-secondary>
-                                                    <x-forms.button-secondary class="ml-2" id="toggle-pad-uploader">@lang('modules.estimates.uploadSignature')</x-forms.button-secondary>
-                                                    <x-forms.button-secondary class="ml-2" id="toggle-draw-sign">@lang('Draw Sign')</x-forms.button-secondary>
-                                                    <x-forms.button-secondary class="ml-2" id="toggle-generate-sign">@lang('Generate Sign')</x-forms.button-secondary>
-                                                </div>
-                                                
-                                            </div>
-                                        </x-form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <x-forms.button-cancel data-dismiss="modal" class="border-0 mr-3">@lang('app.cancel')</x-forms.button-cancel>
-                                        <x-forms.button-primary id="save-signature" icon="check">@lang('app.submit')</x-forms.button-primary>
+                            <!-- Tab panes -->
+                            <div class="tab-content mt-3">
+                                
+                                <div class="tab-pane fade col-sm-12 bg-grey p-4 signature bg-grey" id="draw_sign" role="tabpanel" aria-labelledby="draw-sign-tab">
+                                    <div class="signature_wrap wrapper border-0 form-control">
+                                        <canvas id="signature-pad" class="signature-pad rounded" width=400 height=150></canvas>
                                     </div>
                                 </div>
+                                
+                                <div class="tab-pane fade col-sm-12 p-4 upload-image" id="upload_sign" role="tabpanel" aria-labelledby="upload-sign-tab">
+                                    <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('')" fieldName="image"
+                                        fieldId="image" fieldRequired="true" />
+                                </div>
+              
+                                <div class="col-sm-12 p-4 generate-sign tab-pane fade show active" id="generate_sign" role="tabpanel" aria-labelledby="generate-sign-tab">
+                                    <div class="mb-3">
+                                        <x-forms.text :fieldLabel="__('Enter Your Name')" fieldName="nameInput" fieldId="nameInput"  fieldRequired="true"/>
+                                    </div>
+
+                                    <x-forms.button-primary id="generateBtn" icon="check">@lang('Generate Signatures')</x-forms.button-primary><br/>
+
+                                    <x-forms.select fieldId="signatureSelect" :fieldLabel="__('Choose Signature Style')" fieldName="signatureSelect" fieldRequired="true">
+                                    </x-forms.select>
+                                    
+                                    <div class="mt-4">
+                                        <h5>Preview:</h5>
+                                        <div id="preview" class="signature-option"></div>
+                                    </div>
+                                </div>
+                                <x-forms.button-secondary id="undo-signature" class="signature d-none mt-3">@lang('modules.estimates.undo')</x-forms.button-secondary>
+                                <x-forms.button-secondary class="ml-2 signature d-none mt-3" id="clear-signature">@lang('modules.estimates.clear')</x-forms.button-secondary>
                             </div>
                         </div>
                     </div>
                     <x-form-actions>
-                        <x-forms.link-primary class="" link="javascript:;" data-toggle="modal"
-                            data-target="#signature-modal" icon="check">@lang('app.sign')
-                        </x-forms.link-primary>
+                        <x-forms.button-primary id="save-signature" icon="check">@lang('app.submit')</x-forms.button-primary>
                         <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0 ml-3">@lang('app.cancel')
                         </x-forms.button-cancel>
                     </x-form-actions>
@@ -421,6 +415,7 @@
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     var fieldIds = ['#gl_ins_exp', '#wc_ins_exp', '#license_exp'];
     
@@ -598,23 +593,21 @@
     $(document).ready(function () {
       select.selectpicker(); // initialize once
     });
-    $('#toggle-pad-uploader').click(function () {
-        $('.upload-image').removeClass('d-none');
-        $('.generate-sign').addClass('d-none');
-        $('.signature').addClass('d-none');
+
+    $('#draw-sign-tab').click(function () {
+
+        $('#clear-signature').removeClass('d-none');
+        $('#undo-signature').removeClass('d-none');
     });
-    $('#toggle-draw-sign').click(function () {
+    $('#upload-sign-tab').click(function () {
 
         $('#clear-signature').addClass('d-none');
         $('#undo-signature').addClass('d-none');
-        $('.signature').removeClass('d-none');
-        $('.generate-sign').addClass('d-none');
-        $('.upload-image').addClass('d-none');
     });
-    $('#toggle-generate-sign').click(function () {
-        $('.generate-sign').removeClass('d-none');
-        $('.upload-image').addClass('d-none');
-        $('.signature').addClass('d-none');
+    $('#generate-sign-tab').click(function () {
+
+        $('#clear-signature').addClass('d-none');
+        $('#undo-signature').addClass('d-none');
     });
 </script>
 <script>
@@ -652,8 +645,8 @@ $('#save-signature').click(function () {
     // var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
     var checkboxes = document.querySelectorAll('input[name="payment_methods[]"]');
     var isChecked = Array.prototype.slice.call(checkboxes).some(x => x.checked);
-    
-    if (signaturePad.isEmpty() && !$('.signature').hasClass('d-none') && !select.val()) {
+    var uploadSign = $('#upload_sign')
+    if (signaturePad.isEmpty() && !uploadSign.val() && !select.val()) {
         Swal.fire({
             icon: 'error',
             text: '{{ __('messages.signatureRequired') }}',
@@ -688,13 +681,13 @@ $('#save-signature').click(function () {
         return false;
     }
         
-    if(!$('.signature').hasClass('d-none'))
+    if(!signaturePad.isEmpty())
     {
         var signature = signaturePad.toDataURL('image/png');
         var signature_type = 'signature';
         submit(signature,signature_type);
     }
-    else if (!$('.upload-image').hasClass('d-none'))
+    else if (uploadSign.val())
     {
         var signature = '';
         var signature_type = 'upload';

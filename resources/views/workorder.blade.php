@@ -118,7 +118,7 @@
                             {{ $company->company_name }}<br>
                             {!! nl2br($company->defaultAddress->address) !!}<br>
                             Phone #: {{ $company->company_phone }}<br>
-                            Email: <a href="{{$company->website}}">{{ $company->company_email }}</a><br>
+                            Email: <a href="{{$company->website}}">vendors@mcresi.com</a><br>
                             Website: <a href="{{$company->website}}">{{ $company->website }}</a>
                         </p>
                     </div>
@@ -278,6 +278,7 @@
             <div>
                 @if($projectvendor->changenotification)
                     @foreach($projectvendor->changenotification as $key => $changenotify)
+                    @if($changenotify->link_status != 'Removed')
                         <hr class="custom-line">
                         <h4 class="f-14 font-weight-bold">Change Order - {{$key+1}}</h4>
                         <div class="border rounded border-dark p-2 position-relative">
@@ -351,6 +352,7 @@
                             </div>
                             @endif
                         </div>
+                    @endif
                     @endforeach
                 @endif
                 <hr class="custom-line">
