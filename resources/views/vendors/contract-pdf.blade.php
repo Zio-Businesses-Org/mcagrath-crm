@@ -273,7 +273,7 @@
                     {{ $company->company_name }}<br>
                     {!! nl2br($company->defaultAddress->address) !!}<br>
                     Phone #: {{ $company->company_phone }}<br>
-                    Email: <a href="{{$company->website}}">{{ $company->company_email }}</a><br>
+                    Email: <a href="{{$company->website}}">vendors@mcresi.com</a><br>
                     Website: <a href="{{$company->website}}">{{ $company->website }}</a>
 
                     </p>
