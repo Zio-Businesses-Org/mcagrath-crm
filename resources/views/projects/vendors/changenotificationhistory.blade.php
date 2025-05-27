@@ -4,7 +4,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">×</span></button>
 </div>
-<div class="modal-body">
+<div class="modal-body" id="change-notification-history">
     <div class="row py-5">
         
         <div class="col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
@@ -22,7 +22,7 @@
                 </x-slot>
 
                 @forelse($projectvendor->changenotification as $key=>$item)
-                    <tr id="row-{{ $item->id }}">
+                    <tr id="row-{{ $item->id }}" @if($item->link_status == 'Removed') style="background-color: rgba(220, 53, 70, 0.76);" @endif>
                         <td class="pl-20">Change Order - {{$key+1}}</td>
                         <td>
                             <a href="javascript:;" class="sow-detail text-darkest-grey f-w-500"
@@ -49,6 +49,18 @@
                                 <a href="javascript:;" data-link-id="{{ $item->id }}"
                                     class="px-2 text-darkest-grey f-w-500 relink-change"> <i class="fa fa-paper-plane"></i></a>
                             </div>
+                            @if($item->link_status != 'Removed')
+                            <div class="task_view">
+                                <a href="javascript:;" data-remove-id="{{ $item->id }}"
+                                    class="px-2 text-darkest-grey f-w-500 remove-link"> <i class="fa fa-times"></i></a>
+                            </div>
+                            @endif
+                            @if(in_array('admin', user_roles()))
+                            <div class="task_view">
+                                <a href="javascript:;" data-delete-id="{{ $item->id }}"
+                                    class="px-2 text-darkest-grey f-w-500 delete-link"> <i class="fa fa-trash"></i></a>
+                            </div>
+                            @endif
                         </td>
                     </tr>
                     <tr id="showmore-{{ $item->id }}" class="d-none">
@@ -86,7 +98,10 @@
         $.easyAjax({
                 url: url,
                 type: 'POST',
+                container:'#change-notification-history',
                 blockUI: true,
+                disableButton: true,
+                buttonSelector: '.relink-change',
                 data: {
                         _token: '{{ csrf_token() }}',
                     },
@@ -96,6 +111,70 @@
                     } 
                 },
             });
+    });
+    $('body').on('click', '.remove-link', function() {
+        var id = $(this).data('remove-id');
+        var url="{{ route('projectvendorschangenotify.removelink',':id') }}";
+        url = url.replace(':id', id);
+        $.easyAjax({
+                url: url,
+                type: 'POST',
+                container:'#change-notification-history',
+                blockUI: true,
+                disableButton: true,
+                buttonSelector: '.remove-link',
+                data: {
+                        _token: '{{ csrf_token() }}',
+                    },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                    } 
+                },
+            });
+    });
+
+    $('body').on('click', '.delete-link', function() {
+        var id = $(this).data('delete-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('change-notification.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                var token = "{{ csrf_token() }}";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    container: '.content-wrapper',
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
     });
 });
 </script>

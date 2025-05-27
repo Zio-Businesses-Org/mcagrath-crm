@@ -47,4 +47,17 @@ class VendorChangeNotificationController extends Controller
         Notification::route('mail', $vpro->vendor_email_address)->notify(new ChangeOrderNotification($vpro->id,$vpro->project_id,$vpro->contract_id,$vpro->vendor_id));
         return Reply::success(__('Link Resend'));
     }
+    public function removeLink($id)
+    {
+        $vcn = VendorChangeNotification::findOrFail($id);
+        $vcn->link_status='Removed';
+        $vcn->save();
+        return Reply::success(__('Status Updated'));
+
+    }
+    public function destroy($id)
+    {
+        VendorChangeNotification::destroy($id);
+        return Reply::success(__('messages.deleteSuccess'));
+    }
 }

@@ -18,6 +18,8 @@ class vendor_estimates extends BaseModel
         'valid_till' => 'datetime',
         'last_viewed' => 'datetime',
     ];
+    
+    public $skipObserver = false;
 
     public static function lastEstimateNumber()
     {

@@ -13,6 +13,8 @@ class VendorEstimateFiles extends BaseModel
 
     protected $fillable = [];
 
+    public $skipObserver = false;
+    
     protected $guarded = ['id'];
 
     protected $table = 'vendor_estimate_files';

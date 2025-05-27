@@ -222,10 +222,20 @@ $deleteProjectPermission = user()->permission('delete_projects');
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
+                    <input type="hidden" id="member_type" name="member_type"/>
                     <div class="select-status mr-3 pl-3">
                         <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
                             <option value=""><?php echo app('translator')->get('app.selectAction'); ?></option>
                             <option value="change-status"><?php echo app('translator')->get('modules.tasks.changeStatus'); ?></option>
+                            <option value="change-project-manager"><?php echo app('translator')->get('Change Project Manager'); ?></option>
+                            <option value="change-project-coordinator"><?php echo app('translator')->get('Change Project Coordinator'); ?></option>
+                            <option value="change-project-estimator"><?php echo app('translator')->get('Change Project Estimator'); ?></option>
+                            <option value="change-accounting-analyst"><?php echo app('translator')->get('Change Accounting Analyst'); ?></option>
+                            <option value="change-escalation-manager"><?php echo app('translator')->get('Change Escalation Manager'); ?></option>
+                            <option value="change-project-scheduler"><?php echo app('translator')->get('Change Project Scheduler'); ?></option>
+                            <option value="change-vendor-recruiter"><?php echo app('translator')->get('Change Vendor Recruiter'); ?></option>
+                            <option value="change-follow-up"><?php echo app('translator')->get('Change Next Follow Up Date'); ?></option>
+                            <option value="change-follow-up-time"><?php echo app('translator')->get('Change Next Follow Up Time'); ?></option>
                             <option value="archive"><?php echo app('translator')->get('app.archive'); ?></option>
                             <option value="delete"><?php echo app('translator')->get('app.delete'); ?></option>
                         </select>
@@ -236,6 +246,27 @@ $deleteProjectPermission = user()->permission('delete_projects');
                                  <option value="<?php echo e($status->status_name); ?>"><?php echo e($status->status_name); ?></option>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
+                    </div>
+                    <div class="select-status mr-3 d-none quick-action-field" id="change-member-action">
+                        <select class="form-control select-picker" name="member"
+                                data-live-search="true" data-container="body" data-size="8">
+                            <?php $__currentLoopData = $allEmployees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($category->id); ?>" >
+                                    <?php echo e($category->name); ?>
+
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                    <div class="select-status mr-3 d-none quick-action-field" id="change-follow-up-action">
+                        <input type="text" class="form-control custom-bulk-action-date-picker date-picker height-35 f-14"
+                        placeholder="Next Follow Up Date" name="nxt_follow_up_action"
+                        id="nxt_follow_up_action"/>
+                    </div>
+                    <div class="select-status mr-3 d-none quick-action-field" id="nxt-follow-up-time">
+                        <input type="text" class="form-control height-35 f-14"
+                        placeholder="Next Follow Up Time" name="nxt_follow_up_time"
+                        id="nxt_follow_up_time"/>
                     </div>
                  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
@@ -559,6 +590,7 @@ $deleteProjectPermission = user()->permission('delete_projects');
         var endDate = '';
         var startDatenxt = '';
         var endDatenxt = '';
+        var firstOpen = true;
 
         $('#customRange,#nxtRange').daterangepicker({
             autoUpdateInput: false,
@@ -594,6 +626,26 @@ $deleteProjectPermission = user()->permission('delete_projects');
             document.getElementById('endDate').value=endDate;
             
             $(this).val(picker.startDate.format('<?php echo e(company()->moment_date_format); ?>') + ' - ' + picker.endDate.format('<?php echo e(company()->moment_date_format); ?>'));
+            
+        });
+        $('.custom-bulk-action-date-picker').each(function(ind, el) {
+            datepicker(el, {
+                position: 'bl',
+                ...datepickerConfig
+            });
+        });
+        
+        $('#nxt_follow_up_time').datetimepicker({
+            <?php if(company()->time_format == 'H:i'): ?>
+                showMeridian: false,
+            <?php endif; ?>
+            useCurrent: false,
+            format: "hh:mm A"
+            }).on('dp.show', function() {
+            if(firstOpen) {
+                time = moment().startOf('day');
+                firstOpen = false;
+            } 
             
         });
         
@@ -823,7 +875,69 @@ $deleteProjectPermission = user()->permission('delete_projects');
                 if (actionValue == 'change-status') {
                     $('.quick-action-field').addClass('d-none');
                     $('#change-status-action').removeClass('d-none');
-                } else {
+                } 
+                else if(actionValue =='change-project-manager')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('project-manager');
+                    
+                }
+                else if(actionValue =='change-project-coordinator')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('project-coordinator');
+                    
+                }
+                else if(actionValue =='change-project-estimator')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('project-estimator');
+                    
+                }
+                else if(actionValue =='change-accounting-analyst')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('accounting-analyst');
+                    
+                }
+                else if(actionValue =='change-escalation-manager')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('escalation-manager');
+                    
+                }
+                else if(actionValue =='change-project-scheduler')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('project-scheduler');
+                    
+                }
+                else if(actionValue =='change-vendor-recruiter')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-member-action').removeClass('d-none');
+                    $('#member_type').val('vendor-recruiter');
+                    
+                }
+                else if(actionValue =='change-follow-up')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-follow-up-action').removeClass('d-none');
+                    
+                }
+                else if(actionValue =='change-follow-up-time')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#nxt-follow-up-time').removeClass('d-none');
+                    
+                }
+                else {
                     $('.quick-action-field').addClass('d-none');
                 }
             } else {
@@ -955,10 +1069,11 @@ $deleteProjectPermission = user()->permission('delete_projects');
         const applyQuickAction = () => {
             var rowdIds = $("#projects-table input:checkbox:checked").map(function() {
                 return $(this).val();
-            }).get();
+            }).get().filter(value => value !== "on");
 
             var url = "<?php echo e(route('projects.apply_quick_action')); ?>?row_ids=" + rowdIds;
-
+            
+            
             $.easyAjax({
                 url: url,
                 container: '#quick-action-form',
@@ -968,11 +1083,12 @@ $deleteProjectPermission = user()->permission('delete_projects');
                 data: $('#quick-action-form').serialize(),
                 success: function(response) {
                     if (response.status == 'success') {
-                        showTable();
+                        window.location.reload();
                         resetActionButtons();
                         deSelectAll();
                         $('#quick-action-apply').attr('disabled', 'disabled');
                         $('#change-status-action').addClass('d-none');
+                        $('#change-member-action').addClass('d-none');
                         $('#quick-action-form').hide();
                     }
                 }
@@ -987,6 +1103,43 @@ $deleteProjectPermission = user()->permission('delete_projects');
 
             $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
             $.ajaxModal(MODAL_LG, url);
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Select All Checkbox Functionality
+            $('body').on("change", "#new-select-all-table", function () {
+                $("#projects-table .select-table-row").prop("checked", this.checked);
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                   // $(".select-picker").selectpicker("refresh");
+                    $("#quick-action-type,#change-member-action,#change-status-action").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                
+            });
+            $('body').on("change", ".select-table-row", function () {
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                    $("#quick-action-type,#change-member-action,#change-status-action").selectpicker("refresh");
+                    //$(".select-picker").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                 
+            });
+
+            // Individual Checkbox Click - Control Select All Checkbox
+            // $(document).on("change", ".select-table-row", function () {
+            //     let allChecked = $("#project_datatable .select-table-row").length === $("#project_datatable .select-table-row:checked").length;
+            //     $("#select-all-checkbox").prop("checked", allChecked);
+            // });
         });
 
     </script>

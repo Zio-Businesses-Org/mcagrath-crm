@@ -86,6 +86,9 @@ $addEstimatePermission = user()->permission('add_estimates');
                     class="mr-3 mb-2 mb-lg-0 mb-md-0 float-left mb-2 mb-lg-0 mb-md-0" icon="layer-group">
                     @lang('modules.estimates.estimateTemplate')
                     </x-forms.link-secondary> -->
+                    <x-forms.button-secondary icon="share" id="estimate-share-link" class="type-btn mb-3">
+                        @lang('Generate Link')
+                    </x-forms.button-secondary>
                 @endif
             </div>
 
@@ -133,6 +136,7 @@ $addEstimatePermission = user()->permission('add_estimates');
             data['status'] = status;
             data['searchText'] = searchText;
         });
+       
         const showTable = () => {
             window.LaravelDataTables["vendor-estimates-table"].draw(false);
         }
@@ -231,6 +235,13 @@ $addEstimatePermission = user()->permission('add_estimates');
             });
         });
 
+        $('#estimate-share-link').click(function() {
+
+            var url = "{{ route('vendor-estimates.generate') }}";
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+
+        });
 
     </script>
 @endpush

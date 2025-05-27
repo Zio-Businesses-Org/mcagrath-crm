@@ -81,6 +81,7 @@ class VendorEstimatesDataTable extends BaseDataTable
         $datatables->editColumn('total', function ($row) {
             return currency_format($row->total, $row->currencyId);
         });
+
         $datatables->editColumn('cbid', function ($row)
         {
             return '
@@ -203,7 +204,7 @@ class VendorEstimatesDataTable extends BaseDataTable
             __('Created') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Created')],
             __('Created By') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('Created By')],
             __('Considered For Bid') => ['data' => 'cbid', 'name' => 'cbid', 'title' => __('Considered For Bid')],
-            
+            __('External') => ['data' => 'external', 'name' => 'external', 'title' => __('External')],
         ];
         $action = [
             Column::computed('action', __('app.action'))

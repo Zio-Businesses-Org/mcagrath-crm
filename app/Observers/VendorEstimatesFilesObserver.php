@@ -10,7 +10,9 @@ class VendorEstimatesFilesObserver
 {
     public function saving(VendorEstimateFiles $Files)
     {
-        
+        if (!empty($Files->skipObserver)) {
+            return;
+        }
         if (!isRunningInConsoleOrSeeding()) {
             $Files->last_updated_by = user()->id;
         }
@@ -18,7 +20,9 @@ class VendorEstimatesFilesObserver
 
     public function creating(VendorEstimateFiles $Files)
     {
-
+        if (!empty($Files->skipObserver)) {
+            return;
+        }
         if (!isRunningInConsoleOrSeeding()) {
             $Files->added_by = user()->id;
             $Files->created_at = now()->format('Y-m-d H:i:s');

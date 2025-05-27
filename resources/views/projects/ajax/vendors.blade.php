@@ -96,7 +96,7 @@
                             </td>
                         </tr>
                         <tr id="contact-information-{{ $item->id }}" class="contact-information-row d-none">
-                            <td colspan="11">
+                            <td colspan="12">
                                 <x-form id="updateProjectVendor-{{ $item->id }}" method="PUT">
                                     <a href="javascript:;" class="text-dark toggle-original" data-original-id="{{ $item->id }}"><i
                                             class="fa fa-chevron-down"></i>
@@ -311,7 +311,7 @@
                             </td>
                         </tr>            
                     @empty
-                        <x-cards.no-record-found-list colspan="5"/>
+                        <x-cards.no-record-found-list colspan="12"/>
                     @endforelse
                 </x-table>
 

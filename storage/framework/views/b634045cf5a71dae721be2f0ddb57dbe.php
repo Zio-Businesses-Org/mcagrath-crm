@@ -184,6 +184,50 @@
 <?php unset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
 <?php endif; ?> 
             </div>
+            <?php if (isset($component)) { $__componentOriginald48019b35c4ccf364e5d37d92848414c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginald48019b35c4ccf364e5d37d92848414c = $attributes; } ?>
+<?php $component = App\View\Components\Datatable\Actions::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('datatable.actions'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Datatable\Actions::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                <div class="select-status mr-3 pl-3">
+                    <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
+                        <option value=""><?php echo app('translator')->get('app.selectAction'); ?></option>
+                        <option value="change-created-by"><?php echo app('translator')->get('Change Created By'); ?></option>
+                        <option value="change-follow-up"><?php echo app('translator')->get('Change Next Follow Up Date'); ?></option>
+                        <option value="delete"><?php echo app('translator')->get('app.delete'); ?></option>
+                    </select>
+                </div>
+                <div class="select-status mr-3 d-none quick-action-field" id="change-created-by-action">
+                        <select class="form-control select-picker" name="member"
+                                data-live-search="true" data-container="body" data-size="8">
+                            <?php $__currentLoopData = $allEmployees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($category->name); ?>" >
+                                    <?php echo e($category->name); ?>
+
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                </div>
+                <div class="select-status mr-3 d-none quick-action-field" id="change-follow-up-action">
+                    <input type="text" class="form-control custom-date-picker date-picker height-35 f-14"
+                    placeholder="Next Follow Up Date" name="nxt_follow_up_action"
+                    id="nxt_follow_up_action"/>
+                </div>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginald48019b35c4ccf364e5d37d92848414c)): ?>
+<?php $attributes = $__attributesOriginald48019b35c4ccf364e5d37d92848414c; ?>
+<?php unset($__attributesOriginald48019b35c4ccf364e5d37d92848414c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginald48019b35c4ccf364e5d37d92848414c)): ?>
+<?php $component = $__componentOriginald48019b35c4ccf364e5d37d92848414c; ?>
+<?php unset($__componentOriginald48019b35c4ccf364e5d37d92848414c); ?>
+<?php endif; ?>
             <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
                 <a href="<?php echo e(route('vendors.index')); ?>" class="btn btn-secondary f-14 btn-active" data-toggle="tooltip"
                     data-original-title="<?php echo app('translator')->get('Vendors'); ?>"><i class="side-icon bi bi-list-ul"></i></a>
@@ -591,6 +635,13 @@
     var startDate = '';
     var endDate = '';
 
+    $('.custom-date-picker').each(function(ind, el) {
+        datepicker(el, {
+            position: 'bl',
+            ...datepickerConfig
+        });
+    });
+
     $('#customRange').daterangepicker({
         autoUpdateInput: false,
         locale: {
@@ -827,6 +878,88 @@
             $('#reset-filters').addClass('d-none');
             showTable();
         });    
+        $('#quick-action-type').change(function() {
+            const actionValue = $(this).val();
+            if (actionValue != '') {
+                $('#quick-action-apply').removeAttr('disabled');
+
+                if (actionValue == 'change-follow-up') {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-follow-up-action').removeClass('d-none');
+                } 
+                else if(actionValue =='change-created-by')
+                {
+                    $('.quick-action-field').addClass('d-none');
+                    $('#change-created-by-action').removeClass('d-none');
+                    
+                }
+                else {
+                    $('.quick-action-field').addClass('d-none');
+                }
+            } else {
+                $('#quick-action-apply').attr('disabled', true);
+                $('.quick-action-field').addClass('d-none');
+            }
+        });
+
+        $('#quick-action-apply').click(function() {
+            const actionValue = $('#quick-action-type').val();
+            if (actionValue == 'delete') {
+                Swal.fire({
+                    title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+                    text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+                    cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+                    customClass: {
+                        confirmButton: 'btn btn-primary mr-3',
+                        cancelButton: 'btn btn-secondary'
+                    },
+                    showClass: {
+                        popup: 'swal2-noanimation',
+                        backdrop: 'swal2-noanimation'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        applyQuickAction();
+                    }
+                });
+
+            } else {
+                applyQuickAction();
+            }
+        });
+        const applyQuickAction = () => {
+            var rowdIds = $("#vendorstrack-table input:checkbox:checked").map(function() {
+                return $(this).val();
+            }).get().filter(value => value !== "on");
+
+            var url = "<?php echo e(route('leads.apply_quick_action')); ?>?row_ids=" + rowdIds;
+            
+            
+            $.easyAjax({
+                url: url,
+                container: '#quick-action-form',
+                type: "POST",
+                disableButton: true,
+                buttonSelector: "#quick-action-apply",
+                data: $('#quick-action-form').serialize(),
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                        resetActionButtons();
+                        deSelectAll();
+                        $('#quick-action-apply').attr('disabled', 'disabled');
+                        $('#change-status-action').addClass('d-none');
+                        $('#change-member-action').addClass('d-none');
+                        $('#quick-action-form').hide();
+                    }
+                }
+            })
+        };
         
         $('body').on('click', '.send-proposal', function() {
             const id = $(this).data('user-send');
@@ -898,6 +1031,43 @@
             $('#datatableRange').data('daterangepicker').setEndDate("<?php echo e(request('end')); ?>");
                 showTable();
             <?php endif; ?>
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Select All Checkbox Functionality
+            $('body').on("change", "#new-select-all-table", function () {
+                $("#vendorstrack-table .select-table-row").prop("checked", this.checked);
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                   // $(".select-picker").selectpicker("refresh");
+                    $("#quick-action-type,#change-created-by-action").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                
+            });
+            $('body').on("change", ".select-table-row", function () {
+                if ($(".select-table-row:checked").length > 0){
+                    $("#quick-action-form").fadeIn();
+                    $("#quick-actions").find("input, textarea, button, select").removeAttr("disabled");
+                    $("#quick-actions").find("button").removeClass("disabled");
+                    $("#quick-action-type,#change-created-by-action").selectpicker("refresh");
+                    //$(".select-picker").selectpicker("refresh");
+                } else {
+                    $("#quick-action-form").fadeOut();
+                }
+                 
+            });
+
+            // Individual Checkbox Click - Control Select All Checkbox
+            // $(document).on("change", ".select-table-row", function () {
+            //     let allChecked = $("#project_datatable .select-table-row").length === $("#project_datatable .select-table-row:checked").length;
+            //     $("#select-all-checkbox").prop("checked", allChecked);
+            // });
         });
 
     </script>

@@ -321,6 +321,7 @@
                     <div class="page-break"></div>
                     @if($projectvendor->changenotification)
                         @foreach($projectvendor->changenotification as $key => $changenotify)
+                        @if($changenotify->link_status != 'Removed')
                             <hr class="custom-line">
                             <h4 class="f-14 font-weight-bold">Change Order - {{$key+1}}</h4>
                             <div style="border: 1px solid #000; border-radius: 4px; padding: 0.5rem; position: relative;">
@@ -384,6 +385,7 @@
                                     </div>
                                 </div>
                             </div>
+                        @endif
                         @endforeach
                     @endif
                     <hr class="custom-line">

@@ -25,6 +25,7 @@ use App\Http\Controllers\PublicWaiverFormCotnroller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PublicProjectFileController;
+use App\Http\Controllers\PublicVendorEstimateController;
 
 Route::get('/', function () {
     return redirect(route('login'));
@@ -174,3 +175,11 @@ Route::get('/task/{id}', [HomeController::class, 'taskDetail'])->name('front.tas
 Route::get('counties/{state}', [LocationController::class, 'getCounties'])->name('locations.counties');
 Route::get('cities/{county}', [LocationController::class, 'getCities'])->name('locations.cities');
 Route::resource('locations', LocationController::class);
+
+//Public Vendor Estimate
+Route::get('vendor-estimates/generate', [PublicVendorEstimateController::class, 'generateDialog'])->name('vendor-estimates.generate');
+Route::post('vendor-estimates/generate-link', [PublicVendorEstimateController::class, 'generateLink'])->name('vendor-estimates.generateLink');
+Route::get('/external-expense', [PublicVendorEstimateController::class, 'ExpenseView'])->name('external.expense.view')->middleware('signed');
+Route::post('vendor-estimates/store', [PublicVendorEstimateController::class, 'storeExternalEst'])->name('vendor-estimates.storeext');
+Route::post('vendor-estimates/store-file', [PublicVendorEstimateController::class, 'storeExternalEstFiles'])->name('vendor-estimates.storeext.file');
+Route::get('/estimate-download-pdf', [PublicVendorEstimateController::class, 'downloadPdf'])->name('front.vendorestimate.download')->middleware('signed');

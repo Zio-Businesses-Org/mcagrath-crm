@@ -39,6 +39,9 @@ class VendorEstimateObserver
 
     public function creating(vendor_estimates $estimate)
     {
+        if (!empty($estimate->skipObserver)) {
+            return;
+        }
         $estimate->hash = md5(microtime());
 
         if (user()) {
