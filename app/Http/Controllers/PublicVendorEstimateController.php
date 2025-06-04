@@ -36,6 +36,7 @@ class PublicVendorEstimateController extends Controller
 
     public function generateLink(Request $request)
     {
+        \Log::info('hello');
         $url = url()->temporarySignedRoute(
             'external.expense.view',
             now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),

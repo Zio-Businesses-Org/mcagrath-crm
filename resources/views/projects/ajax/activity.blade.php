@@ -12,8 +12,12 @@
                             <x-date-badge :month="$activity->created_at->timezone(company()->timezone)->translatedFormat('M')" :date="$activity->created_at->timezone(company()->timezone)->translatedFormat('d')" />
                         </div>
                         <div class="card-body border-0 p-0 ml-3">
-                            <h4 class="card-title f-14 font-weight-normal text-capitalize">{!! __($activity->activity) !!}
-                            </h4>
+                            <h4 class="card-title f-14 font-weight-normal text-capitalize">{!! __($activity->activity) !!}</h4>
+                            @if($activity->from && $activity->to)
+                                <!-- <h4 class="card-title f-14 font-weight-normal text-capitalize">From : {{$activity->from}}</h4>
+                                <h4 class="card-title f-14 font-weight-normal text-capitalize">To : {{$activity->to}}</h4>
+                                <h4 class="card-title f-14 font-weight-normal text-capitalize">Changed By : {{$activity->change_user_name}}</h4> -->
+                            @endif
                             <p class="card-text f-12 text-dark-grey">
                                 {{ $activity->created_at->timezone(company()->timezone)->translatedFormat(company()->time_format) }}
                             </p>

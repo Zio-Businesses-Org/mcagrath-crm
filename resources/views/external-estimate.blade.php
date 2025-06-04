@@ -157,10 +157,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-8 col-md-3 ">
+                    <div class="form-group mb-4">
+                        <x-forms.label fieldId="property_address" :fieldLabel="__('Full Property Address')" fieldRequired="true">
+                        </x-forms.label>
+                        <div class="input-group">
+                            <input type="text" id="property" name="property"
+                                class="px-6 position-relative text-dark font-weight-normal form-control height-35 rounded p-0 text-left f-15"
+                                value="{{ $project->propertyDetails->property_address }}" readOnly/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-3 ">
+                    <h4 class="mb-0 f-21 font-weight-normal">Estimates/Quotes: NO pricing discussion with Tenants at any cost.
+                        ALL quotes MUST have detailed costs for each line item (Should include necessary measurements or counts and labor and material costs). 
+                        ALL quotes should be inclusive of additional fees/taxes, if any. 
+                        Post Bid approval, additional amount for such fees or taxes will strictly be NOT considered or entertained.</h2>
+                </div>
 
                 <!-- CLIENT END -->
 
-                <div class="col-md-12 my-3">
+                <div class="col-md-12 my-3 d-none">
                     <div class="form-group">
                         <x-forms.label fieldId="description" :fieldLabel="__('app.description')">
                         </x-forms.label>
@@ -280,7 +297,7 @@
                                             <input type="hidden" class="sub-total-field" name="sub_total"
                                                 value="0">
                                         </tr>
-                                        <tr>
+                                        <tr class="d-none">
                                             <td width="20%" class="text-dark-grey">@lang('modules.invoices.discount')
                                             </td>
                                             <td width="40%" style="padding: 5px;">
@@ -344,14 +361,17 @@
                     <x-forms.label fieldId="" :fieldLabel="__('modules.invoiceSettings.invoiceTerms')">
                     </x-forms.label>
                     <p>
-                        {!! nl2br($invoiceSetting->invoice_terms) !!}
+                        Thank you for your business.<br/><br/>
+                        {{$vendor->vendor_name}}<br/>
+                        Email : {{$vendor->vendor_email_address}}<br/>
+                        Phone : {{$vendor->vendor_phone}}
                     </p>
                 </div>
             </div>
             <div class="row px-lg-4 px-md-4 px-3 py-3">
                 <!-- INVOICE NUMBER START -->
                 <div class="col-md-12">
-                    <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.menu.addFile')" fieldName="file" fieldId="file-upload-dropzone"/>
+                    <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Add Files - (Add Photos, Pdf, etc)')" fieldName="file" fieldId="file-upload-dropzone"/>
                 </div>
                 <input type="hidden" name="estimateId" id="estimateId">
             </div>

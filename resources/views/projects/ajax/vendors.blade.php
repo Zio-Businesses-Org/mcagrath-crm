@@ -274,6 +274,12 @@
                                         <input type="text" id="linkInput-{{ $item->id }}" value="{{$item->link}}" class="d-none">
                                     </div>
                                     <div class="row justify-content-end mr-2">
+                                            
+                                            <a class="btn btn-secondary m-2 btn-xs generate-link-estimate" href="javascript:;"
+                                                data-estimate-vendor-id="{{ $item->id }}" data-estimate-project-id="{{$project->id}}">
+                                                <i class="fa fa-credit-card mr-2"></i>
+                                                @lang('Generate Estimate Link')
+                                            </a>
                                             <a class="btn btn-secondary m-2 btn-xs change-notify-history" href="javascript:;"
                                                 data-notify-history-id="{{ $item->id }}">
                                                 <i class="fa fa-table mr-2"></i>
@@ -284,6 +290,13 @@
                                                 <i class="fa fa-paper-plane mr-2"></i>
                                                 @lang('Change Notification')
                                             </a>
+                                            @if(in_array('admin', user_roles()))
+                                            <a class="btn btn-secondary m-2 btn-xs delete-row" href="javascript:;"
+                                            data-row-id="{{ $item->id }}">
+                                                    <i class="fa fa-trash mr-2"></i>
+                                                    @lang('Delete')
+                                            </a>
+                                            @endif
                                             <a class="btn btn-secondary m-2 btn-xs copy-vpro" href="javascript:;"
                                             data-row-id="{{ $item->id }}">
                                                     <i class="fa fa-copy mr-2"></i>
@@ -547,10 +560,50 @@
                     },
                     success: function(response) {
                         if (response.status == "success") {
-                            $('#row-' + id).fadeOut();
+                           window.location.reload();
                         }
                     }
                 });
+            }
+        });
+
+    });
+    $('.generate-link-estimate').click(function() {
+        console.log('hello');
+        var vendor_id = $(this).data('estimate-vendor-id');
+        var project_id = $(this).data('estimate-project-id');
+        var url="{{ route('vendor-estimates.generateLink') }}";
+        var token = "{{ csrf_token() }}";
+        $.easyAjax({
+            url: url,
+            type: "POST",
+            blockUI: true,
+            buttonSelector: ".generate-link-estimate",
+            data: {
+                '_token': token,
+                'vendor_id':vendor_id,
+                'project_id':project_id
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    navigator.clipboard.writeText(response.url).then(function() {
+                        Swal.fire({
+                            icon: 'success',
+                            text: '{{ __('Link Copied') }}',
+
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                            showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                            },
+                            buttonsStyling: false
+                        });
+                    }).catch(function(err) {
+                        console.error('Failed to copy text: ', err);
+                    });
+                }
             }
         });
 

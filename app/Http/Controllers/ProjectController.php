@@ -151,6 +151,7 @@ class ProjectController extends AccountBaseController
 
         case 'change-status':
             $this->changeStatus($request);
+            
             return Reply::success(__('messages.updateSuccess'));
 
         case 'change-project-manager':
@@ -300,6 +301,7 @@ class ProjectController extends AccountBaseController
         abort_403(user()->permission('edit_projects') != 'all');
 
         Project::whereIn('id', explode(',', $request->row_ids))->update(['status' => $request->status]);
+        
     }
 
     public function updateStatus(Request $request, $id)
@@ -855,8 +857,13 @@ class ProjectController extends AccountBaseController
         $project->project_budget = $request->project_budget;
         $project->currency_id = $request->currency_id != '' ? $request->currency_id : company()->currency_id;
         $project->hours_allocated = $request->hours_allocated;
-        $project->status = $request->status;
+        
 
+        if($project->status !== $request->status){
+
+            $this->logProjectActivityDetailed($project->id, 'Status Change', user()->name, $project->status, $request->status);
+        }
+        $project->status = $request->status;
         $project->miro_board_id = $request->miro_board_id;
 
         if ($request->has('miroboard_checkbox')) {
@@ -926,7 +933,7 @@ class ProjectController extends AccountBaseController
         $this->viewBurndownChartPermission = user()->permission('view_project_burndown_chart');
         $this->viewProjectMemberPermission = user()->permission('view_project_members');
 
-        $this->project = Project::with(['client', 'members', 'members.user','mentionProject', 'members.user.session', 'members.user.employeeDetail.designation', 'milestones' => function ($q) use ($viewMilestonePermission) {
+        $this->project = Project::with(['client', 'members', 'files.user', 'projectvendor', 'members.user','mentionProject', 'members.user.session', 'members.user.employeeDetail.designation', 'milestones' => function ($q) use ($viewMilestonePermission) {
             if ($viewMilestonePermission == 'added') {
                 $q->where('added_by', user()->id);
             }

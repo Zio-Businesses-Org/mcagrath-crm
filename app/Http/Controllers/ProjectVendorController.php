@@ -163,18 +163,28 @@ class ProjectVendorController extends AccountBaseController
     public function linkstatuschange(Request $request, $id)
     {
         $vpro = ProjectVendor::findOrFail($id);
+        if($vpro->link_status!==$request->value)
+        {
+            $this->logProjectActivityDetailed($vpro->project_id, "Link Status Changed for {$vpro->vendor_name}", user()->name, $vpro->link_status, $request->value);
+        }
         $vpro->link_status=$request->value;
         if($request->value=='Removed'){
             Notification::route('mail', $vpro->vendor_email_address)->notify(new ProjectVendorRemoved($vpro->id));
         }
         $vpro->save();
+        
         return Reply::success(__('Updated Successfully'));
     }
     public function wostatuschange(Request $request, $id)
     {
         $vpro = ProjectVendor::findOrFail($id);
+        if($vpro->wo_status!==$request->value)
+        {
+            $this->logProjectActivityDetailed($vpro->project_id, "Vendor WO Status Change for {$vpro->vendor_name}", user()->name, $vpro->wo_status, $request->value);
+        }
         $vpro->wo_status=$request->value;
         $vpro->save();
+        
         return Reply::success(__('Updated Successfully'));
     }
     public function resentLink($id)

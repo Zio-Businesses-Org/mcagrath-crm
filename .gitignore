@@ -4,6 +4,7 @@
 /public/user-uploads/*
 !public/user-uploads/.htaccess
 /storage/*.key
+/storage/framework/views
 .env
 .env.backup
 .phpunit.result.cache

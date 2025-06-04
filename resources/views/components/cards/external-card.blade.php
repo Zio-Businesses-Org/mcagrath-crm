@@ -1,6 +1,6 @@
 <style>
     .card-body-extra{
-        width: 340px !important;
+        width: 310px !important;
     }
 </style>
 <div {{ $attributes->merge(['class' => 'card bg-white border-grey file-card mr-3 mb-3']) }} >

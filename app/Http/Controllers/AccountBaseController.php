@@ -125,6 +125,17 @@ class AccountBaseController extends Controller
         $activity->save();
     }
 
+    public function logProjectActivityDetailed($projectId, $text, $change_user_name, $from, $to)
+    {
+        $activity = new ProjectActivity();
+        $activity->project_id = $projectId;
+        $activity->activity = $text;
+        $activity->from = $from;
+        $activity->to = $to;
+        $activity->change_user_name = $change_user_name;
+        $activity->save();
+    }
+
     public function logUserActivity($userId, $text)
     {
         $activity = new UserActivity();
