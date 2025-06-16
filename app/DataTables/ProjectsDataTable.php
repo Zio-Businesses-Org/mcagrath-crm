@@ -323,6 +323,7 @@ class ProjectsDataTable extends BaseDataTable
         $datatables->editColumn('invoiced_date', fn($row) => $row->latestInvoice?->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format));
         $datatables->editColumn('deadline', fn($row) => Common::dateColor($row->deadline));
         $datatables->editColumn('bsdate', fn($row) => $row->bid_submitted?->translatedFormat($this->company->date_format));
+        $datatables->editColumn('cpaydate', fn($row) => $row->latestPayment?->paid_on->translatedFormat($this->company->date_format));
         $datatables->editColumn('brdate', fn($row) => $row->bid_rejected?->translatedFormat($this->company->date_format));
         $datatables->editColumn('badate', fn($row) => $row->bid_approval?->translatedFormat($this->company->date_format));
         $datatables->editColumn('wcd', fn($row) => $row->work_completion_date?->translatedFormat($this->company->date_format));
@@ -343,6 +344,10 @@ class ProjectsDataTable extends BaseDataTable
          $datatables->editColumn('total', function ($row){
             
             return currency_format($row->invoices_sum_total ?? 0, $row->currency_id);
+        });
+        $datatables->editColumn('cpayamt', function ($row){
+            
+            return currency_format($row->payments_sum_amount ?? 0, $row->currency_id);
         });
         $datatables->editColumn('rinspectiondt', function ($row){
             return '
@@ -509,6 +514,8 @@ class ProjectsDataTable extends BaseDataTable
         $model = $model->withSum(['invoices' => function ($query) {
             $query->whereIn('status', ['paid', 'unpaid']);
         }], 'total');
+
+        $model = $model->withSum('payments', 'amount');
         
         if ($request->pinned == 'pinned') {
             $model->join('pinned', 'pinned.project_id', 'projects.id');
@@ -818,6 +825,8 @@ class ProjectsDataTable extends BaseDataTable
             __('Cancelled Date') => ['data' => 'cancelled_date', 'name' => 'cancelled_date', 'title' => __('Cancelled Date')],
             __('Cancelled Reason') => ['data' => 'cancelled_reason', 'name' => 'cancelled_reason', 'title' => __('Cancelled Reason')],
             __('app.delayedby') => ['data' => 'delayed_by', 'name' => 'delayed_by', 'title' => __('app.delayedby')],
+            __('Client Paid Date') => ['data' => 'cpaydate', 'name' => 'cpaydate', 'title' => __('Client Paid Date')],
+            __('Client Paid Amount') => ['data' => 'cpayamt', 'name' => 'cpayamt', 'title' => __('Client Paid Amount')],
             // Hide __('app.progress') => ['data' => 'completion_percent', 'name' => 'completion_percent', 'exportable' => false, 'title' => __('app.progress')],
             
         ];

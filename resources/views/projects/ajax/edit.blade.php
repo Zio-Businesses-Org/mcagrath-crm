@@ -263,7 +263,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldValue="($project->latestInvoice?->created_at ? $project->latestInvoice->created_at->timezone(company()->timezone)->format(company()->date_format) : '')" />
                                
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
 
                         <x-forms.input-group>
                             <x-client-selection-dropdown :clients="$clients" fieldRequired="false"
@@ -277,7 +277,15 @@ $createPublicProjectPermission = user()->permission('create_public_project');
 {{--                            @endif--}}
                         </x-forms.input-group>
                     </div>
-
+                     <div class="col-md-3 col-lg-3">
+                    
+                        <x-forms.text :fieldLabel="__('Client Paid Date')"
+                            :fieldPlaceholder="__('placeholders.hours')" fieldName="client_paid_on"
+                            fieldId="client_paid_on" fieldReadOnly
+                            :fieldValue="($project->latestPayment ? $project->latestPayment->paid_on->format(company()->date_format) : '')" />
+                                
+                    </div>
+                    
                     <div class="col-md-12 col-lg-12">
                         <div class="form-group my-3">
                             <x-forms.label class="my-3" fieldId="project_summary"
@@ -288,6 +296,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                                 class="d-none">{!! $project->project_summary !!}</textarea>
                         </div>
                     </div>
+                    
                     <x-forms.custom-field :fields="$fields" :model="$project"></x-forms.custom-field>
                     <!-- @if ($project->public == 1 && $createPublicProjectPermission == 'all')
                         <div class="col-sm-12">
@@ -972,6 +981,14 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Vendor Amount')"
                                       fieldName="vamt" fieldId="vamt"
                                       :fieldPlaceholder="__('Vendor Amount')" :fieldValue="$project->vendor_amount"/>
+                        </div>
+                        <div class="col-md-3 col-lg-4">
+                    
+                            <x-forms.text :fieldLabel="__('Client Paid Amount')"
+                                :fieldPlaceholder="__('placeholders.hours')" fieldName="client_paid_amt"
+                                fieldId="client_paid_amt"  fieldReadOnly 
+                                :fieldValue="currency_format($project->totalPaymentAmount, $project->currency_id)" />
+                                    
                         </div>
                     </div>
                 <x-form-actions>

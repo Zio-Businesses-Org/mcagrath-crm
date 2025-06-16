@@ -59,6 +59,15 @@
                     Not To Exceed - <?php echo e($project->nte); ?> 
                 </div>
             </div>
+            <div class="row border-bottom-grey">
+                <div class="col">
+                    Next Follow Up Date - <?php echo e($project->nxt_follow_up_date?->format(company()->date_format)); ?>
+
+                </div>
+                <div class="col border-left-grey">
+                    Next Follow Up Time - <?php echo e($project->nxt_follow_up_time ? \Carbon\Carbon::createFromFormat('H:i:s', $project->nxt_follow_up_time)->format(company()->time_format) : ''); ?> 
+                </div>
+            </div>
         </div>
         <div class="col-sm border-right-grey">
             <div class="row border-bottom-grey">

@@ -256,6 +256,18 @@ class Project extends BaseModel
                     ->latest('id')
                     ->select(['project_id', 'created_at']);// equivalent to orderByDesc('id') and limits the results to one.
     }
+    public function latestPayment(): HasOne
+    {
+        return $this->hasOne(Payment::class, 'project_id')
+                    ->latest('id')
+                    ->select(['project_id', 'created_at', 'paid_on']);// equivalent to orderByDesc('id') and limits the results to one.
+    }
+
+    public function getTotalPaymentAmountAttribute()
+    {
+        return $this->payments()
+                    ->sum('amount'); 
+    }
 
     public function getTotalInvoiceAmountAttribute()
     {
