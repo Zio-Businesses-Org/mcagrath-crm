@@ -155,8 +155,10 @@ class VendorDataTable extends BaseDataTable
                     ->orWhere('created_by', 'like', '%' . request('searchText') . '%');
             });
         }
-
-        $users = self::customFilter($users);
+        
+        if ($request->searchText == ''){
+         $users = self::customFilter($users);
+        }
 
         if ($request->status != '') {
             $users = $users->where('status', $request->status);

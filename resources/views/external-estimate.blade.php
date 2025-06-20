@@ -216,7 +216,7 @@
                                 <tr>
                                     <td class="border-bottom-0 btrr-mbl btlr">
                                         <input type="text" class="f-14 border-0 w-100 item_name form-control"
-                                            name="item_name[]" placeholder="@lang('modules.expenses.itemName')">
+                                            name="item_name[]" placeholder="Item Name  (To mention if it is Drywall, Plumbing, Electrical, Etc)">
                                     </td>
                                     <td class="border-bottom-0 d-block d-lg-none d-md-none">
                                         <textarea class="form-control f-14 border-0 w-100 mobile-description" name="item_summary[]"
@@ -257,7 +257,7 @@
                                     <td colspan="{{ $invoiceSetting->hsn_sac_code_show ? '4' : '3' }}"
                                         class="dash-border-top bblr">
                                         <textarea class="f-14 border-0 w-100 desktop-description form-control" name="item_summary[]"
-                                            placeholder="@lang('placeholders.invoices.description')"></textarea>
+                                            placeholder="Enter Description (Describe the issue and details of the repair to be completed. If irreparable, reason it cannot be repaired and replacement details.)"></textarea>
                                     </td>
                                 </tr>
                             </tbody>
@@ -274,7 +274,7 @@
             <div class="row px-lg-4 px-md-4 px-3 pb-3 pt-0 mb-3  mt-2">
                 <div class="col-md-12">
                     <a class="f-15 f-w-500" href="javascript:;" id="add-item"><i
-                            class="icons icon-plus font-weight-bold mr-1"></i>@lang('modules.invoices.addItem')</a>
+                            class="icons icon-plus font-weight-bold mr-1"></i>Add Item ( To add if multiple repairs are applicable)</a>
                 </div>
             </div>
             <!--  ADD ITEM END-->
@@ -560,7 +560,7 @@
                 </tr>` +
                 '<tr>' +
                 '<td class="border-bottom-0 btrr-mbl btlr">' +
-                `<input type="text" class="f-14 border-0 w-100 item_name form-control" name="item_name[]" placeholder="@lang('modules.expenses.itemName')">` +
+                `<input type="text" class="f-14 border-0 w-100 item_name form-control" name="item_name[]" placeholder="Item Name (To mention if it is Drywall, Plumbing, Electrical, Etc)">` +
                 '</td>' +
                 '<td class="border-bottom-0 d-block d-lg-none d-md-none">' +
                 `<textarea class="f-14 border-0 w-100 mobile-description form-control" name="item_summary[]" placeholder="@lang('placeholders.invoices.description')"></textarea>` +
@@ -593,7 +593,7 @@
             '</tr>' +
             '<tr class="d-none d-md-table-row d-lg-table-row">' +
             '<td colspan="{{ $invoiceSetting->hsn_sac_code_show ? 4 : 3 }}" class="dash-border-top bblr">' +
-            '<textarea class="f-14 border-0 w-100 desktop-description form-control" name="item_summary[]" placeholder="@lang('placeholders.invoices.description')"></textarea>' +
+            '<textarea class="f-14 border-0 w-100 desktop-description form-control" name="item_summary[]" placeholder="Description (Describe the issue and details of the repair to be completed. If irreparable, reason it cannot be repaired and replacement details.)"></textarea>' +
             '</td>' +
             
                 '</tr>' +
