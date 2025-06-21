@@ -979,8 +979,8 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         </div>
                         <div class="col-lg-4 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Vendor Amount')"
-                                      fieldName="vamt" fieldId="vamt"
-                                      :fieldPlaceholder="__('Vendor Amount')" :fieldValue="$project->vendor_amount"/>
+                                      fieldName="vamt" fieldId="vamt" fieldReadOnly
+                                      :fieldPlaceholder="__('Vendor Amount')" :fieldValue="currency_format($project->TotalVendorAmount, $project->currency_id)"/>
                         </div>
                         <div class="col-md-3 col-lg-4">
                     

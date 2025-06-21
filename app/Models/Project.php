@@ -276,6 +276,13 @@ class Project extends BaseModel
                     ->sum('total'); // This returns a single value, NOT a collection
     }
 
+    public function getTotalVendorAmountAttribute()
+    {
+        return $this->projectvendor()
+                    ->selectRaw('SUM(CAST(project_amount AS DECIMAL(10,2))) as total')
+                    ->value('total'); // This returns a single value, NOT a collection
+    }
+
     
     public function contracts(): HasMany
     {
