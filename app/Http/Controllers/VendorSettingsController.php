@@ -11,6 +11,7 @@ use App\Models\WorkOrderStatus;
 use App\Models\SOWTitle;
 use App\Models\VendorWorkOrderStatus;
 use App\Helper\Reply;
+use App\Models\VendorGeneralSettings;
 
 class VendorSettingsController extends AccountBaseController
 {
@@ -35,6 +36,7 @@ class VendorSettingsController extends AccountBaseController
             $this->contract=ContractTemplate::all();
             $this->wform=VendorWaiverFormTemplate::first();
             $this->vendor_status = VendorWorkOrderStatus::first();
+            $this->vendor_general_settings = VendorGeneralSettings::first();
             $this->view = 'vendor-settings.ajax.wcform';
             break;
 
@@ -52,6 +54,7 @@ class VendorSettingsController extends AccountBaseController
             $this->contract=ContractTemplate::all();
             $this->wform=VendorWaiverFormTemplate::first();
             $this->vendor_status = VendorWorkOrderStatus::first();
+            $this->vendor_general_settings = VendorGeneralSettings::first();
             $this->view = 'vendor-settings.ajax.wcform';
             break;
         }
@@ -118,5 +121,22 @@ class VendorSettingsController extends AccountBaseController
         $sow->sow_title = $request->sow_title;
         $sow->save();
         return Reply::success(__('messages.recordSaved'));
+    }
+
+    public function saveSelfNotifyMail(Request $request)
+    {
+        if (VendorGeneralSettings::exists())
+        {
+            $vgs = VendorGeneralSettings::first();
+            $vgs->selfnotifymail = $request->value;
+            $vgs->save();
+            return Reply::success(__('messages.recordSaved'));
+        }
+        else{
+            $vgs = new VendorGeneralSettings();
+            $vgs->selfnotifymail = $request->value;
+            $vgs->save();
+            return Reply::success(__('messages.recordSaved'));
+        }
     }
 }

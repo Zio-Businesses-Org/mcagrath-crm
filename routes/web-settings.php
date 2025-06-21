@@ -276,6 +276,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::post('vendor-settings/save-workorder-status', [VendorSettingsController::class, 'saveWorkOrderStatus'])->name('vendor-settings.saveWorkOrderStatus');
     Route::get('vendor-settings/create-sow-title', [VendorSettingsController::class, 'createSOWTitle'])->name('vendor-settings.createSOWTitle');
     Route::post('vendor-settings/save-sow-title', [VendorSettingsController::class, 'saveSOWTitle'])->name('vendor-settings.saveSOWTitle');
+    Route::post('vendor-settings/self-notify-mail', [VendorSettingsController::class, 'saveSelfNotifyMail'])->name('vendor-settings.saveSelfNotifyMail');
     Route::resource('vendor-settings', VendorSettingsController::class);
 });
 

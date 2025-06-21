@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\EstimateReplyNotification;
 use App\Models\VendorContract;
+use App\Models\VendorGeneralSettings;
+use App\Notifications\ExternalVendorEstimateNotification;
 
 class PublicVendorEstimateController extends Controller
 {
@@ -36,7 +38,7 @@ class PublicVendorEstimateController extends Controller
 
     public function generateLink(Request $request)
     {
-        \Log::info('hello');
+        
         $url = url()->temporarySignedRoute(
             'external.expense.view',
             now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),
@@ -141,7 +143,14 @@ class PublicVendorEstimateController extends Controller
         $estimate->original_estimate_number = str($estimate->estimate_number)->replace($company->invoiceSetting->estimate_prefix . $company->invoiceSetting->estimate_number_separator, '');
         $estimate->save();
         $vendor = VendorContract::findOrFail($request->vendor_id);
+        $vgs = VendorGeneralSettings::first();
         Notification::route('mail', $vendor->vendor_email)->notify(new EstimateReplyNotification($estimate->id));
+        try{
+            Notification::route('mail', $vgs->selfnotifymail)->notify(new ExternalVendorEstimateNotification($estimate->id));
+        }
+        catch (\Exception $e){
+            \Log::info($e);
+        }
         return Reply::successWithData(__('messages.recordSaved'), ['estimateId' => $estimate->id]);
     }
 

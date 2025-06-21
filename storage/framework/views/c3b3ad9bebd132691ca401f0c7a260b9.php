@@ -719,7 +719,7 @@
                                             
                                             <a class="btn btn-secondary m-2 btn-xs generate-link-estimate" href="javascript:;"
                                                 data-estimate-vendor-id="<?php echo e($item->id); ?>" data-estimate-project-id="<?php echo e($project->id); ?>">
-                                                <i class="fa fa-dollar mr-2"></i>
+                                                <i class="fa fa-credit-card mr-2"></i>
                                                 <?php echo app('translator')->get('Generate Estimate Link'); ?>
                                             </a>
                                             <a class="btn btn-secondary m-2 btn-xs change-notify-history" href="javascript:;"

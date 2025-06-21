@@ -24,7 +24,20 @@ $deleteFilePermission = user()->permission('delete_project_files');
         background: white;
         border: 1px solid #ccc;
     }
+    .file-checkbox-download {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 1px solid #ccc;
+    }
 
+    .show-checkboxes-download .file-checkbox-download{
+        display: block;
+    }
     /* Remove the !important and simplify the selector */
     .show-checkboxes .file-checkbox {
         display: block;
@@ -83,6 +96,27 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
 <?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
 <?php endif; ?>
+        <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'download'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-primary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'multi-download','class' => 'type-btn mb-3 ml-3']); ?>
+            <?php echo app('translator')->get('Multiple Download'); ?>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
 
         <div id="share-actions" style="display: none;" class="mb-3">
             <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
@@ -128,7 +162,52 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <?php unset($__componentOriginalc35c79ed7e812580313ad04118477974); ?>
 <?php endif; ?>
         </div>
+        <div id="multi-download-actions" style="display: none;" class="mb-3">
+            <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonPrimary::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-primary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'download-selected','class' => 'mr-2']); ?>
+                <?php echo app('translator')->get('Download'); ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginalc35c79ed7e812580313ad04118477974 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc35c79ed7e812580313ad04118477974 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonCancel::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-cancel'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonCancel::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'cancel-download']); ?>
+                <?php echo app('translator')->get('Cancel'); ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc35c79ed7e812580313ad04118477974)): ?>
+<?php $attributes = $__attributesOriginalc35c79ed7e812580313ad04118477974; ?>
+<?php unset($__attributesOriginalc35c79ed7e812580313ad04118477974); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc35c79ed7e812580313ad04118477974)): ?>
+<?php $component = $__componentOriginalc35c79ed7e812580313ad04118477974; ?>
+<?php unset($__componentOriginalc35c79ed7e812580313ad04118477974); ?>
+<?php endif; ?>
+        </div>
     </div>
+    <div id="download-result"></div>
     <?php if (isset($component)) { $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $attributes; } ?>
 <?php $component = App\View\Components\Cards\Data::resolve(['title' => __('modules.projects.files')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -241,7 +320,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
                             <i class="fa <?php echo e($file->icon); ?> text-lightest"></i>
                             
                         <?php endif; ?>
-
+                            <input type="checkbox" class="file-checkbox-download" name="selected_files_download[]" data-source="internal" data-id="<?php echo e(md5($file->id)); ?>">
                         <?php if($viewFilePermission == 'all' || ($viewFilePermission == 'added' && $file->added_by == user()->id)): ?>
                              <?php $__env->slot('action', null, []); ?> 
                                 <div class="dropdown ml-auto file-action">
@@ -333,6 +412,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
                     <?php else: ?>
                         <i class="fa <?php echo e($file->icon); ?> text-lightest"></i>
                     <?php endif; ?>
+                        <input type="checkbox" class="file-checkbox-download" name="selected_files_download[]" data-source="external" data-id="<?php echo e(md5($file->id)); ?>">
                      <?php $__env->slot('action', null, []); ?> 
                         <div class="dropdown ml-auto file-action">
                             <button
@@ -390,7 +470,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <!-- TAB CONTENT END -->
 
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
         var add_project_files = "<?php echo e($addFilePermission); ?>";
         var trashed = "<?php echo e($project->trashed()); ?>";
         var isProjectAdmin = <?php echo e(($project->project_admin == user()->id) ? 1 : 0); ?>;
@@ -596,6 +676,22 @@ $deleteFilePermission = user()->permission('delete_project_files');
         $('#files-upload-site').addClass('show-checkboxes');
         $('#share-actions').show();
         $(this).hide();
+        $('#multi-download').hide();
+    });
+
+    $('#multi-download').click(function() {
+        $('#files-upload-site').addClass('show-checkboxes-download');
+        $('#multi-download-actions').show();
+        $(this).hide();
+        $('#share-link').hide();
+    });
+
+    $('#cancel-download').click(function() {
+        $('#files-upload-site').removeClass('show-checkboxes-download');
+        $('#multi-download-actions').hide();
+        $('#share-link').show();
+        $('#multi-download').show();
+        $('.file-checkbox-download').prop('checked', false);
     });
 
     // Cancel sharing process
@@ -603,6 +699,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
         $('#files-upload-site').removeClass('show-checkboxes');
         $('#share-actions').hide();
         $('#share-link').show();
+        $('#multi-download').show();
         $('.file-checkbox').prop('checked', false);
     });
 
@@ -664,8 +761,95 @@ $deleteFilePermission = user()->permission('delete_project_files');
             }
         });
     });
+    $('#download-selected').click(function () {
+        let selectedFiles = [];
 
+        $('input[name="selected_files_download[]"]:checked').each(function () {
+            selectedFiles.push({
+                id: $(this).data('id'),
+                source: $(this).data('source')
+            });
+        });
+
+        if (selectedFiles.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Please select at least one file to download.',
+                customClass: { confirmButton: 'btn btn-primary' },
+                buttonsStyling: false
+            });
+            return;
+        }
+
+        const token = '<?php echo e(csrf_token()); ?>';
+        const total = selectedFiles.length;
+        let completed = 0;
+
+        Swal.fire({
+            title: 'Downloading files...',
+            html: `0 of ${total} files downloaded.`,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        selectedFiles.forEach((file, index) => {
+            $.ajax({
+                url: '<?php echo e(route("files.download-selected")); ?>',
+                method: 'POST',
+                xhrFields: {
+                    responseType: 'blob' // handle binary data
+                },
+                headers: {
+                    'X-CSRF-TOKEN': token
+                },
+                data: file,
+                success: function (response, status, xhr) {
+                    const blob = new Blob([response], { type: xhr.getResponseHeader('Content-Type') });
+                    const downloadUrl = window.URL.createObjectURL(blob);
+
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+
+                    // Try to get filename from response headers
+                    const contentDisposition = xhr.getResponseHeader('Content-Disposition');
+                    let filename = 'downloaded-file';
+                    if (contentDisposition && contentDisposition.indexOf('filename=') !== -1) {
+                        filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+                    }
+
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                },
+                error: function () {
+                    console.error(`Failed to download file: ${file.id}`);
+                },
+                complete: function () {
+                    completed++;
+
+                    Swal.update({
+                        html: `${completed} of ${total} files downloaded.`
+                    });
+
+                    if (completed === total) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'All files downloaded!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            });
+        });
     });
+
+});
 
 </script>
 <?php /**PATH C:\laragon\www\mcagrath-crm\resources\views/projects/ajax/files.blade.php ENDPATH**/ ?>

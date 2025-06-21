@@ -165,6 +165,8 @@ use App\Http\Controllers\EmployeeShiftChangeRequestController;
 use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\LeadClientCustomFilterController; 
 use App\Http\Controllers\ExpenseStatusController;
+
+
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
@@ -311,6 +313,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
             Route::post('files/store-link', [ProjectFileController::class, 'storeLink'])->name('files.store_link');
             Route::get('files/download/{id}', [ProjectFileController::class, 'download'])->name('files.download');
+            Route::post('files/mutiple-download', [ProjectFileController::class, 'downloadMultiple'])->name('files.download-selected');
             Route::get('files/thumbnail', [ProjectFileController::class, 'thumbnailShow'])->name('files.thumbnail');
             Route::post('files/multiple-upload', [ProjectFileController::class, 'storeMultiple'])->name('files.multiple_upload');
             Route::resource('files', ProjectFileController::class);
@@ -1022,4 +1025,5 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
     //Vendor Work Order Status
     Route::resource('vendor-work-status', VendorWorkOrderStatusController::class);
+    
 });

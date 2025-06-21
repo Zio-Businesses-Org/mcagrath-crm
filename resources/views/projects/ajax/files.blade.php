@@ -24,7 +24,20 @@ $deleteFilePermission = user()->permission('delete_project_files');
         background: white;
         border: 1px solid #ccc;
     }
+    .file-checkbox-download {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 1px solid #ccc;
+    }
 
+    .show-checkboxes-download .file-checkbox-download{
+        display: block;
+    }
     /* Remove the !important and simplify the selector */
     .show-checkboxes .file-checkbox {
         display: block;
@@ -47,6 +60,9 @@ $deleteFilePermission = user()->permission('delete_project_files');
         <x-forms.button-primary icon="share" id="share-link" class="type-btn mb-3">
             @lang('Click Here For File Sharing')
         </x-forms.button-primary>
+        <x-forms.button-primary icon="download" id="multi-download" class="type-btn mb-3 ml-3">
+            @lang('Multiple Download')
+        </x-forms.button-primary>
 
         <div id="share-actions" style="display: none;" class="mb-3">
             <x-forms.button-primary id="share-selected" class="mr-2">
@@ -56,7 +72,16 @@ $deleteFilePermission = user()->permission('delete_project_files');
                 @lang('Cancel')
             </x-forms.button-cancel>
         </div>
+        <div id="multi-download-actions" style="display: none;" class="mb-3">
+            <x-forms.button-primary id="download-selected" class="mr-2">
+                @lang('Download')
+            </x-forms.button-primary>
+            <x-forms.button-cancel id="cancel-download">
+                @lang('Cancel')
+            </x-forms.button-cancel>
+        </div>
     </div>
+    <div id="download-result"></div>
     <x-cards.data :title="__('modules.projects.files')">
 
         @if (($addFilePermission == 'all' || $addFilePermission == 'added' || $project->project_admin == user()->id) && !$project->trashed())
@@ -96,7 +121,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
                             <i class="fa {{ $file->icon }} text-lightest"></i>
                             
                         @endif
-
+                            <input type="checkbox" class="file-checkbox-download" name="selected_files_download[]" data-source="internal" data-id="{{ md5($file->id) }}">
                         @if ($viewFilePermission == 'all' || ($viewFilePermission == 'added' && $file->added_by == user()->id))
                             <x-slot name="action">
                                 <div class="dropdown ml-auto file-action">
@@ -152,6 +177,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
                     @else
                         <i class="fa {{ $file->icon }} text-lightest"></i>
                     @endif
+                        <input type="checkbox" class="file-checkbox-download" name="selected_files_download[]" data-source="external" data-id="{{ md5($file->id) }}">
                     <x-slot name="action">
                         <div class="dropdown ml-auto file-action">
                             <button
@@ -191,7 +217,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <!-- TAB CONTENT END -->
 
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
         var add_project_files = "{{ $addFilePermission }}";
         var trashed = "{{ $project->trashed() }}";
         var isProjectAdmin = {{ ($project->project_admin == user()->id) ? 1 : 0 }};
@@ -397,6 +423,22 @@ $deleteFilePermission = user()->permission('delete_project_files');
         $('#files-upload-site').addClass('show-checkboxes');
         $('#share-actions').show();
         $(this).hide();
+        $('#multi-download').hide();
+    });
+
+    $('#multi-download').click(function() {
+        $('#files-upload-site').addClass('show-checkboxes-download');
+        $('#multi-download-actions').show();
+        $(this).hide();
+        $('#share-link').hide();
+    });
+
+    $('#cancel-download').click(function() {
+        $('#files-upload-site').removeClass('show-checkboxes-download');
+        $('#multi-download-actions').hide();
+        $('#share-link').show();
+        $('#multi-download').show();
+        $('.file-checkbox-download').prop('checked', false);
     });
 
     // Cancel sharing process
@@ -404,6 +446,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
         $('#files-upload-site').removeClass('show-checkboxes');
         $('#share-actions').hide();
         $('#share-link').show();
+        $('#multi-download').show();
         $('.file-checkbox').prop('checked', false);
     });
 
@@ -465,7 +508,94 @@ $deleteFilePermission = user()->permission('delete_project_files');
             }
         });
     });
+    $('#download-selected').click(function () {
+        let selectedFiles = [];
 
+        $('input[name="selected_files_download[]"]:checked').each(function () {
+            selectedFiles.push({
+                id: $(this).data('id'),
+                source: $(this).data('source')
+            });
+        });
+
+        if (selectedFiles.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Please select at least one file to download.',
+                customClass: { confirmButton: 'btn btn-primary' },
+                buttonsStyling: false
+            });
+            return;
+        }
+
+        const token = '{{ csrf_token() }}';
+        const total = selectedFiles.length;
+        let completed = 0;
+
+        Swal.fire({
+            title: 'Downloading files...',
+            html: `0 of ${total} files downloaded.`,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        selectedFiles.forEach((file, index) => {
+            $.ajax({
+                url: '{{ route("files.download-selected") }}',
+                method: 'POST',
+                xhrFields: {
+                    responseType: 'blob' // handle binary data
+                },
+                headers: {
+                    'X-CSRF-TOKEN': token
+                },
+                data: file,
+                success: function (response, status, xhr) {
+                    const blob = new Blob([response], { type: xhr.getResponseHeader('Content-Type') });
+                    const downloadUrl = window.URL.createObjectURL(blob);
+
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+
+                    // Try to get filename from response headers
+                    const contentDisposition = xhr.getResponseHeader('Content-Disposition');
+                    let filename = 'downloaded-file';
+                    if (contentDisposition && contentDisposition.indexOf('filename=') !== -1) {
+                        filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+                    }
+
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                },
+                error: function () {
+                    console.error(`Failed to download file: ${file.id}`);
+                },
+                complete: function () {
+                    completed++;
+
+                    Swal.update({
+                        html: `${completed} of ${total} files downloaded.`
+                    });
+
+                    if (completed === total) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'All files downloaded!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            });
+        });
     });
+
+});
 
 </script>

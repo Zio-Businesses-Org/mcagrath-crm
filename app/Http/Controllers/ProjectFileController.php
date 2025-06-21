@@ -11,6 +11,9 @@ use App\Models\GlobalSetting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\ProjectExternalFile;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class ProjectFileController extends AccountBaseController
 {
@@ -117,7 +120,10 @@ class ProjectFileController extends AccountBaseController
         abort_403(!($this->viewPermission == 'all' || 
             ($this->viewPermission == 'added' && $file->added_by == user()->id)));
 
+            
         return download_local_s3($file, ProjectFile::FILE_PATH . '/' . $file->project_id . '/' . $file->hashname);
+        
+        
     }
 
     /**
@@ -170,6 +176,24 @@ class ProjectFileController extends AccountBaseController
 
             return Reply::error('Failed to generate sharing link: ' . $e->getMessage());
         }
+    }
+
+    public function downloadMultiple(Request $request)
+    {
+                
+        if($request->source=='internal'){
+            
+            $file = ProjectFile::whereRaw('md5(id) = ?', $request->id)->firstOrFail();
+            return download_local_s3($file, ProjectFile::FILE_PATH . '/' . $file->project_id . '/' . $file->hashname);
+        }
+        else{
+                
+            $file = ProjectExternalFile::whereRaw('md5(id) = ?', $request->id)->firstOrFail();
+    
+            return download_local_s3($file, ProjectExternalFile::FILE_PATH . '/' . $file->hashname);
+        }
+    
+        
     }
 
 }

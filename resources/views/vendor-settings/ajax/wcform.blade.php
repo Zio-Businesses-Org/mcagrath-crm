@@ -1,6 +1,6 @@
 
 <div class="col-lg-12 col-md-12 ntfcn-tab-content-left w-100 p-4 d-flex">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <x-forms.select fieldId="contract_id"
             :fieldLabel="__('Select WC Waiver Form Template')" fieldName="contract_id" search="true" fieldRequired="true">
                 <option value="">--</option>
@@ -15,7 +15,7 @@
         $selectedVendorStatus = $vendor_status->vendor_status ?? [];
     @endphp
     
-    <div class="col-md-6">
+    <div class="col-md-4">
         <x-forms.select fieldId="vendor_status"
             :fieldLabel="__('Select Vendor Status For Work Order')" fieldName="vendor_status[]" search="true" fieldRequired="true" multiple>
                 <option value="">--</option>
@@ -27,8 +27,20 @@
                 <option  value="On Hold" {{ in_array('On Hold', $selectedVendorStatus) ? 'selected' : '' }} data-content='<i class="fa fa-circle mr-2" style="color:#808080;"></i>On Hold'>
         </x-forms.select>
     </div>
+    <div class="col-md-4">
+        <x-forms.label class="mt-3" fieldId="category_id"
+                        :fieldLabel="__('External Estimate Notification Email')" fieldRequired="true">
+        </x-forms.label>
+        <x-forms.input-group>
+            <input type="email" id="selfnotifymail" name="selfnotifymail" class="form-control" placeholder="e.g. johndoe@example.com" aria-label="Email Address" value="{{ $vendor_general_settings->selfnotifymail ?? '' }}">
+            <x-slot name="append">
+                <button id="saveselfnotifymail" type="button"
+                        class="btn btn-outline-secondary border-grey"
+                        data-toggle="tooltip" data-original-title="{{__('Save Email Address') }}">@lang('Save')</button>
+            </x-slot>
+        </x-forms.input-group>
+    </div>
 </div>
-
 
 <script>
  $(document).ready(function() {
@@ -60,6 +72,24 @@
                 data: {
                         _token: '{{ csrf_token() }}',
                         value: select,
+                    },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                    } 
+                },
+            });
+    });
+    $('#saveselfnotifymail').click(function() {
+        var mail = $('#selfnotifymail').val();
+        var url="{{ route('vendor-settings.saveSelfNotifyMail') }}";
+        $.easyAjax({
+                url: url,
+                type: 'POST',
+                blockUI: true,
+                data: {
+                        _token: '{{ csrf_token() }}',
+                        value: mail,
                     },
                 success: function(response) {
                     if (response.status == 'success') {
