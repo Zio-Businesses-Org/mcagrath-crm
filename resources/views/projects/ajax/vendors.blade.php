@@ -302,11 +302,13 @@
                                                     <i class="fa fa-copy mr-2"></i>
                                                     @lang('Copy Link')
                                             </a>
+                                            @if($item->link_status!=='Accepted')
                                             <a class="btn btn-secondary m-2 btn-xs relink-vpro" href="javascript:;"
                                                 data-link-id="{{ $item->id }}">
                                                 <i class="fa fa-paper-plane mr-2"></i>
                                                 @lang('Resend Link')
                                             </a>
+                                            @endif
                                             <a class="btn btn-secondary m-2 btn-xs" href="{{route('projectvendors.download', $item->id)}}"
                                                 data-row-id="{{ $item->id }}">
                                                 <i class="fa fa-download mr-2"></i>

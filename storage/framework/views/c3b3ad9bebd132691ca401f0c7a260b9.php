@@ -744,11 +744,13 @@
                                                     <i class="fa fa-copy mr-2"></i>
                                                     <?php echo app('translator')->get('Copy Link'); ?>
                                             </a>
+                                            <?php if($item->link_status!=='Accepted'): ?>
                                             <a class="btn btn-secondary m-2 btn-xs relink-vpro" href="javascript:;"
                                                 data-link-id="<?php echo e($item->id); ?>">
                                                 <i class="fa fa-paper-plane mr-2"></i>
                                                 <?php echo app('translator')->get('Resend Link'); ?>
                                             </a>
+                                            <?php endif; ?>
                                             <a class="btn btn-secondary m-2 btn-xs" href="<?php echo e(route('projectvendors.download', $item->id)); ?>"
                                                 data-row-id="<?php echo e($item->id); ?>">
                                                 <i class="fa fa-download mr-2"></i>
