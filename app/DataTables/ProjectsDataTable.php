@@ -349,6 +349,10 @@ class ProjectsDataTable extends BaseDataTable
             
             return currency_format($row->payments_sum_amount ?? 0, $row->currency_id);
         });
+         $datatables->editColumn('vendor_amt', function ($row){
+            
+            return currency_format($row->total_vendor_amt ?? 0, $row->currency_id);
+        });
         $datatables->editColumn('rinspectiondt', function ($row){
             return '
                     <div class="media align-items-center justify-content-center mr-3">
@@ -510,6 +514,11 @@ class ProjectsDataTable extends BaseDataTable
             projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
            ( select count("id") from pinned where pinned.project_id = projects.id and pinned.user_id = ' . user()->id . ') as pinned_project'
             );
+
+        $model = $model->addSelect([
+            'total_vendor_amt' => \App\Models\ProjectVendor::selectRaw('SUM(CAST(project_amount AS DECIMAL(10,2)))')
+                ->whereColumn('project_vendors.project_id', 'projects.id')
+        ]);
 
         $model = $model->withSum(['invoices' => function ($query) {
             $query->whereIn('status', ['paid', 'unpaid']);
@@ -821,7 +830,7 @@ class ProjectsDataTable extends BaseDataTable
             __('app.baa') => ['data' => 'bid_approved_amount', 'name' => 'bid_approved_amount', 'title' => __('app.baa')],
             __('Invoiced Date') => ['data' => 'invoiced_date', 'name' => 'invoiced_date', 'title' => __('Invoiced Date')],
             __('Invoiced Amount') => ['data' => 'total', 'name' => 'total', 'title' => __('Invoiced Amount')],
-            // __('Vendor Amount') => ['data' => 'vendor_amount', 'name' => 'vendor_amount', 'title' => __('Vendor Amount')],
+            __('Vendor Amount') => ['data' => 'vendor_amt', 'name' => 'vendor_amt', 'title' => __('Vendor Amount')],
             __('Cancelled Date') => ['data' => 'cancelled_date', 'name' => 'cancelled_date', 'title' => __('Cancelled Date')],
             __('Cancelled Reason') => ['data' => 'cancelled_reason', 'name' => 'cancelled_reason', 'title' => __('Cancelled Reason')],
             __('app.delayedby') => ['data' => 'delayed_by', 'name' => 'delayed_by', 'title' => __('app.delayedby')],
