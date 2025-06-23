@@ -96,7 +96,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
 <?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
 <?php endif; ?>
-        <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+        <!-- <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
 <?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'download'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.button-primary'); ?>
@@ -116,7 +116,7 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
 <?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
 <?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
-<?php endif; ?>
+<?php endif; ?> -->
 
         <div id="share-actions" style="display: none;" class="mb-3">
             <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>

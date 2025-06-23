@@ -12,6 +12,7 @@
                             :fieldLabel="__('Select Vendor')" fieldName="vendor_id" search="true" fieldRequired="true">
                                 <option value="">--</option>
                                 @foreach ($vendor as $category)
+                                    @if(!in_array($category->id, $project->projectvendor->pluck('vendor_id')->toArray()))
                                     <option value="{{ $category->id }}" data-content='{{ $category->vendor_name}}<span class="d-none">{{$category->vendor_email}}</span><span class="d-none">{{$category->cell}}</span><span class="badge ml-2 text-gray-400" style="background-color: 
                                     {{ 
                                         $category->status === 'DNU' ? '#FF0000' : 
@@ -22,6 +23,7 @@
                                         ($category->status === 'Non Compliant' ? '#FFFF00' : 
                                         '#000000')))))
                                     }};">{{$category->status}}</span>'>
+                                    @endif
                                 @endforeach
                         </x-forms.select>
                     </div>
