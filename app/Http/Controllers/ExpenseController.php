@@ -23,6 +23,7 @@ use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
 use Illuminate\Http\Request;
 use App\Models\ExpenseStatus;
+use App\Models\ExpensePartialPay;
 
 class ExpenseController extends AccountBaseController
 {
@@ -182,8 +183,12 @@ class ExpenseController extends AccountBaseController
         $expense->additional_fee = $request->fee_method_id;
         $expense->payment_method = $request->payment_method; // Store the name
         $expense->status = 'Pending';
+        if((float)$request->pending_amount > 0)
+        {
+            $expense->status = 'Paid Off';   
+        }
         if ($userRole[0] == 'admin') {
-            $expense->status = 'Paid';
+            //$expense->status = 'Paid';
             $expense->approver_id = user()->id;
         }
 
@@ -191,6 +196,7 @@ class ExpenseController extends AccountBaseController
             
             $expense->approver_id = user()->id;
         }
+       
 
         if ($request->has('project_id') && $request->project_id != '0') {
             $expense->project_id = $request->project_id;
@@ -205,6 +211,27 @@ class ExpenseController extends AccountBaseController
 
         $expense->save();
 
+        if((float)$request->pending_amount > 0)
+        {
+            
+            $expensep = new ExpensePartialPay();
+        
+            $expensep->price = round($request->price, 2);
+            
+            $expensep->category_id = $request->category_id;
+            $expensep->added_by = user()->id;
+            $expensep->project_id = $request->project_id;
+            $expensep->vendor_id = $request->vendor_id;
+            $expensep->expense_id = $expense->id;
+            $expensep->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
+            $expensep->additional_fee = $request->fee_method_id;
+            $expensep->payment_method = $request->payment_method; // Store the name
+            if ($request->hasFile('bill')) {
+                $filename = Files::uploadLocalOrS3($request->bill, ExpensePartialPay::FILE_PATH);
+                $expensep->bill = $filename;
+            }
+            $expensep->save();
+        }
         // To add custom fields data
         if ($request->custom_fields_data) {
             $expense->updateCustomFieldData($request->custom_fields_data);

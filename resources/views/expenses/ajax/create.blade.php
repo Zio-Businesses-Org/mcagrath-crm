@@ -281,20 +281,76 @@
             $('#mentionUserId').val(mention_user_id.join(','));
             const url = "{{ route('expenses.store') }}";
             var data = $('#save-expense-data-form').serialize();
+            var pending_amount = $('#pending_amount').val();
+            var bid_approved_amount = parseFloat($('#bid_approved_amount').val());
+           
+            if ( isNaN(bid_approved_amount) || bid_approved_amount == 0 )
+            {
+                Swal.fire({
+                icon: 'error',
+                text: '{{ __('Please Provide Bid Approved Amount For The Vendor') }}',
 
-            $.easyAjax({
-                url: url,
-                container: '#save-expense-data-form',
-                type: "POST",
-                disableButton: true,
-                blockUI: true,
-                buttonSelector: "#save-expense-form",
-                data: data,
-                file: true,
-                success: function(response) {
-                    window.location.href = response.redirectUrl;
-                }
-            });
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+                });
+                return false;
+            }
+            
+            if(parseFloat(pending_amount) > 0)
+            {
+                Swal.fire({
+                    title: 'Do You Want To Create a Partial Payment Info',
+                    text: '{{ __('') }}',
+                    html: `
+                        <h4 class="mb-0 p-20 f-15 font-weight-normal text-capitalize">
+                        If YES. Please Check One Of The Following To Sort Out Where The Bill Has To Be Stored</h4>
+                        <div style="display: flex; gap: 1.5rem; justify-content: center;">
+                            <label style="color: white;">
+                                <input type="radio" name="option" value="original_expense" style=" transform: scale(1.5);"/> Original Expense
+                            </label>
+                            <label style="color: white;">
+                                <input type="radio" name="option" value="partial_pay" style=" transform: scale(1.5);"/> Partial Pay
+                            </label>
+                            <label style="color: white;">
+                                <input type="radio" name="option" value="both" style=" transform: scale(1.5);"/> Both
+                            </label>
+                        </div> `,
+                    confirmButtonText: 'Submit',
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        const selected = document.querySelector('input[name="option"]:checked');
+                        if (!selected) {
+                        Swal.showValidationMessage('Please select one option');
+                        return false;
+                        }
+                        return selected.value;
+                    }
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log('Selected:', result.value);
+                        // Do something with the selected value
+                    }
+                });
+            }
+            // $.easyAjax({
+            //     url: url,
+            //     container: '#save-expense-data-form',
+            //     type: "POST",
+            //     disableButton: true,
+            //     blockUI: true,
+            //     buttonSelector: "#save-expense-form",
+            //     data: data,
+            //     file: true,
+            //     success: function(response) {
+            //         window.location.href = response.redirectUrl;
+            //     }
+            // });
         });
 
         $('#addExpenseCategory').click(function() {

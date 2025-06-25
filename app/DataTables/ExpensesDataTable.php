@@ -57,6 +57,7 @@ class ExpensesDataTable extends BaseDataTable
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink-' . $row->id . '" tabindex="0">';
 
             $action .= '<a href="' . route('expenses.show', [$row->id]) . '" class="dropdown-item openRightModal"><i class="fa fa-eye mr-2"></i>' . __('app.view') . '</a>';
+            $action .= '<a href="' . route('partial-pay.create', [$row->id,$row->project?->id,$row->projectvendor?->id]) . '" class="dropdown-item openRightModal"><i class="bi bi-cash-coin mr-2"></i>' . __('Add Partial Pay') . '</a>';
 
             if (is_null($row->expenses_recurring_id)) {
                 if ($this->editExpensePermission == 'all' || ($this->editExpensePermission == 'added' && user()->id == $row->added_by)) {
@@ -172,17 +173,19 @@ class ExpensesDataTable extends BaseDataTable
                 }
             }
         );
+
         $datatables->editColumn(
-            'pay_date',
+            'partial_pay',
             function ($row) {
-                if (!is_null($row->pay_date)) {
-                    return $row->pay_date->translatedFormat($this->company->date_format);
+                if ($row->partialPay->isNotEmpty()) {
+                    return '<a href="' . route('expenses.show', $row->id) . '" class="text-darkest-grey"> Ongoing </a>';
                 }
                 else{
                     return 'N/A';
                 }
             }
         );
+        
         // $datatables->editColumn(
         //     'purchase_from',
         //     function ($row) {
@@ -199,7 +202,7 @@ class ExpensesDataTable extends BaseDataTable
         // Custom Fields For export
         $customFieldColumns = CustomField::customFieldData($datatables, Expense::CUSTOM_FIELD_MODEL);
 
-        $datatables->rawColumns(array_merge(['action', 'status', 'user_id', 'item_name', 'check'], $customFieldColumns));
+        $datatables->rawColumns(array_merge(['action', 'status', 'user_id', 'item_name', 'check', 'partial_pay'], $customFieldColumns));
 
         return $datatables;
     }
@@ -333,6 +336,7 @@ class ExpensesDataTable extends BaseDataTable
             __('Payment Method') => ['data' => 'payment_method', 'name' => 'expenses.payment_method', 'title' => __('Payment Method')],
             __('Additional Fee') => ['data' => 'additional_fee', 'name' => 'additional_fee', 'title' => __('Additional Fee')], // ✅ Added column
             __('app.status') => ['data' => 'status', 'name' => 'status', 'exportable' => false, 'title' => __('app.status')],
+            __('Partial Pay') => ['data' => 'partial_pay', 'name' => 'partial_pay', 'exportable' => false, 'title' => __('Partial Pay')],
             __('app.expense') . ' ' . __('app.status') => ['data' => 'status_export', 'name' => 'status', 'visible' => false, 'title' => __('app.expense')]
         ];
 

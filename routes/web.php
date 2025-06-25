@@ -165,7 +165,7 @@ use App\Http\Controllers\EmployeeShiftChangeRequestController;
 use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\LeadClientCustomFilterController; 
 use App\Http\Controllers\ExpenseStatusController;
-
+use App\Http\Controllers\ExpensePartialPayController;
 
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
@@ -779,6 +779,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('expenseAdditionalFee', ExpenseAdditionalFeeTypeController::class);
     Route::get('expense-additional-fees/list', [ExpenseAdditionalFeeTypeController::class, 'getList'])->name('expenseAdditionalFee.list');
     Route::get('projectvendors/get-vendor-details/{vendorId}/{projectId}', [ProjectVendorController::class, 'getVendorDetails'])->name('projectvendors.get_vendor_details');
+
+    //Partial-Pay-Expense
+    Route::resource('partial-pay', ExpensePartialPayController::class);
+    Route::get('partial-pay/{expenseId}/{projectId}/{vendorId}', [ExpensePartialPayController::class, 'create'])->name('partial-pay.create');
 
     // Timelogs
     Route::group(['prefix' => 'timelogs'], function () {
