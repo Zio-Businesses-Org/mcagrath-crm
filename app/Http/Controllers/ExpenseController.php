@@ -163,87 +163,88 @@ class ExpenseController extends AccountBaseController
 
     public function store(StoreExpense $request)
     {
-        $userRole = session('user_roles');
-        $expense = new Expense();
-        $expense->item_name = '--';
-        $expense->purchase_date = date('Y-m-d');
-        $expense->purchase_from = '--';
-        $expense->price = round($request->price, 2);
-        $expense->currency_id = $request->currency_id;
-        $expense->category_id = $request->category_id;
-        $expense->user_id = user()->id;
-        $expense->default_currency_id = company()->currency_id;
-        $expense->exchange_rate = $request->exchange_rate;
-        $expense->description = trim_editor($request->description);
-        $expense->vendor_id = $request->vendor_id;
-        $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
-        $expense->wo_status = $request->wo_status;
-        $expense->bid_approved_amt = $request->bid_approved_amount;
-        $expense->change_amt = $request->change_order_amount;
-        $expense->additional_fee = $request->fee_method_id;
-        $expense->payment_method = $request->payment_method; // Store the name
-        $expense->status = 'Pending';
-        if((float)$request->pending_amount > 0)
-        {
-            $expense->status = 'Paid Off';   
-        }
-        if ($userRole[0] == 'admin') {
-            //$expense->status = 'Paid';
-            $expense->approver_id = user()->id;
-        }
+        \Log::info($request);
+        // $userRole = session('user_roles');
+        // $expense = new Expense();
+        // $expense->item_name = '--';
+        // $expense->purchase_date = date('Y-m-d');
+        // $expense->purchase_from = '--';
+        // $expense->price = round($request->price, 2);
+        // $expense->currency_id = $request->currency_id;
+        // $expense->category_id = $request->category_id;
+        // $expense->user_id = user()->id;
+        // $expense->default_currency_id = company()->currency_id;
+        // $expense->exchange_rate = $request->exchange_rate;
+        // $expense->description = trim_editor($request->description);
+        // $expense->vendor_id = $request->vendor_id;
+        // $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
+        // $expense->wo_status = $request->wo_status;
+        // $expense->bid_approved_amt = $request->bid_approved_amount;
+        // $expense->change_amt = $request->change_order_amount;
+        // $expense->additional_fee = $request->fee_method_id;
+        // $expense->payment_method = $request->payment_method; // Store the name
+        // $expense->status = 'Pending';
+        // if((float)$request->pending_amount > 0)
+        // {
+        //     $expense->status = 'Paid Off';   
+        // }
+        // if ($userRole[0] == 'admin') {
+        //     //$expense->status = 'Paid';
+        //     $expense->approver_id = user()->id;
+        // }
 
-        if ($request->has('status')) {
+        // if ($request->has('status')) {
             
-            $expense->approver_id = user()->id;
-        }
+        //     $expense->approver_id = user()->id;
+        // }
        
 
-        if ($request->has('project_id') && $request->project_id != '0') {
-            $expense->project_id = $request->project_id;
-        }
+        // if ($request->has('project_id') && $request->project_id != '0') {
+        //     $expense->project_id = $request->project_id;
+        // }
 
-        if ($request->hasFile('bill')) {
-            $filename = Files::uploadLocalOrS3($request->bill, Expense::FILE_PATH);
-            $expense->bill = $filename;
-        }
+        // if ($request->hasFile('bill')) {
+        //     $filename = Files::uploadLocalOrS3($request->bill, Expense::FILE_PATH);
+        //     $expense->bill = $filename;
+        // }
 
-        $expense->bank_account_id = $request->bank_account_id;
+        // $expense->bank_account_id = $request->bank_account_id;
 
-        $expense->save();
+        // $expense->save();
 
-        if((float)$request->pending_amount > 0)
-        {
+        // if((float)$request->pending_amount > 0)
+        // {
             
-            $expensep = new ExpensePartialPay();
+        //     $expensep = new ExpensePartialPay();
         
-            $expensep->price = round($request->price, 2);
+        //     $expensep->price = round($request->price, 2);
             
-            $expensep->category_id = $request->category_id;
-            $expensep->added_by = user()->id;
-            $expensep->project_id = $request->project_id;
-            $expensep->vendor_id = $request->vendor_id;
-            $expensep->expense_id = $expense->id;
-            $expensep->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
-            $expensep->additional_fee = $request->fee_method_id;
-            $expensep->payment_method = $request->payment_method; // Store the name
-            if ($request->hasFile('bill')) {
-                $filename = Files::uploadLocalOrS3($request->bill, ExpensePartialPay::FILE_PATH);
-                $expensep->bill = $filename;
-            }
-            $expensep->save();
-        }
-        // To add custom fields data
-        if ($request->custom_fields_data) {
-            $expense->updateCustomFieldData($request->custom_fields_data);
-        }
+        //     $expensep->category_id = $request->category_id;
+        //     $expensep->added_by = user()->id;
+        //     $expensep->project_id = $request->project_id;
+        //     $expensep->vendor_id = $request->vendor_id;
+        //     $expensep->expense_id = $expense->id;
+        //     $expensep->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
+        //     $expensep->additional_fee = $request->fee_method_id;
+        //     $expensep->payment_method = $request->payment_method; // Store the name
+        //     if ($request->hasFile('bill')) {
+        //         $filename = Files::uploadLocalOrS3($request->bill, ExpensePartialPay::FILE_PATH);
+        //         $expensep->bill = $filename;
+        //     }
+        //     $expensep->save();
+        // }
+        // // To add custom fields data
+        // if ($request->custom_fields_data) {
+        //     $expense->updateCustomFieldData($request->custom_fields_data);
+        // }
 
-        $redirectUrl = urldecode($request->redirect_url);
+        // $redirectUrl = urldecode($request->redirect_url);
 
-        if ($redirectUrl == '') {
-            $redirectUrl = route('expenses.index');
-        }
+        // if ($redirectUrl == '') {
+        //     $redirectUrl = route('expenses.index');
+        // }
 
-        return Reply::successWithData(__('messages.recordSaved'), ['redirectUrl' => $redirectUrl]);
+        // return Reply::successWithData(__('messages.recordSaved'), ['redirectUrl' => $redirectUrl]);
     }
 
     public function edit($id)

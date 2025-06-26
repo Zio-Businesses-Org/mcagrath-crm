@@ -312,17 +312,18 @@
                         If YES. Please Check One Of The Following To Sort Out Where The Bill Has To Be Stored</h4>
                         <div style="display: flex; gap: 1.5rem; justify-content: center;">
                             <label style="color: white;">
-                                <input type="radio" name="option" value="original_expense" style=" transform: scale(1.5);"/> Original Expense
-                            </label>
-                            <label style="color: white;">
                                 <input type="radio" name="option" value="partial_pay" style=" transform: scale(1.5);"/> Partial Pay
                             </label>
                             <label style="color: white;">
                                 <input type="radio" name="option" value="both" style=" transform: scale(1.5);"/> Both
                             </label>
                         </div> `,
-                    confirmButtonText: 'Submit',
-                    focusConfirm: false,
+                    showCancelButton: true,
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
+                    
                     preConfirm: () => {
                         const selected = document.querySelector('input[name="option"]:checked');
                         if (!selected) {
@@ -334,24 +335,34 @@
                     }).then((result) => {
                     if (result.isConfirmed) {
                         console.log('Selected:', result.value);
-                        // Do something with the selected value
+                        saveexpenseForm(url,data,result.value)
+                    }
+                    else if (result.dismiss){
+                        saveexpenseForm(url,data,null)
                     }
                 });
             }
-            // $.easyAjax({
-            //     url: url,
-            //     container: '#save-expense-data-form',
-            //     type: "POST",
-            //     disableButton: true,
-            //     blockUI: true,
-            //     buttonSelector: "#save-expense-form",
-            //     data: data,
-            //     file: true,
-            //     success: function(response) {
-            //         window.location.href = response.redirectUrl;
-            //     }
-            // });
+            
         });
+        function saveexpenseForm(url,data,storage)
+        {
+        $.easyAjax({
+                url: url,
+                container: '#save-expense-data-form',
+                type: "POST",
+                disableButton: true,
+                blockUI: true,
+                buttonSelector: "#save-expense-form",
+                data: {
+                    data:data,
+                    storage:storage,
+                },
+                file: true,
+                success: function(response) {
+                    window.location.href = response.redirectUrl;
+                }
+            });
+        }
 
         $('#addExpenseCategory').click(function() {
             let userId = $('#user_id').val();
