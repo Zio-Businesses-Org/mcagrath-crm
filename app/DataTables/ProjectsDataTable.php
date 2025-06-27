@@ -516,8 +516,8 @@ class ProjectsDataTable extends BaseDataTable
             );
 
         $model = $model->addSelect([
-            'total_vendor_amt' => \App\Models\ProjectVendor::selectRaw('SUM(CAST(project_amount AS DECIMAL(10,2)))')
-                ->whereColumn('project_vendors.project_id', 'projects.id')
+            'total_vendor_amt' => \App\Models\Expense::selectRaw('SUM(price)')
+            ->whereColumn('expenses.project_id', 'projects.id')
         ]);
 
         $model = $model->withSum(['invoices' => function ($query) {
