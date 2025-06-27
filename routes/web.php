@@ -776,6 +776,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('expense-payment-methods/list', [ExpensePaymentMethodController::class, 'getList'])->name('expensePaymentMethod.list');
     Route::resource('expenseStatus', ExpenseStatusController::class);
     Route::get('expense-status/list', [ExpenseStatusController::class, 'getList'])->name('expenseStatus.list');
+    Route::get('expense-partial-pay/list/{id}', [ExpenseController::class, 'viewPartialPay'])->name('expensePartialPay.list');
     Route::resource('expenseAdditionalFee', ExpenseAdditionalFeeTypeController::class);
     Route::get('expense-additional-fees/list', [ExpenseAdditionalFeeTypeController::class, 'getList'])->name('expenseAdditionalFee.list');
     Route::get('projectvendors/get-vendor-details/{vendorId}/{projectId}', [ProjectVendorController::class, 'getVendorDetails'])->name('projectvendors.get_vendor_details');

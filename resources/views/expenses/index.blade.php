@@ -385,5 +385,15 @@ $recurringExpensesPermission = user()->permission('manage_recurring_expense');
                 }
             })
         };
+        
+        $('body').on('click', '.open-partial-pay-modal', function () {
+            var id = $(this).data('partial-id');
+            var url = "{{ route('expensePartialPay.list', ':id') }}";
+            url = url.replace(':id', id);
+
+            $(MODAL_XL + ' ' + MODAL_HEADING).html('Loading...');
+            $.ajaxModal(MODAL_XL, url);
+        });
+
     </script>
 @endpush

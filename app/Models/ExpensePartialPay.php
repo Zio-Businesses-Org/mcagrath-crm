@@ -36,4 +36,14 @@ class ExpensePartialPay extends BaseModel
         return $this->belongsTo(Expense::class, 'expense_id');
     }
 
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(ExpensesCategory::class, 'category_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'added_by')->withoutGlobalScope(ActiveScope::class);
+    }
+
 }

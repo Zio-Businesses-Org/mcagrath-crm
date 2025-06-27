@@ -278,5 +278,14 @@ $addExpensesPermission = user()->permission('add_expenses');
             }
         })
     };
+    
+    $('body').on('click', '.open-partial-pay-modal', function () {
+        var id = $(this).data('partial-id');
+        var url = "{{ route('expensePartialPay.list', ':id') }}";
+        url = url.replace(':id', id);
+
+        $(MODAL_XL + ' ' + MODAL_HEADING).html('Loading...');
+        $.ajaxModal(MODAL_XL, url);
+    });
 
 </script>

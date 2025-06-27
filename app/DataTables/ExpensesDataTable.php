@@ -173,18 +173,26 @@ class ExpensesDataTable extends BaseDataTable
                 }
             }
         );
-
         $datatables->editColumn(
-            'partial_pay',
+            'pay_date',
             function ($row) {
-                if ($row->partialPay->isNotEmpty()) {
-                    return '<a href="' . route('expenses.show', $row->id) . '" class="text-darkest-grey"> Ongoing </a>';
+                if (!is_null($row->pay_date)) {
+                    return $row->pay_date->translatedFormat($this->company->date_format);
                 }
                 else{
                     return 'N/A';
                 }
             }
         );
+
+        $datatables->editColumn('partial_pay', function ($row) {
+            if ($row->partialPay->isNotEmpty()) {
+                return '<a href="javascript:void(0);" class="text-darkest-grey open-partial-pay-modal" data-partial-id="' . $row->id . '">Ongoing</a>';
+            } else {
+                return 'N/A';
+            }
+        });
+
         
         // $datatables->editColumn(
         //     'purchase_from',

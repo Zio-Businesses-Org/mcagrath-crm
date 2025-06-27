@@ -44,6 +44,7 @@ class ExpensePartialPayController extends AccountBaseController
     {
         $request->validate([
             'price' => 'required',
+            'pay_date' => 'required',
         ]);
         $expense = new ExpensePartialPay();
         
@@ -66,4 +67,14 @@ class ExpensePartialPayController extends AccountBaseController
         return Reply::successWithData(__('messages.recordSaved'), ['redirectUrl' => route('projects.show', $request->project_id) . '?tab=expenses']);
 
     }
+
+    public function edit($id, Request $request)
+    {
+        $this->expense = ExpensePartialPay::findOrFail($id);
+        $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
+        $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Fetch payment methods
+        $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Fetch fee methods
+        return view('expenses.partial_pay.ajax.edit', $this->data);
+    }
+    
 }

@@ -75,7 +75,7 @@
                     </div>
                     
                     <div class="col-md-6 col-lg-3">
-                        <x-forms.datepicker fieldId="pay_date" :fieldLabel="__('Payment Date')" fieldName="pay_date"
+                        <x-forms.datepicker fieldId="pay_date" :fieldLabel="__('Payment Date')" fieldName="pay_date" fieldRequired="true"
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
                     <div class="col-md-6 col-lg-3">
@@ -273,6 +273,7 @@
         });
 
         $('#save-expense-form').click(function() {
+
             let note = document.getElementById('description').children[0].innerHTML;
             document.getElementById('description-text').value = note;
             var mention_user_id = $('#description span[data-id]').map(function() {
@@ -283,7 +284,54 @@
             var data = $('#save-expense-data-form').serialize();
             var pending_amount = $('#pending_amount').val();
             var bid_approved_amount = parseFloat($('#bid_approved_amount').val());
-           
+            var price = parseFloat($('#price').val());
+            const fileInput = document.getElementById('bill');
+            let optionsHtml = '';
+            let preConfirmFn = null;
+
+            if (fileInput && fileInput.files.length > 0) {
+                optionsHtml = `
+                    <h4 class="mb-0 p-20 f-15 font-weight-normal text-capitalize">
+                        If YES. Please Check One Of The Following To Sort Out Where The Bill Has To Be Stored</h4>
+                    <div style="display: flex; gap: 1.5rem; justify-content: center;">
+                        <label style="color: white;">
+                            <input type="radio" name="option" value="original_expense" style="transform: scale(1.5);" /> Original Expense
+                        </label>
+                        <label style="color: white;">
+                            <input type="radio" name="option" value="partial_pay" style="transform: scale(1.5);" /> Partial Pay
+                        </label>
+                        <label style="color: white;">
+                            <input type="radio" name="option" value="both" style="transform: scale(1.5);" /> Both
+                        </label>
+                    </div>
+                `;
+
+                preConfirmFn = () => {
+                    const selected = document.querySelector('input[name="option"]:checked');
+                    if (!selected) {
+                        Swal.showValidationMessage('Please select one option');
+                        return false;
+                    }
+                    return selected.value;
+                };
+            }
+            if ( isNaN(price) || price == 0 )
+            {
+                Swal.fire({
+                icon: 'error',
+                text: '{{ __('Please Provide The Price') }}',
+
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+                });
+                return false;
+            }
             if ( isNaN(bid_approved_amount) || bid_approved_amount == 0 )
             {
                 Swal.fire({
@@ -304,47 +352,33 @@
             
             if(parseFloat(pending_amount) > 0)
             {
+                
                 Swal.fire({
                     title: 'Do You Want To Create a Partial Payment Info',
-                    text: '{{ __('') }}',
-                    html: `
-                        <h4 class="mb-0 p-20 f-15 font-weight-normal text-capitalize">
-                        If YES. Please Check One Of The Following To Sort Out Where The Bill Has To Be Stored</h4>
-                        <div style="display: flex; gap: 1.5rem; justify-content: center;">
-                            <label style="color: white;">
-                                <input type="radio" name="option" value="partial_pay" style=" transform: scale(1.5);"/> Partial Pay
-                            </label>
-                            <label style="color: white;">
-                                <input type="radio" name="option" value="both" style=" transform: scale(1.5);"/> Both
-                            </label>
-                        </div> `,
+                    html: `${optionsHtml}`,
                     showCancelButton: true,
                     customClass: {
                         confirmButton: 'btn btn-primary',
                         cancelButton: 'btn btn-secondary',
                     },
-                    
-                    preConfirm: () => {
-                        const selected = document.querySelector('input[name="option"]:checked');
-                        if (!selected) {
-                        Swal.showValidationMessage('Please select one option');
-                        return false;
-                        }
-                        return selected.value;
-                    }
+                    preConfirm: preConfirmFn 
                     }).then((result) => {
+                    const selectedOption = result.isConfirmed ? result.value : null;
                     if (result.isConfirmed) {
-                        console.log('Selected:', result.value);
-                        saveexpenseForm(url,data,result.value)
-                    }
-                    else if (result.dismiss){
-                        saveexpenseForm(url,data,null)
-                    }
+                            saveexpenseForm(url, data, selectedOption,'yes');
+                        }
+                        else if (result.dismiss){
+                            saveexpenseForm(url, data, selectedOption,'no');
+                        }
                 });
+                
+            }
+            else{
+                saveexpenseForm(url,data,null,'no')
             }
             
         });
-        function saveexpenseForm(url,data,storage)
+        function saveexpenseForm(url,data,storage,create)
         {
         $.easyAjax({
                 url: url,
@@ -356,6 +390,7 @@
                 data: {
                     data:data,
                     storage:storage,
+                    create:create
                 },
                 file: true,
                 success: function(response) {

@@ -28,18 +28,13 @@
                     </div>
                     
                     <div class="col-md-6 col-lg-3">
-                        <x-forms.datepicker fieldId="pay_date" :fieldLabel="__('Payment Date')" fieldName="pay_date"
+                        <x-forms.datepicker fieldId="pay_date" :fieldLabel="__('Payment Date')" fieldName="pay_date" fieldRequired="true"
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
                     <div class="col-md-6 col-lg-3">
                         <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.price')" fieldName="price"
                             fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')" />
 
-                    </div>
-
-                    <div class="col-md-6 col-lg-4 d-none">
-                        <x-forms.datepicker fieldId="purchase_date" fieldRequired="true" :fieldLabel="__('modules.expenses.purchaseDate')"
-                            fieldName="purchase_date" :fieldPlaceholder="__('placeholders.date')" :fieldValue="\Carbon\Carbon::today()->format(company()->date_format)" />
                     </div>
 
                     <div class="col-md-3">
