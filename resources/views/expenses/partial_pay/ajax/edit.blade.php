@@ -7,7 +7,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-sm-12">
-            <x-form id="save-partial-pay-form">
+            <x-form id="update-partial-pay-form" method="PUT">
 
                 <div class="add-client bg-white rounded">
 
@@ -77,7 +77,7 @@
                     </div>
 
                     <x-form-actions>
-                        <x-forms.button-primary id="save-partial-pay" class="mr-3" icon="check">@lang('app.save')
+                        <x-forms.button-primary id="update-partial-pay" class="mr-3" icon="check">@lang('app.save')
                         </x-forms.button-primary>
                         <x-forms.button-cancel :link="route('expenses.index')" class="border-0">@lang('app.cancel')
                         </x-forms.button-cancel>
@@ -90,5 +90,38 @@
     </div>
 </div>
 <script>
+    $(document).ready(function() {
+
+        $("#update-partial-pay-form .select-picker").selectpicker();
+
+        $('#bill').dropify();
+        $('#bill').dropify().on('dropify.afterClear', function (event, element) {
+            $('input[name="bill_delete"]').remove();
+
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'bill_delete',
+                value: 'yes'
+            }).appendTo('#update-partial-pay-form');
+        });
+        $('#update-partial-pay').click(function() {
+            var url = "{{ route('partial-pay.update', $expense->id) }}";
+            $.easyAjax({
+                url: url,
+                container: '#update-partial-pay-form',
+                type: "POST",
+                blockUI: true,
+                disableButton: true,
+                buttonSelector: '#update-partial-pay',
+                data: $('#update-partial-pay-form').serialize(),
+                file: true,
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                    }
+                }
+            })
+        });
+    });
     
 </script>

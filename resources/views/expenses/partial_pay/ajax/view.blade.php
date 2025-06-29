@@ -46,7 +46,10 @@
                 </td>
                 <td class="text-right pr-20">
                     <div class="task_view">
-                    
+                        @if($item->bill)
+                        <a class="taskView sow-detail text-darkest-grey f-w-500"
+                            target="_blank" href="{{ $item->bill_url }}">@lang('view bill')</a>
+                        @endif
                         <div class="dropdown">
                             <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"
                                 type="link" id="dropdownMenuLink-{{ $item->id }}" data-toggle="dropdown"
@@ -62,7 +65,7 @@
                                     @lang('app.edit')
                                 </a>
                                 
-                                <a class="dropdown-item delete-row" href="javascript:;"
+                                <a class="dropdown-item delete-row-partial" href="javascript:;"
                                     data-row-id="{{ $item->id }}">
                                     <i class="fa fa-trash mr-2"></i>
                                     @lang('app.delete')
@@ -92,6 +95,52 @@
 
         $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_XL, url);
+
+    });
+
+    $('.delete-row-partial').click(function() {
+
+        var id = $(this).data('row-id');
+        var url = "{{ route('partial-pay.destroy', ':id') }}";
+        url = url.replace(':id', id);
+
+        var token = "{{ csrf_token() }}";
+
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $('#row-' + id).fadeOut();
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
 
     });
 

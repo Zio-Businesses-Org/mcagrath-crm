@@ -42,6 +42,7 @@ class ExpensePartialPayController extends AccountBaseController
 
     public function store(Request $request)
     {
+        
         $request->validate([
             'price' => 'required',
             'pay_date' => 'required',
@@ -75,6 +76,43 @@ class ExpensePartialPayController extends AccountBaseController
         $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Fetch payment methods
         $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Fetch fee methods
         return view('expenses.partial_pay.ajax.edit', $this->data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'price' => 'required',
+            'pay_date' => 'required',
+        ]);
+        $expense = ExpensePartialPay::findOrFail($id);
+        
+        $expense->price = round($request->price, 2);
+        
+        $expense->category_id = $request->category_id;
+        $expense->last_updated_by = user()->id;
+        $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
+        $expense->additional_fee = $request->fee_method_id;
+        $expense->payment_method = $request->payment_method; // Store the name
+   
+        if ($request->bill_delete == 'yes') {
+            Files::deleteFile($expense->bill, ExpensePartialPay::FILE_PATH);
+            $expense->bill = null;
+        }
+
+        if ($request->hasFile('bill')) {
+            Files::deleteFile($expense->bill, ExpensePartialPay::FILE_PATH);
+
+            $filename = Files::uploadLocalOrS3($request->bill, ExpensePartialPay::FILE_PATH);
+            $expense->bill = $filename;
+        }
+        $expense->save();
+        return Reply::successWithData(__('messages.recordSaved'), ['redirectUrl' => route('projects.show', $expense->project_id) . '?tab=expenses']);
+    }
+
+    public function destroy($id)
+    {
+        ExpensePartialPay::destroy($id);
+        return Reply::success(__('messages.deleteSuccess'));
     }
     
 }
