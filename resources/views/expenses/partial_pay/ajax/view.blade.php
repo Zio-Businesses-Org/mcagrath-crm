@@ -5,6 +5,10 @@
 </div>
 
 <div class="modal-body">
+    <x-forms.link-primary class="mr-3 openRightModal float-left mb-3" icon="plus"
+                :link="route('partial-pay.create', [$expense->id, $expense->project?->id, $expense->projectvendor?->id])" id="addPartialPay">
+                @lang('Add Partial Pay')
+    </x-forms.link-primary>
     <x-table class="border-0 pb-3 admin-dash-table table-hover">
 
         <x-slot name="thead">
@@ -96,6 +100,9 @@
         $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_XL, url);
 
+    });
+    $('#addPartialPay').click(function() {
+         $('.modal.show').modal('hide');
     });
 
     $('.delete-row-partial').click(function() {
