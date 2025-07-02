@@ -184,10 +184,10 @@ class ExpenseController extends AccountBaseController
         $expense->additional_fee = $request->fee_method_id;
         $expense->payment_method = $request->payment_method; // Store the name
         $expense->status = 'Pending';
-        if((float)$request->pending_amount > 0)
-        {
-            $expense->status = 'Paid Off';   
-        }
+        // if((float)$request->pending_amount > 0)
+        // {
+        //     $expense->status = 'Paid Off';   
+        // }
         if ($userRole[0] == 'admin') {
             //$expense->status = 'Paid';
             $expense->approver_id = user()->id;
@@ -203,7 +203,7 @@ class ExpenseController extends AccountBaseController
             $expense->project_id = $request->project_id;
         }
 
-        if ($request->hasFile('bill') && ($request->storage == 'both' || $request->storage == 'original_expense' || $request->storage == null )) {
+        if ($request->hasFile('bill') && ($request->storage == 'both' || $request->storage == 'original_expense' || $request->storage == 'null' )) {
             $filename = Files::uploadLocalOrS3($request->bill, Expense::FILE_PATH);
             $expense->bill = $filename;
         }
