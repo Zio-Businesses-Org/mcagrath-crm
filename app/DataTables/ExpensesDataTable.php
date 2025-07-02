@@ -58,6 +58,15 @@ class ExpensesDataTable extends BaseDataTable
 
             $action .= '<a href="' . route('expenses.show', [$row->id]) . '" class="dropdown-item openRightModal"><i class="fa fa-eye mr-2"></i>' . __('app.view') . '</a>';
 
+            $disabled = $row->bid_approved_amt == 0;
+            // $action .= '<a ' .
+            //     ($disabled
+            //         ? 'title="Partial Pay is disabled because Bid Approved Amount is zero" class="dropdown-item text-muted pointer-events-none " data-bs-toggle="tooltip"' 
+            //         : 'href="' . route('partial-pay.create', [$row->id, $row->project?->id, $row->projectvendor?->id]) . '" class="dropdown-item openRightModal"') .
+            //     '>' .
+            //     '<i class="bi bi-cash-coin mr-2"></i>' . __('Add Partial Pay') . '</a>';
+
+
             if (is_null($row->expenses_recurring_id)) {
                 if ($this->editExpensePermission == 'all' || ($this->editExpensePermission == 'added' && user()->id == $row->added_by)) {
                     if (is_null($row->project_id)) {
@@ -183,6 +192,26 @@ class ExpensesDataTable extends BaseDataTable
                 }
             }
         );
+
+
+        $datatables->editColumn('partial_pay', function ($row) {
+            if ($row->partialPay->isNotEmpty()) {
+
+                if($row->partial_pay_sum_price != $row->bid_approved_amt){
+
+                 return '<a href="javascript:void(0);" class="text-darkest-grey open-partial-pay-modal" data-partial-id="' . $row->id . '">Ongoing</a>';
+
+                }
+                else{
+                    
+                    return '<a href="javascript:void(0);" class="text-darkest-grey open-partial-pay-modal" data-partial-id="' . $row->id . '">Completed</a>';
+                }
+            } else {
+                return 'N/A';
+            }
+        });
+
+        
         // $datatables->editColumn(
         //     'purchase_from',
         //     function ($row) {
@@ -199,7 +228,7 @@ class ExpensesDataTable extends BaseDataTable
         // Custom Fields For export
         $customFieldColumns = CustomField::customFieldData($datatables, Expense::CUSTOM_FIELD_MODEL);
 
-        $datatables->rawColumns(array_merge(['action', 'status', 'user_id', 'item_name', 'check'], $customFieldColumns));
+        $datatables->rawColumns(array_merge(['action', 'status', 'user_id', 'item_name', 'check', 'partial_pay'], $customFieldColumns));
 
         return $datatables;
     }
@@ -212,7 +241,7 @@ class ExpensesDataTable extends BaseDataTable
         $request = $this->request();
         
         $model = Expense::with('currency', 'user', 'user.employeeDetail', 'user.employeeDetail.designation', 'user.session', 'projectvendor','project')
-         ->select('expenses.id', 'expenses.project_id', 'expenses.item_name', 'expenses.category_id','expenses.vendor_id', 'expenses.created_at', 'expenses.pay_date', 'expenses.user_id', 'expenses.payment_method',  'expenses.additional_fee','expenses.price', 'users.salutation', 'users.name', 'expenses.purchase_date', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
+         ->select('expenses.id', 'expenses.project_id', 'expenses.item_name', 'expenses.category_id','expenses.vendor_id', 'expenses.created_at', 'expenses.pay_date', 'expenses.user_id', 'expenses.payment_method',  'expenses.additional_fee','expenses.price', 'users.salutation', 'users.name', 'expenses.purchase_date','expenses.bid_approved_amt', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
 
     
             ->join('users', 'users.id', 'expenses.user_id')
@@ -221,7 +250,9 @@ class ExpensesDataTable extends BaseDataTable
             ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id')
             ->leftJoin('projects', 'projects.id', 'expenses.project_id')
             ->join('currencies', 'currencies.id', 'expenses.currency_id');
-
+        
+        $model = $model->withSum('partialPay', 'price');
+         
         if (!$this->includeSoftDeletedProjects) {
             $model->whereNull('projects.deleted_at');
         }
@@ -333,6 +364,7 @@ class ExpensesDataTable extends BaseDataTable
             __('Payment Method') => ['data' => 'payment_method', 'name' => 'expenses.payment_method', 'title' => __('Payment Method')],
             __('Additional Fee') => ['data' => 'additional_fee', 'name' => 'additional_fee', 'title' => __('Additional Fee')], // ✅ Added column
             __('app.status') => ['data' => 'status', 'name' => 'status', 'exportable' => false, 'title' => __('app.status')],
+            __('Partial Pay') => ['data' => 'partial_pay', 'name' => 'partial_pay', 'exportable' => false, 'title' => __('Partial Pay')],
             __('app.expense') . ' ' . __('app.status') => ['data' => 'status_export', 'name' => 'status', 'visible' => false, 'title' => __('app.expense')]
         ];
 

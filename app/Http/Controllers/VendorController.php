@@ -149,7 +149,6 @@ class VendorController extends AccountBaseController
        $vendor->contractor_type=$request->contracttype;
         $vendor->status=$request->status;
         $vendor->payment_methods=json_encode($request->payment_methods);
-        \Log::info($request->payment_methods);
         $vendor->gl_insurance_policy_number=$request->gl_ins_pn;
         $vendor->wc_insurance_policy_number=$request->wc_ins_pn;
         $vendor->county=$request->county;

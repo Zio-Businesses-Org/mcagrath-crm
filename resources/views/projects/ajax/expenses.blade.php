@@ -17,7 +17,14 @@ $addExpensesPermission = user()->permission('add_expenses');
             </div>
 
         </div>
-
+        <div class="col-md-4 d-flex align-items-center my-3 border-grey p-2">
+                <h4 class="f-21 font-weight-normal text-capitalize mb-0 me-2">
+                    Total Expenses:
+                </h4>
+                <span class="ml-2">
+                    {{ currency_format($project->total_expense ?? 0, $project->currency_id) }}
+                </span>
+        </div>
 
         <form action="" id="filter-form">
             <div class="d-block d-lg-flex d-md-flex my-3">
@@ -60,7 +67,7 @@ $addExpensesPermission = user()->permission('add_expenses');
 
 
         <!-- Task Box Start -->
-        <div class="d-flex flex-column w-tables rounded mt-3 bg-white">
+        <div class="d-flex flex-column w-tables rounded mt-3 bg-white table-responsive">
 
             {!! $dataTable->table(['class' => 'table table-hover border-0 w-100']) !!}
 
@@ -271,5 +278,14 @@ $addExpensesPermission = user()->permission('add_expenses');
             }
         })
     };
+    
+    $('body').on('click', '.open-partial-pay-modal', function () {
+        var id = $(this).data('partial-id');
+        var url = "{{ route('expensePartialPay.list', ':id') }}";
+        url = url.replace(':id', id);
+
+        $(MODAL_XL + ' ' + MODAL_HEADING).html('Loading...');
+        $.ajaxModal(MODAL_XL, url);
+    });
 
 </script>

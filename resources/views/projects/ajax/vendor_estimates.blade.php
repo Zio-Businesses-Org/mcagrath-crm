@@ -18,7 +18,14 @@ $addInvoicePermission = user()->permission('add_invoices');
                 @endif
             </div>
             <!-- Add Task Export Buttons End -->
-
+            <div class="col-md-4 d-flex align-items-center my-3 border-grey p-2">
+                <h4 class="f-21 font-weight-normal text-capitalize mb-0 me-2">
+                    Total Vendor Estimate:
+                </h4>
+                <span class="ml-2">
+                    {{ currency_format($project->total_vendor_estimate ?? 0, $project->currency_id) }}
+                </span>
+            </div>
 
             <form action="" id="filter-form">
                 <div class="d-block d-lg-flex d-md-flex my-3">

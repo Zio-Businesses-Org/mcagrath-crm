@@ -283,6 +283,24 @@ class Project extends BaseModel
                     ->value('total'); // This returns a single value, NOT a collection
     }
 
+    public function getTotalClientEstimateAttribute()
+    {
+        return $this->client_estimates()
+                    ->sum('total'); // This returns a single value, NOT a collection
+    }
+
+    public function getTotalVendorEstimateAttribute()
+    {
+        return $this->vendor_estimates()
+                    ->sum('total'); // This returns a single value, NOT a collection
+    }
+
+    public function getTotalExpenseAttribute()
+    {
+        return $this->expenses()
+                    ->sum('price'); // This returns a single value, NOT a collection
+    }
+
     
     public function contracts(): HasMany
     {
@@ -321,6 +339,10 @@ class Project extends BaseModel
                     ->orderByDesc('id');
     }
 
+    public function client_estimates(): HasMany
+    {
+        return $this->hasMany(Estimate::class, 'project_id')->orderByDesc('id');
+    }
 
     public function vendor_estimates(): HasMany
     {
