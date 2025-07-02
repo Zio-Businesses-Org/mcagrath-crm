@@ -782,7 +782,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('projectvendors/get-vendor-details/{vendorId}/{projectId}', [ProjectVendorController::class, 'getVendorDetails'])->name('projectvendors.get_vendor_details');
 
     //Partial-Pay-Expense
-    Route::resource('partial-pay', ExpensePartialPayController::class);
+    Route::resource('partial-pay', ExpensePartialPayController::class)->except(['create']);
     Route::get('partial-pay/{expenseId}/{projectId}/{vendorId}', [ExpensePartialPayController::class, 'create'])->name('partial-pay.create');
 
     // Timelogs
