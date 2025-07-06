@@ -270,7 +270,10 @@ $(document).ready(function() {
             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
             'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            // 'Today Onwards': [moment(), moment().add(10, 'years')],
+            // 'Tomorrow Onwards': [moment().add(1, 'day'), moment().add(10, 'years')],
+            // 'Past': [moment().subtract(50, 'years'), moment().subtract(1, 'day')],
         }
     });
         

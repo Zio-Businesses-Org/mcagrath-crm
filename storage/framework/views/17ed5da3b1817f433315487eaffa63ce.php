@@ -603,12 +603,19 @@ $deleteProjectPermission = user()->permission('delete_projects');
                 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
                 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
                 'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                // 'Today Onwards': [moment(), moment().add(10, 'years')],
+                // 'Tomorrow Onwards': [moment().add(1, 'day'), moment().add(10, 'years')],
+                // 'Past': [moment().subtract(50, 'years'), moment().subtract(1, 'day')],
            }
         });
         
         $('#nxtRange').on('apply.daterangepicker', function(ev, picker) {
             // Get start and end dates
+            if(picker.endDate == 'Future')
+            {
+                console.log(picker.endDate);
+            }
             startDatenxt = picker.startDate.format('YYYY-MM-DD');
             document.getElementById('startDatenxt').value=startDatenxt;
             endDatenxt = picker.endDate.format('YYYY-MM-DD');

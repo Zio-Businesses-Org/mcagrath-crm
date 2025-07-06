@@ -340,7 +340,18 @@ class ProjectsDataTable extends BaseDataTable
                     </div>
                       ';
         });
-        
+        $datatables->editColumn('quick_notes_disp', function ($row){
+           if($row->quick_notes){ 
+
+            return '<span data-toggle="tooltip" title="' . e($row->quick_notes) . '">
+            <i class="fa fa-sticky-note" aria-hidden="true"></i>
+            </span>' ;
+
+            }
+            else{ 
+                return 'N/A';
+            }
+        });
          $datatables->editColumn('total', function ($row){
             
             return currency_format($row->invoices_sum_total ?? 0, $row->currency_id);
@@ -466,7 +477,7 @@ class ProjectsDataTable extends BaseDataTable
         // Custom Fields For export
         $customFieldColumns = CustomField::customFieldData($datatables, Project::CUSTOM_FIELD_MODEL);
 
-        $datatables->rawColumns(array_merge(['project_name', 'action', 'completion_percent', 'members', 'status', 'client_id', 'check', 'project_short_code', 'deadline','rinspectiondt','inspectiondt','wsdt','wrsdt','vendors','nxtfollowdt'], $customFieldColumns));
+        $datatables->rawColumns(array_merge(['project_name', 'action', 'completion_percent', 'members', 'status', 'client_id', 'check', 'project_short_code', 'deadline','rinspectiondt','inspectiondt','wsdt','wrsdt','vendors','nxtfollowdt','quick_notes_disp'], $customFieldColumns));
 
         return $datatables;
     }
@@ -508,7 +519,7 @@ class ProjectsDataTable extends BaseDataTable
             ->selectRaw(
                 'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
               projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,projects.cancelled_date,projects.cancelled_reason,projects.project_coordinator_id,projects.project_scheduler_id,projects.vendor_recruiter_id,
-              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,projects.nxt_follow_up_time,projects.nxt_follow_up_date,
+              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,projects.nxt_follow_up_time,projects.nxt_follow_up_date,projects.quick_notes,
               property_details.state,property_details.city,property_details.zipcode,property_details.street_address,property_details.county,
               projects.work_schedule_re_date,projects.work_schedule_re_time,projects.work_completion_date,project_category.category_name,
             projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
@@ -836,6 +847,8 @@ class ProjectsDataTable extends BaseDataTable
             __('app.delayedby') => ['data' => 'delayed_by', 'name' => 'delayed_by', 'title' => __('app.delayedby')],
             __('Client Paid Date') => ['data' => 'cpaydate', 'name' => 'cpaydate', 'title' => __('Client Paid Date')],
             __('Client Paid Amount') => ['data' => 'cpayamt', 'name' => 'cpayamt', 'title' => __('Client Paid Amount')],
+            __('Quick Note') => ['data' => 'quick_notes_disp', 'name' => 'quick_notes_disp', 'exportable' => false, 'title' => __('Quick Note')],
+             __('Note') => ['data' => 'quick_notes', 'name' => 'quick_notes', 'visible' => false, 'title' => __('Note')],
             // Hide __('app.progress') => ['data' => 'completion_percent', 'name' => 'completion_percent', 'exportable' => false, 'title' => __('app.progress')],
             
         ];

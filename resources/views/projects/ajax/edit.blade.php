@@ -22,9 +22,23 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                     @lang('modules.projects.projectInfo')</h4>
                 <div class="row p-20">
                     <div class="col-lg-3 col-md-3">
-                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Work Order #')"
-                                      fieldName="project_code" fieldRequired="true" fieldId="project_code"
-                                      :fieldPlaceholder="__('Project unique work order')" :fieldValue="$project->project_short_code" />
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Work Order #')"
+                            fieldName="project_code" fieldRequired="true" fieldId="project_code"
+                            :fieldPlaceholder="__('Project unique work order')" :fieldValue="$project->project_short_code" />
+                    </div>
+                     <div class="col-md-3">
+
+                        <x-forms.input-group>
+                            <x-client-selection-dropdown :clients="$clients" fieldRequired="false"
+                                                         :selected="$project->client_id ?? null"/>
+{{--                            @if ($addClientPermission == 'all' || $addClientPermission == 'added')--}}
+{{--                                <x-slot name="append">--}}
+{{--                                    <button id="add-client" type="button"--}}
+{{--                                        class="btn btn-outline-secondary border-grey"--}}
+{{--                                        data-toggle="tooltip" data-original-title="{{__('modules.client.addNewClient') }}">@lang('app.add')</button>--}}
+{{--                                </x-slot>--}}
+{{--                            @endif--}}
+                        </x-forms.input-group>
                     </div>
 
                     <input type="hidden" name="project_id" value="{{ $project->id }}">
@@ -138,21 +152,12 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldValue="($project->nxt_follow_up_time ? \Carbon\Carbon::createFromFormat('H:i:s', $project->nxt_follow_up_time)->format(company()->time_format) : '')" />        
                         </div>          
                     </div>
-                    <div class="col-md-3">
-                        <x-forms.label class="mb-12 mt-3" fieldId="type"
-                                       :fieldLabel="__('Delayed By')">
-                        </x-forms.label>
-                        <x-forms.input-group>
-                            <select class="form-control select-picker" name="delayed_by" id="delayed_by"
-                                    data-live-search="true">
-                                    <option value="">--</option>
-                                @foreach ($delayedby as $category)
-                                    <option @selected($project->delayed_by == $category->delayed_by) value="{{ $category->delayed_by}}">
-                                    {{ $category->delayed_by }}</option>
-                                @endforeach
-                            </select>
-                        </x-forms.input-group>
+                     <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Quick Note')"
+                                      fieldName="quick_notes"  fieldId="quick_notes"
+                                      :fieldPlaceholder="__('Enter Quick Note')" :fieldValue="$project->quick_notes" />
                     </div>
+                    
                     <div class="col-md-3 col-lg-3">
                         <x-forms.datepicker fieldId="inspection_date" custom="true"
                             :fieldLabel="__('Inspection Date')" fieldName="inspection_date"
@@ -229,6 +234,21 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                                         :fieldValue="($project->work_schedule_re_time ? \Carbon\Carbon::createFromFormat('H:i:s', $project->work_schedule_re_time)->format(company()->time_format) : '')" />
                                 </div>
                     </div>
+                    <div class="col-md-3">
+                        <x-forms.label class="mb-12 mt-3" fieldId="type"
+                                       :fieldLabel="__('Delayed By')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="delayed_by" id="delayed_by"
+                                    data-live-search="true">
+                                    <option value="">--</option>
+                                @foreach ($delayedby as $category)
+                                    <option @selected($project->delayed_by == $category->delayed_by) value="{{ $category->delayed_by}}">
+                                    {{ $category->delayed_by }}</option>
+                                @endforeach
+                            </select>
+                        </x-forms.input-group>
+                    </div>
                     <div class="col-md-3 col-lg-3">
                         <x-forms.datepicker fieldId="work_completion_date" custom="true"
                             :fieldLabel="__('Work Completion Date')" fieldName="work_completion_date"
@@ -263,21 +283,8 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldValue="($project->latestInvoice?->created_at ? $project->latestInvoice->created_at->timezone(company()->timezone)->format(company()->date_format) : '')" />
                                
                     </div>
-                    <div class="col-md-3">
-
-                        <x-forms.input-group>
-                            <x-client-selection-dropdown :clients="$clients" fieldRequired="false"
-                                                         :selected="$project->client_id ?? null"/>
-{{--                            @if ($addClientPermission == 'all' || $addClientPermission == 'added')--}}
-{{--                                <x-slot name="append">--}}
-{{--                                    <button id="add-client" type="button"--}}
-{{--                                        class="btn btn-outline-secondary border-grey"--}}
-{{--                                        data-toggle="tooltip" data-original-title="{{__('modules.client.addNewClient') }}">@lang('app.add')</button>--}}
-{{--                                </x-slot>--}}
-{{--                            @endif--}}
-                        </x-forms.input-group>
-                    </div>
-                     <div class="col-md-3 col-lg-3">
+                   
+                    <div class="col-md-3 col-lg-3">
                     
                         <x-forms.text :fieldLabel="__('Client Paid Date')"
                             :fieldPlaceholder="__('placeholders.hours')" fieldName="client_paid_on"
@@ -285,6 +292,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldValue="($project->latestPayment ? $project->latestPayment->paid_on->format(company()->date_format) : '')" />
                                 
                     </div>
+                    
                     
                     <div class="col-md-12 col-lg-12">
                         <div class="form-group my-3">

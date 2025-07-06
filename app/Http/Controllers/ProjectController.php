@@ -761,6 +761,7 @@ class ProjectController extends AccountBaseController
         $project->vendor_recruiter_id = $request->vendor_recruiter;
         $project->project_coordinator_id = $request->project_coordinator;
         $project->project_scheduler_id = $request->project_scheduler;
+        $project->quick_notes = $request->quick_notes;
         $propertyDetails->property_address = $request->property_add;
         $propertyDetails->property_address = $request->property_address;
         $propertyDetails->street_address = $request->street_address;

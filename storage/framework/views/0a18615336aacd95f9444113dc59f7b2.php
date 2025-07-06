@@ -122,6 +122,11 @@
                         Lock Box Code - <?php echo e($project->propertyDetails->lockboxcode ?? ''); ?> 
                 </div>
             </div>
+            <div class="row border-bottom-grey">
+                <div class="col">
+                        Note - <?php echo e($project->quick_notes ?? ''); ?>                        
+                </div>
+            </div>
         </div>
         <div class="col-sm">
             <div class="row border-bottom-grey">
