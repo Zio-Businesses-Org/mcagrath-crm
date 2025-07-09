@@ -15,6 +15,8 @@
                     <th class="pl-20">#</th>
                     <th>@lang('Vendor Name')</th>
                     <th>@lang('Vendor Phone')</th>
+                    <th>@lang('Vendor Office #')</th>
+                    <th>@lang('Vendor Company Name')</th>
                     <th>@lang('Vendor Email')</th>
                 </x-slot>
 
@@ -26,6 +28,12 @@
                         </td>
                         <td>
                             {{$item->vendor_phone??''}}
+                        </td>
+                        <td>
+                            {{$item->vendors->office??''}}
+                        </td>
+                        <td>
+                            {{$item->vendors->company_name??''}}
                         </td>
                         <td>
                             {{$item->vendor_email_address}}

@@ -30,7 +30,7 @@ class StoreExpense extends CoreRequest
         $rules = [
             'project_id' =>'required',
             'price' => 'required|numeric',
-            'pay_date'=>'required',
+            
         ];
 
         $rules = $this->customFieldRules($rules);
