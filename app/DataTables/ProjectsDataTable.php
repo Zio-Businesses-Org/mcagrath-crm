@@ -798,6 +798,7 @@ class ProjectsDataTable extends BaseDataTable
                 'class' => 'text-right pr-20'
             ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => false, 'title' => '#'],
+            __('Next F/U Details') => ['data' => 'nxtfollowdt', 'name' => 'nxtfollowdt', 'title' => __('Next F/U Details'), 'width' => '12%'],
             __('app.completion') => ['data' => 'completion_export', 'name' => 'completion_export', 'visible' => false, 'title' => __('app.completion')],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'width' => '16%', 'exportable' => false, 'title' => __('app.status')],
             __('app.project') . ' ' . __('app.status') => ['data' => 'project_status', 'name' => 'status', 'visible' => false, 'title' => __('app.project') . ' ' . __('app.status')],
@@ -827,7 +828,7 @@ class ProjectsDataTable extends BaseDataTable
             __('Vendor') => ['data' => 'vendors_name', 'name' => 'vendors_name', 'visible' => false, 'title' => __('Vendor')],
             __('app.pdate') => ['data' => 'start_date', 'name' => 'start_date', 'title' => __('app.pdate'), 'width' => '12%'],
             __('app.due') => ['data' => 'deadline', 'name' => 'deadline', 'title' => __('app.due'), 'width' => '12%'],
-            __('Next Follow Up Date & Time') => ['data' => 'nxtfollowdt', 'name' => 'nxtfollowdt', 'title' => __('Next Follow Up Date & Time'), 'width' => '12%'],
+            
             __('app.inspectiondt') => ['data' => 'inspectiondt', 'name' => 'inspectiondt', 'title' => __('app.inspectiondt'), 'width' => '12%'],
             __('app.rinspectiondt') => ['data' => 'rinspectiondt', 'name' => 'rinspectiondt', 'title' => __('app.rinspectiondt'), 'width' => '12%'],
             __('app.bsdate') => ['data' => 'bsdate', 'name' => 'bsdate', 'title' => __('app.bsdate'), 'width' => '12%'],
