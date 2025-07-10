@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\App;
 use App\Notifications\ProjectVendorRemoved;
 use App\Models\CancelledReason;
 use App\Models\VendorWorkOrderStatus;
+use App\Models\GlobalSetting;
 
 class ProjectVendorController extends AccountBaseController
 {
@@ -78,8 +79,18 @@ class ProjectVendorController extends AccountBaseController
             $vpro->contract_id=$request->contract_id;
             $vpro->link_status='Sent';
             $vpro->save();
+
+            $url = url()->temporarySignedRoute(
+                'external.expense.view',
+                now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),
+                ['pid' => $request->project_id,
+                'vid'=>$vpro->id]
+            );
+        
+            $url = getDomainSpecificUrl($url, $this->company);
+
             $this->logProjectActivity($request->project_id, 'messages.vendorcreated');
-            Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id));
+            Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id,$url));
             return Reply::success(__('New Vendor Added Successfully'));
 
         }

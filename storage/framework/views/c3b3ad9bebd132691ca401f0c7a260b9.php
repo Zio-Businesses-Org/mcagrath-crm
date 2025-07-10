@@ -1059,7 +1059,7 @@
 
     });
     $('.generate-link-estimate').click(function() {
-        console.log('hello');
+        
         var vendor_id = $(this).data('estimate-vendor-id');
         var project_id = $(this).data('estimate-project-id');
         var url="<?php echo e(route('vendor-estimates.generateLink')); ?>";

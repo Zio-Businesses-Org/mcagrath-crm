@@ -21,6 +21,7 @@ use App\Jobs\ProcessWorkOrder;
 use App\Models\ProjectFile;
 use App\Helper\Files;
 use Illuminate\Http\UploadedFile;
+use App\Models\GlobalSetting;
 
 class PublicWorkOrderController extends Controller
 {
@@ -69,7 +70,16 @@ class PublicWorkOrderController extends Controller
             $projectvendor->link_status='Accepted';
             $projectvendor->accepted_date=date("Y-m-d");
             $projectvendor->save();
-            Notification::route('mail', $projectvendor->vendor_email_address)->notify(new WorkOrderAcceptNotification($projectvendor->id,'original'));
+            $url = url()->temporarySignedRoute(
+                'external.expense.view',
+                now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),
+                ['pid' => $projectvendor->project_id,
+                'vid'=>$projectvendor->id]
+            );
+        
+            $url = getDomainSpecificUrl($url, $this->company);
+
+            Notification::route('mail', $projectvendor->vendor_email_address)->notify(new WorkOrderAcceptNotification($projectvendor->id,'original',$url));
             ProcessWorkOrder::dispatch($projectvendor->id)->onConnection('database')->onQueue('file-auto-upload');
             // $this->pdfAutoGen($projectvendor->id);               
             return Reply::success(__('Thank You. Your Response Has Been Noted'));

@@ -15,15 +15,16 @@ class WorkOrderAcceptNotification extends BaseNotification
 {
     
 
-    protected $projectvendor,$from;
+    protected $projectvendor,$from,$urlest;
     /**
      * Create a new notification instance.
      */
-    public function __construct($vproid,$by)
+    public function __construct($vproid,$by,$urlest)
     {
         $this->company = Company::find(1);
         $this->projectvendor = $vproid;
         $this->from = $by;
+        $this->urlest = $urlest;
         // $this->pdfsent =  $pdfgenerated;
     }
 
@@ -75,13 +76,14 @@ class WorkOrderAcceptNotification extends BaseNotification
         $url = getDomainSpecificUrl($url, $this->company);
         return $build
             ->subject(__($subject))
-            ->markdown('mail.email', [
+            ->markdown('mail.email-workorder', [
                 'content'=>$content,
                 'url' => $url,
                 'themeColor' => $this->company->header_color,
                 'phone'=> $this->company->company_phone,
                 'actionText' => __('Download') . ' ' . __('PDF'),
                 'notifiableName' => $vpro->vendor_name,
+                'estlink' => $this->urlest,
             ]);
             // ->attachData($pdfPath, $filename, [
             //     'mime' => 'application/pdf',
