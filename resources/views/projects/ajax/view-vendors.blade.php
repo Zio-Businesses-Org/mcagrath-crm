@@ -27,7 +27,7 @@
                             {{$item->vendor_name??''}}
                         </td>
                         <td>
-                            {{$item->vendor_phone??''}}
+                            {{$item->vendors->cell??''}}
                         </td>
                         <td>
                             {{$item->vendors->office??''}}
