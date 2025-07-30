@@ -137,27 +137,37 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldValue="($project->deadline ? $project->deadline->format(company()->date_format) : '')"
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
-                    <div class="col-md-3 col-lg-3">
-                        <x-forms.datepicker fieldId="nxt_follow_up_date" custom="true"
+                    <div class="col-lg-9 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Quick Note')"
+                            fieldName="quick_notes"  fieldId="quick_notes"
+                            :fieldPlaceholder="__('Enter Quick Note')" :fieldValue="$project->quick_notes" />
+                    </div>
+                    <div class="col-md-6 col-lg-12 my-0 my-lg-3 d-lg-flex" style="border: 1px solid lightgrey; border-radius: 10px;">
+                        <label class="f-14 font-weight-bold text-dark-grey float-left"
+                        for="usr" style="position: absolute; top: -11px; left: 11px; background-color: white; padding: 2px 5px;">@lang('Next F/U Details')</label>
+                        
+                        <div class="col-md-3 col-lg-6">
+                            <x-forms.datepicker fieldId="nxt_follow_up_date" custom="true"
                             :fieldLabel="__('Next Follow Up Date')" fieldName="nxt_follow_up_date"
                             :fieldValue="($project->nxt_follow_up_date ? $project->nxt_follow_up_date->format(company()->date_format) : '')"
                             :fieldPlaceholder="__('placeholders.date')" />
+                        </div>
+                        <div class="col-md-3 col-lg-6 curr_nxt">
+                            <div class ="mr-3 mt-2 mb-2 float-right">
+                            <x-forms.checkbox 
+                                    :fieldLabel="__('Current Date and Time')" 
+                                    fieldName="curr_date_time" 
+                                    fieldId="curr_date_time" 
+                                    fieldValue="curr_date_time"/>  
+                            </div>
+
+                            <x-forms.text :fieldLabel="__('Next Follow Up Time')"
+                                :fieldPlaceholder="__('placeholders.hours')" fieldName="nxt_follow_up_time"
+                                fieldId="nxt_follow_up_time" 
+                                :fieldValue="($project->nxt_follow_up_time ? \Carbon\Carbon::createFromFormat('H:i:s', $project->nxt_follow_up_time)->format(company()->time_format) : '')" />    
+                                
+                        </div>
                     </div>
-                    
-                    <div class="col-md-3 col-lg-3">
-                        <div>
-                         <x-forms.text :fieldLabel="__('Next Follow Up Time')"
-                            :fieldPlaceholder="__('placeholders.hours')" fieldName="nxt_follow_up_time"
-                            fieldId="nxt_follow_up_time" 
-                            :fieldValue="($project->nxt_follow_up_time ? \Carbon\Carbon::createFromFormat('H:i:s', $project->nxt_follow_up_time)->format(company()->time_format) : '')" />        
-                        </div>          
-                    </div>
-                     <div class="col-lg-3 col-md-3">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Quick Note')"
-                                      fieldName="quick_notes"  fieldId="quick_notes"
-                                      :fieldPlaceholder="__('Enter Quick Note')" :fieldValue="$project->quick_notes" />
-                    </div>
-                    
                     <div class="col-md-3 col-lg-3">
                         <x-forms.datepicker fieldId="inspection_date" custom="true"
                             :fieldLabel="__('Inspection Date')" fieldName="inspection_date"
@@ -1012,7 +1022,9 @@ $createPublicProjectPermission = user()->permission('create_public_project');
     </div>
 </div>
 
-
+<script>
+    const timeFormat = @json(company()->time_format == 'h:i A' ? 'hh:mm A' : (company()->time_format == 'H:i' ? 'HH:mm' :'HH:mm')); 
+</script>
 <script>
     $(document).ready(function() {
         let tenantCount = 1;
@@ -1079,7 +1091,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
             }
         });
 
-        $('#inspection_time,#re_inspection_time,#work_schedule_time,#work_schedule_re_time,#nxt_follow_up_time').datetimepicker({
+        $('#inspection_time,#re_inspection_time,#work_schedule_time,#nxt_follow_up_time,#work_schedule_re_time').datetimepicker({
             @if (company()->time_format == 'H:i')
                 showMeridian: false,
             @endif
@@ -1288,6 +1300,49 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                 $('#completion_percent').attr('disabled', 'true');
             } else {
                 $('#completion_percent').removeAttr('disabled');
+            }
+        });
+
+        $('#curr_date_time').change(function() {
+            let optionsHtml = `
+                <select id="minuteSelect" style="transform: scale(1.5);">
+                    <option value="0">0 min</option>
+                    <option value="1">1 min</option>
+                    <option value="2">2 min</option>
+                    <option value="3">3 min</option>
+                    <option value="5">5 min</option>
+                    <option value="10">10 min</option>
+                    <option value="15">15 min</option>
+                    <option value="20">20 min</option>
+                    <option value="30">30 min</option>
+                </select>
+            `;
+            if ($(this).is(':checked')) {
+
+                Swal.fire({
+                title: 'Extend The Time By',
+                html: `${optionsHtml}`,
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                preConfirm: () => {
+                    const selected = $('#minuteSelect').val();
+                    if (selected === null) {
+                        Swal.showValidationMessage('Please select a time');
+                        return false;
+                    }
+                    return selected; 
+                }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const addedMinutes = parseInt(result.value);
+                        const newTime = moment().add(addedMinutes, 'minutes');
+                        const today = moment();
+                        $('#nxt_follow_up_date').val(today.format('{{ company()->moment_date_format }}'));
+                        $('.curr_nxt #nxt_follow_up_time').val(newTime.format(timeFormat));
+                    }
+                });
+
             }
         });
 
