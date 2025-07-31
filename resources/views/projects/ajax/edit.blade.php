@@ -154,11 +154,8 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         </div>
                         <div class="col-md-3 col-lg-6 curr_nxt">
                             <div class ="mr-3 mt-2 mb-2 float-right">
-                            <x-forms.checkbox 
-                                    :fieldLabel="__('Current Date and Time')" 
-                                    fieldName="curr_date_time" 
-                                    fieldId="curr_date_time" 
-                                    fieldValue="curr_date_time"/>  
+                                <x-forms.button-primary id="curr_date_time" class="mr-3" icon="clock">@lang('Current Date and Time')
+                                </x-forms.button-primary>
                             </div>
 
                             <x-forms.text :fieldLabel="__('Next Follow Up Time')"
@@ -1030,6 +1027,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
         let tenantCount = 1;
         var firstOpen = true;
         var time;
+        let clickTimer;
 
         if("{{$project->projectContacts->tenant_name_2}}")
         {
@@ -1303,7 +1301,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
             }
         });
 
-        $('#curr_date_time').change(function() {
+        $('#curr_date_time').on('click', function () {
             let optionsHtml = `
                 <select id="minuteSelect" style="transform: scale(1.5);">
                     <option value="0">0 min</option>
@@ -1313,38 +1311,72 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                     <option value="5">5 min</option>
                     <option value="10">10 min</option>
                     <option value="15">15 min</option>
-                    <option value="20">20 min</option>
                     <option value="30">30 min</option>
-                </select>
+                    <option value="45">45 min</option>
+                    <option value="60">60 min</option>
+                    <option value="90">90 min</option>
+                    <option value="custom">Custom</option>
+                </select><br/><br/>
+                <input type="text" id="custom_curr" placeholder="Enter custom minutes" style="height:25px; color:white; display:none;"/>
             `;
-            if ($(this).is(':checked')) {
+
+            const today = moment();
+
+            if (clickTimer) {
+                clearTimeout(clickTimer);
+                clickTimer = null;
 
                 Swal.fire({
-                title: 'Extend The Time By',
-                html: `${optionsHtml}`,
-                customClass: {
-                    confirmButton: 'btn btn-primary',
-                },
-                preConfirm: () => {
-                    const selected = $('#minuteSelect').val();
-                    if (selected === null) {
-                        Swal.showValidationMessage('Please select a time');
-                        return false;
+                    title: 'Extend The Time By',
+                    html: optionsHtml,
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                    didOpen: () => {
+                        $('#minuteSelect').on('change', function () {
+                            if ($(this).val() === 'custom') {
+                                $('#custom_curr').show();
+                            } else {
+                                $('#custom_curr').hide();
+                            }
+                        });
+                    },
+                    preConfirm: () => {
+                        const selected = $('#minuteSelect').val();
+                        if (!selected) {
+                            Swal.showValidationMessage('Please select a time');
+                            return false;
+                        }
+
+                        if (selected === 'custom') {
+                            const customVal = $('#custom_curr').val().trim();
+                            if (!customVal || isNaN(customVal) || parseInt(customVal) < 0) {
+                                Swal.showValidationMessage('Enter a valid number of minutes');
+                                return false;
+                            }
+                            return parseInt(customVal);
+                        }
+
+                        return parseInt(selected);
                     }
-                    return selected; 
-                }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const addedMinutes = parseInt(result.value);
+                        const addedMinutes = result.value;
                         const newTime = moment().add(addedMinutes, 'minutes');
-                        const today = moment();
                         $('#nxt_follow_up_date').val(today.format('{{ company()->moment_date_format }}'));
                         $('.curr_nxt #nxt_follow_up_time').val(newTime.format(timeFormat));
                     }
                 });
 
+            } else {
+                clickTimer = setTimeout(() => {
+                    $('#nxt_follow_up_date').val(today.format('{{ company()->moment_date_format }}'));
+                    $('.curr_nxt #nxt_follow_up_time').val(today.format(timeFormat));
+                    clickTimer = null;
+                }, 300);
             }
         });
+
 
         <x-forms.custom-field-filejs/>
 
