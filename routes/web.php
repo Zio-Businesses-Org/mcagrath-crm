@@ -583,6 +583,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('lead-handle', [LeadVendorController::class, 'handle'])->name('lead-vendor.handle');
     Route::post('apply-quick-action', [LeadVendorController::class, 'applyQuickAction'])->name('leads.apply_quick_action');
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
+    Route::get('proximity-view', [VendorController::class, 'proximity_view'])->name('vendors.proximity');
     Route::post('vendors/vendor-list/{id}', [VendorController::class, 'vendorList'])->name('vendors.vendors_list');
     Route::post('vendors/vendor-list-expense/{id}', [VendorController::class, 'vendorListExpenses'])->name('vendors.vendors_list_expense');
     Route::get('vendorcheck/{email}', [LeadVendorController::class, 'vendorcheck'])->name('vendors.check');

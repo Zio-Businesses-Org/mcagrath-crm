@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Vendor;
 use App\Models\VendorContract;
 use App\Helper\Files;
+use App\Helper\geocodeAddress;
 use App\Models\Locations;
 use Illuminate\Support\Facades\File;
 use App\Helper\Reply;
@@ -116,6 +117,12 @@ class OneTimeAgreeController extends Controller
         $vendor->distance_covered=$request->dc;
         $vendor->coverage_cities=$request->cc;
         $vendor->county=$request->county;
+        $fullAddress = "{$vendor->street}, {$vendor->city}, {$vendor->state}, {$vendor->zipcode}";
+        $location = geocodeAddress::geocode_address($fullAddress);
+        if ($location) {
+            $vendor->latitude = $location['lat'];
+            $vendor->longitude = $location['lng'];
+        }
         if ($request->hasFile('logo')) {
             $logo = Files::uploadLocalOrS3($request->logo, 'vendor/logo', 300);
             $vendor->company_logo=$logo;

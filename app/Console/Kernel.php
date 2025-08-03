@@ -28,6 +28,7 @@ use App\Console\Commands\SendMonthlyAttendanceReport;
 use App\Console\Commands\SyncUserPermissions;
 use App\Console\Commands\SendTimeTracker;
 use App\Console\Commands\InActiveEmployee;
+use App\Console\Commands\GeocodeVendors;
 use DateTimeZone;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -67,6 +68,7 @@ class Kernel extends ConsoleKernel
         ClearLogs::class,
         InActiveEmployee::class,
         CreateEmployeeLeaveQuotaHistory::class,
+        GeocodeVendors::class,
     ];
 
     /**

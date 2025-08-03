@@ -234,10 +234,10 @@
 <?php unset($__componentOriginal16c5b89192469ba970d54fc9b83541bc); ?>
 <?php endif; ?>
     <?php endif; ?>
-   
-        <?php if (isset($component)) { $__componentOriginal16c5b89192469ba970d54fc9b83541bc = $component; } ?>
+        
+    <?php if (isset($component)) { $__componentOriginal16c5b89192469ba970d54fc9b83541bc = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal16c5b89192469ba970d54fc9b83541bc = $attributes; } ?>
-<?php $component = App\View\Components\MenuItem::resolve(['icon' => 'building','text' => __('Vendors'),'link' => route('vendors.index')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\MenuItem::resolve(['icon' => 'building','text' => __('Vendors')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('menu-item'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -245,13 +245,57 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-             <?php $__env->slot('iconPath', null, []); ?> 
-                <path fill-rule="evenodd"
-                      d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z" />
-                <path
-                    d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z" />
-             <?php $__env->endSlot(); ?>
-         <?php echo $__env->renderComponent(); ?>
+         <?php $__env->slot('iconPath', null, []); ?> 
+            <path fill-rule="evenodd"
+                    d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z" />
+            <path
+                d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z" />
+         <?php $__env->endSlot(); ?>
+        <div class="accordionItemContent ">
+                <?php if (isset($component)) { $__componentOriginal75a60586017d0cb41cbff8f75f4a3989 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989 = $attributes; } ?>
+<?php $component = App\View\Components\SubMenuItem::resolve(['link' => route('vendors.index'),'text' => __('Vendors')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('sub-menu-item'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\SubMenuItem::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal75a60586017d0cb41cbff8f75f4a3989)): ?>
+<?php $attributes = $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
+<?php unset($__attributesOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989)): ?>
+<?php $component = $__componentOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
+<?php unset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
+<?php endif; ?>
+            </div>
+        <div class="accordionItemContent ">
+                <?php if (isset($component)) { $__componentOriginal75a60586017d0cb41cbff8f75f4a3989 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989 = $attributes; } ?>
+<?php $component = App\View\Components\SubMenuItem::resolve(['link' => route('vendors.proximity'),'text' => __('Vendor Proximity')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('sub-menu-item'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\SubMenuItem::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal75a60586017d0cb41cbff8f75f4a3989)): ?>
+<?php $attributes = $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
+<?php unset($__attributesOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989)): ?>
+<?php $component = $__componentOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
+<?php unset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
+<?php endif; ?>
+        </div>
+     <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal16c5b89192469ba970d54fc9b83541bc)): ?>
 <?php $attributes = $__attributesOriginal16c5b89192469ba970d54fc9b83541bc; ?>

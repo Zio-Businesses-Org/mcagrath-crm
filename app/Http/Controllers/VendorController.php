@@ -157,6 +157,7 @@ class VendorController extends AccountBaseController
         $vendor->wc_check=$request->has('wc_check')?1:0;
         $vendor->coverage_cities = $request->cc;
         $vendor->distance_covered = $request->dc;
+        
         if($request->wc_ins_exp!=$vendor->wc_insurance_expiry_date&&!empty(trim($request->wc_ins_exp)))
         {
             
@@ -356,5 +357,23 @@ class VendorController extends AccountBaseController
         }
 
         return Reply::dataOnly(['status' => 'success', 'data' => $options]);
+    }
+
+    public function proximity_view()
+    {
+        $this->pageTitle = 'Vendor Proximity';
+        $this->apikey = global_setting()->google_map_key;
+        $this->contracttype = VendorContract::getContractType();
+        $vendors = VendorContract::whereNotNull('latitude')
+        ->whereNotNull('longitude')
+        ->get(['vendor_name', 'latitude', 'longitude', 'street_address', 'city', 'state', 'zip_code', 'id']);
+
+        $vendors->transform(function ($vendor) {
+            $vendor->profile_url = route('vendors.show', $vendor->id); // or use route name that matches
+            return $vendor;
+        });
+
+        $this->vendors = $vendors;
+        return view('vendors.proximity', $this->data);
     }
 }
