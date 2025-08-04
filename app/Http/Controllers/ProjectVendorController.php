@@ -89,8 +89,16 @@ class ProjectVendorController extends AccountBaseController
         
             $url = getDomainSpecificUrl($url, $this->company);
 
+            $urlext = url()->temporarySignedRoute(
+                'external.file.view',
+                now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),
+                ['data' => $request->project_id]
+            );
+        
+            $urlext = getDomainSpecificUrl($urlext, $this->company);
+
             $this->logProjectActivity($request->project_id, 'messages.vendorcreated');
-            Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id,$url));
+            Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id,$url,$urlext));
             return Reply::success(__('New Vendor Added Successfully'));
 
         }

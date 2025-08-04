@@ -20,6 +20,12 @@
 @endcomponent
 @endif
 
+@if (!empty($extlink))
+@component('mail::button', ['url' => $extlink, 'themeColor' => ((!empty($themeColor)) ? $themeColor : '#1f75cb')])
+    Please Click Here To Upload Photos (Before-During-After)
+@endcomponent
+@endif
+
 @lang('email.regards'),<br>
 {{ config('app.name') }}<br>
 {{ $phone }}

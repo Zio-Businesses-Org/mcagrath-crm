@@ -15,11 +15,11 @@ class NewVendorWorkOrder extends BaseNotification
 {
     
 
-    protected $projectvendor,$projectid,$contractid,$vendorid,$urlest;
+    protected $projectvendor,$projectid,$contractid,$vendorid,$urlest,$urlext;
     /**
      * Create a new notification instance.
      */
-    public function __construct($vproid,$proid,$cid,$vid,$urlest)
+    public function __construct($vproid,$proid,$cid,$vid,$urlest,$urlext)
     {
         $this->company = Company::find(1);
         $this->projectvendor = $vproid;
@@ -27,6 +27,7 @@ class NewVendorWorkOrder extends BaseNotification
         $this->contractid = $cid;
         $this->vendorid = $vid;
         $this->urlest = $urlest;
+        $this->urlext = $urlext;
     }
 
     /**
@@ -92,6 +93,7 @@ class NewVendorWorkOrder extends BaseNotification
                 'actionText' => __('app.view') . ' ' . __('Work Order'),
                 'notifiableName' => $vpro->vendor_name,
                 'estlink' => $this->urlest,
+                'extlink' => $this->urlext,
                 ]);
     }
 
