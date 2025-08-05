@@ -80,9 +80,7 @@
         <div class="accordionItemContent ">
             <x-sub-menu-item :link="route('vendors.index')" :text="__('Vendors')" />
         </div>
-        <!-- <div class="accordionItemContent ">
-            <x-sub-menu-item  :link="route('vendors.proximity')" :text="__('Vendor Proximity')" />
-        </div> -->
+        
     </x-menu-item>
    
 

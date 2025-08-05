@@ -252,7 +252,7 @@
                 d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z" />
          <?php $__env->endSlot(); ?>
         <div class="accordionItemContent ">
-                <?php if (isset($component)) { $__componentOriginal75a60586017d0cb41cbff8f75f4a3989 = $component; } ?>
+            <?php if (isset($component)) { $__componentOriginal75a60586017d0cb41cbff8f75f4a3989 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989 = $attributes; } ?>
 <?php $component = App\View\Components\SubMenuItem::resolve(['link' => route('vendors.index'),'text' => __('Vendors')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('sub-menu-item'); ?>
@@ -272,29 +272,8 @@
 <?php $component = $__componentOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
 <?php unset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
 <?php endif; ?>
-            </div>
-        <div class="accordionItemContent ">
-                <?php if (isset($component)) { $__componentOriginal75a60586017d0cb41cbff8f75f4a3989 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989 = $attributes; } ?>
-<?php $component = App\View\Components\SubMenuItem::resolve(['link' => route('vendors.proximity'),'text' => __('Vendor Proximity')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('sub-menu-item'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\SubMenuItem::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal75a60586017d0cb41cbff8f75f4a3989)): ?>
-<?php $attributes = $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
-<?php unset($__attributesOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989)): ?>
-<?php $component = $__componentOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
-<?php unset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
-<?php endif; ?>
         </div>
+        
      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal16c5b89192469ba970d54fc9b83541bc)): ?>
