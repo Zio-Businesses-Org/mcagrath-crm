@@ -361,6 +361,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::resource('project-template-task', ProjectTemplateTaskController::class);
             Route::resource('project-template-sub-task', ProjectTemplateSubTaskController::class);
             Route::resource('project-calendar', ProjectCalendarController::class);
+            
         }
     );
 
