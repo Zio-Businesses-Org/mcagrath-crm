@@ -59,12 +59,13 @@ class ExpensesDataTable extends BaseDataTable
             $action .= '<a href="' . route('expenses.show', [$row->id]) . '" class="dropdown-item openRightModal"><i class="fa fa-eye mr-2"></i>' . __('app.view') . '</a>';
 
             $disabled = $row->bid_approved_amt == 0;
-            // $action .= '<a ' .
-            //     ($disabled
-            //         ? 'title="Partial Pay is disabled because Bid Approved Amount is zero" class="dropdown-item text-muted pointer-events-none " data-bs-toggle="tooltip"' 
-            //         : 'href="' . route('partial-pay.create', [$row->id, $row->project?->id, $row->projectvendor?->id]) . '" class="dropdown-item openRightModal"') .
-            //     '>' .
-            //     '<i class="bi bi-cash-coin mr-2"></i>' . __('Add Partial Pay') . '</a>';
+            
+            $action .= '<a ' .
+                ($disabled
+                    ? 'title="Partial Pay is disabled because Bid Approved Amount is zero" class="dropdown-item text-muted pointer-events-none " data-bs-toggle="tooltip"' 
+                    : 'href="' . route('partial-pay.create', [$row->id, $row->project?->id, $row->projectvendor?->id]) . '" class="dropdown-item openRightModal"') .
+                '>' .
+                '<i class="bi bi-cash-coin mr-2"></i>' . __('Add Partial Pay') . '</a>';
 
 
             if (is_null($row->expenses_recurring_id)) {
