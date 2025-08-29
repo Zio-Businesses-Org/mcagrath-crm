@@ -58,15 +58,7 @@ class ExpensesDataTable extends BaseDataTable
 
             $action .= '<a href="' . route('expenses.show', [$row->id]) . '" class="dropdown-item openRightModal"><i class="fa fa-eye mr-2"></i>' . __('app.view') . '</a>';
 
-            $disabled = $row->bid_approved_amt == 0;
-            
-            $action .= '<a ' .
-                ($disabled
-                    ? 'title="Partial Pay is disabled because Bid Approved Amount is zero" class="dropdown-item text-muted pointer-events-none " data-bs-toggle="tooltip"' 
-                    : 'href="' . route('partial-pay.create', [$row->id, $row->project?->id, $row->projectvendor?->id]) . '" class="dropdown-item openRightModal"') .
-                '>' .
-                '<i class="bi bi-cash-coin mr-2"></i>' . __('Add Partial Pay') . '</a>';
-
+            $action .= '<a href="' . route('expense.processPayment', [$row->id, $row->project?->id, $row->projectvendor?->id]) . '" class="dropdown-item openRightModal"><i class="fa fa-credit-card mr-2"></i>' . __('Process Payment') . '</a>';
 
             if (is_null($row->expenses_recurring_id)) {
                 if ($this->editExpensePermission == 'all' || ($this->editExpensePermission == 'added' && user()->id == $row->added_by)) {
@@ -100,6 +92,7 @@ class ExpensesDataTable extends BaseDataTable
         $datatables->editColumn('price', function ($row) {
             return $row->total_amount;
         });
+
         $datatables->editColumn('item_name', function ($row) {
             if (is_null($row->expenses_recurring_id)) {
                 return '<a href="' . route('expenses.show', $row->id) . '" class="openRightModal text-darkest-grey">' . $row->item_name . '</a>';
@@ -126,7 +119,10 @@ class ExpensesDataTable extends BaseDataTable
             return $row->user->name;
         });
         $datatables->editColumn('vendor', function ($row) {
-            return $row->projectvendor->vendor_name??"";
+            return $row->projectvendor->vendor_name ?? "";
+        });
+        $datatables->editColumn('vendor_bid_approved', function ($row) {
+            return $row->projectvendor->bid_approved_amount ?? "";
         });
         $datatables->editColumn('user_id', function ($row) {
             return view('components.employee', [
@@ -193,25 +189,6 @@ class ExpensesDataTable extends BaseDataTable
                 }
             }
         );
-
-
-        $datatables->editColumn('partial_pay', function ($row) {
-            if ($row->partialPay->isNotEmpty()) {
-
-                if($row->partial_pay_sum_price != $row->bid_approved_amt){
-
-                 return '<a href="javascript:void(0);" class="text-darkest-grey open-partial-pay-modal" data-partial-id="' . $row->id . '">Ongoing</a>';
-
-                }
-                else{
-                    
-                    return '<a href="javascript:void(0);" class="text-darkest-grey open-partial-pay-modal" data-partial-id="' . $row->id . '">Completed</a>';
-                }
-            } else {
-                return 'N/A';
-            }
-        });
-
         
         // $datatables->editColumn(
         //     'purchase_from',
@@ -251,8 +228,6 @@ class ExpensesDataTable extends BaseDataTable
             ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id')
             ->leftJoin('projects', 'projects.id', 'expenses.project_id')
             ->join('currencies', 'currencies.id', 'expenses.currency_id');
-        
-        $model = $model->withSum('partialPay', 'price');
          
         if (!$this->includeSoftDeletedProjects) {
             $model->whereNull('projects.deleted_at');
@@ -357,7 +332,8 @@ class ExpensesDataTable extends BaseDataTable
             __('app.id') => ['data' => 'id', 'name' => 'expenses.id', 'title' => __('app.id'),'visible' => showId()],
             __('Project') => ['data' => 'project_id', 'name' => 'project_id', 'title' => __('Project')],
             __('Vendor') => ['data' => 'vendor', 'name' => 'vendor', 'title' => __('Vendor')],
-            __('app.price') => ['data' => 'price', 'name' => 'price', 'title' => __('app.price')],
+            __('Bid Approved Amt') => ['data' => 'vendor_bid_approved', 'name' => 'vendor_bid_approved', 'title' => __('Bid Approved Amt')],
+            __('Paid') => ['data' => 'price', 'name' => 'price', 'title' => __('Paid')],
             __('Created By') => ['data' => 'user_id', 'name' => 'user_id', 'exportable' => false, 'title' => __('Created By')],
             __('Expense Created By') => ['data' => 'employee_name', 'name' => 'user_id', 'visible' => false, 'title' => __('Expense Created By')],
             __('Created at') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Created at')],
@@ -365,7 +341,6 @@ class ExpensesDataTable extends BaseDataTable
             __('Payment Method') => ['data' => 'payment_method', 'name' => 'expenses.payment_method', 'title' => __('Payment Method')],
             __('Additional Fee') => ['data' => 'additional_fee', 'name' => 'additional_fee', 'title' => __('Additional Fee')], // ✅ Added column
             __('app.status') => ['data' => 'status', 'name' => 'status', 'exportable' => false, 'title' => __('app.status')],
-            __('Partial Pay') => ['data' => 'partial_pay', 'name' => 'partial_pay', 'exportable' => false, 'title' => __('Partial Pay')],
             __('app.expense') . ' ' . __('app.status') => ['data' => 'status_export', 'name' => 'status', 'visible' => false, 'title' => __('app.expense')]
         ];
 

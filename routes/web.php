@@ -165,7 +165,7 @@ use App\Http\Controllers\EmployeeShiftChangeRequestController;
 use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\LeadClientCustomFilterController; 
 use App\Http\Controllers\ExpenseStatusController;
-use App\Http\Controllers\ExpensePartialPayController;
+use App\Http\Controllers\ExpenseProcessPaymentController;
 
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
@@ -772,20 +772,20 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
         Route::post('import', [ExpenseController::class, 'importStore'])->name('expenses.import.store');
         Route::post('import/process', [ExpenseController::class, 'importProcess'])->name('expenses.import.process');
     });
+
     Route::resource('expenses', ExpenseController::class);
+    Route::get('expenses/process-payment/{estimateId}/{vendorId}/{projectId}', [ExpenseController::class,'processPayment'])->name('expense.processPayment');
     Route::resource('expenseCategory', ExpenseCategoryController::class);
     Route::resource('expensePaymentMethod', ExpensePaymentMethodController::class);
     Route::get('expense-payment-methods/list', [ExpensePaymentMethodController::class, 'getList'])->name('expensePaymentMethod.list');
     Route::resource('expenseStatus', ExpenseStatusController::class);
     Route::get('expense-status/list', [ExpenseStatusController::class, 'getList'])->name('expenseStatus.list');
-    Route::get('expense-partial-pay/list/{id}', [ExpenseController::class, 'viewPartialPay'])->name('expensePartialPay.list');
     Route::resource('expenseAdditionalFee', ExpenseAdditionalFeeTypeController::class);
     Route::get('expense-additional-fees/list', [ExpenseAdditionalFeeTypeController::class, 'getList'])->name('expenseAdditionalFee.list');
     Route::get('projectvendors/get-vendor-details/{vendorId}/{projectId}', [ProjectVendorController::class, 'getVendorDetails'])->name('projectvendors.get_vendor_details');
 
-    //Partial-Pay-Expense
-    Route::resource('partial-pay', ExpensePartialPayController::class)->except(['create']);
-    Route::get('partial-pay/{expenseId}/{projectId}/{vendorId}', [ExpensePartialPayController::class, 'create'])->name('partial-pay.create');
+    // Expense Process Payment
+    Route::resource('expensePayment', ExpenseProcessPaymentController::class);
 
     // Timelogs
     Route::group(['prefix' => 'timelogs'], function () {

@@ -199,9 +199,9 @@ class Expense extends BaseModel
         return $this->belongsTo(BankAccount::class, 'bank_account_id');
     }
 
-    public function partialPay(): HasMany
+    public function processPayment(): HasMany
     {
-        return $this->hasMany(ExpensePartialPay::class, 'expense_id')->orderByDesc('id');
+        return $this->hasMany(ExpenseProcessPayment::class, 'expense_id')->orderByDesc('id');
     }
 
 }

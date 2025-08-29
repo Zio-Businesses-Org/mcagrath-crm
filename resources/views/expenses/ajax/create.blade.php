@@ -286,101 +286,7 @@
             var bid_approved_amount = parseFloat($('#bid_approved_amount').val());
             var price = parseFloat($('#price').val());
             const fileInput = document.getElementById('bill');
-            let optionsHtml = '';
-            let preConfirmFn = null;
-
-            if (fileInput && fileInput.files.length > 0) {
-                optionsHtml = `
-                    <h4 class="mb-0 p-20 f-15 font-weight-normal text-capitalize">
-                        If YES. Please Check One Of The Following To Sort Out Where The Bill Has To Be Stored</h4>
-                    <div style="display: flex; gap: 1.5rem; justify-content: center;">
-                        <label style="color: white;">
-                            <input type="radio" name="option" value="original_expense" style="transform: scale(1.5);" /> Original Expense
-                        </label>
-                        <label style="color: white;">
-                            <input type="radio" name="option" value="partial_pay" style="transform: scale(1.5);" /> Partial Pay
-                        </label>
-                        <label style="color: white;">
-                            <input type="radio" name="option" value="both" style="transform: scale(1.5);" /> Both
-                        </label>
-                    </div>
-                `;
-
-                preConfirmFn = () => {
-                    const selected = document.querySelector('input[name="option"]:checked');
-                    if (!selected) {
-                        Swal.showValidationMessage('Please select one option');
-                        return false;
-                    }
-                    return selected.value;
-                };
-            }
-            if ( isNaN(price) || price == 0 )
-            {
-                Swal.fire({
-                icon: 'error',
-                text: '{{ __('Please Provide The Price') }}',
-
-                customClass: {
-                    confirmButton: 'btn btn-primary',
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-                });
-                return false;
-            }
-            if ( isNaN(bid_approved_amount) || bid_approved_amount == 0 )
-            {
-                Swal.fire({
-                icon: 'error',
-                text: '{{ __('Please Provide Bid Approved Amount For The Vendor') }}',
-
-                customClass: {
-                    confirmButton: 'btn btn-primary',
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-                });
-                return false;
-            }
-            
-            if(parseFloat(pending_amount) > 0)
-            {
-                
-                Swal.fire({
-                    title: 'Do You Want To Create a Partial Payment Info',
-                    html: `${optionsHtml}`,
-                    showCancelButton: true,
-                    customClass: {
-                        confirmButton: 'btn btn-primary',
-                        cancelButton: 'btn btn-secondary',
-                    },
-                    preConfirm: preConfirmFn 
-                    }).then((result) => {
-                    const selectedOption = result.isConfirmed ? result.value : null;
-                    if (result.isConfirmed) {
-                            saveexpenseForm(url, data, selectedOption,'yes');
-                        }
-                        else if (result.dismiss){
-                            saveexpenseForm(url, data, selectedOption,'no');
-                        }
-                });
-                
-            }
-            else{
-                saveexpenseForm(url,data,null,'no')
-            }
-            saveexpenseForm(url,data,null,'no')
-        });
-        function saveexpenseForm(url,data,storage,create)
-        {
-        $.easyAjax({
+            $.easyAjax({
                 url: url,
                 container: '#save-expense-data-form',
                 type: "POST",
@@ -389,15 +295,13 @@
                 buttonSelector: "#save-expense-form",
                 data: {
                     data:data,
-                    storage:storage,
-                    create:create
                 },
                 file: true,
                 success: function(response) {
                     window.location.href = response.redirectUrl;
                 }
             });
-        }
+        });
 
         $('#addExpenseCategory').click(function() {
             let userId = $('#user_id').val();

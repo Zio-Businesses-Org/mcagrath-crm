@@ -15,7 +15,6 @@
             <th class="pl-20">id</th>
             <th>@lang('Pay Date')</th>
             <th>@lang('Price')</th>
-            <th>@lang('Catgeory')</th>
             <th>@lang('Payment Method')</th>
             <th>@lang('Additional Fee')</th>
             <th>@lang('Added By')</th>
@@ -23,18 +22,15 @@
             <th class="text-right pr-20">@lang('app.action')</th>
         </x-slot>
 
-        @forelse($expense->partialPay as $key=>$item)
+        @forelse($expense->processPayment as $key=>$item)
             <tr id="row-{{ $item->id }}">
                 <td class="pl-20">{{ $item->id }}</td>
                 <td>
                     <a href="javascript:;" class="sow-detail text-darkest-grey f-w-500"
-                        data-sow-id="{{ $item->id }}">{{ $item->pay_date->translatedFormat(company()->date_format) ?? ''}}</a>
+                        data-sow-id="{{ $item->id }}">{{ $item->payment_date->translatedFormat(company()->date_format) ?? ''}}</a>
                 </td>
                 <td>
                     {{$item->price??''}}
-                </td>
-                <td>
-                    {{$item->category->category_name??''}}
                 </td>
                 <td>
                     {{$item->payment_method??''}}

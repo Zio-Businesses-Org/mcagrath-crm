@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ExpensePartialPay extends BaseModel
+class ExpenseProcessPayment extends BaseModel
 {
     use HasFactory;
 
-    const FILE_PATH = 'expense-partial-pay-bill';
+    const FILE_PATH = 'expense-payment-bill';
 
     protected $casts = [
-        'pay_date'=> 'datetime',
+        'payment_date'=> 'datetime',
     ];
 
     public function getBillUrlAttribute()
@@ -45,5 +44,4 @@ class ExpensePartialPay extends BaseModel
     {
         return $this->belongsTo(User::class, 'added_by')->withoutGlobalScope(ActiveScope::class);
     }
-
 }
