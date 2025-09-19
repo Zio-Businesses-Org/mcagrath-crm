@@ -1064,7 +1064,11 @@ class ProjectController extends AccountBaseController
                 ->sum('amount');
 
             $this->hoursLogged = intdiv($hoursLogged - $breakMinutes, 60).'.'.(($hoursLogged - $breakMinutes) % 60);
-            $this->expenses = Expense::where(['project_id' => $id, 'status' => 'approved'])->sum('price');
+
+            $this->expense = Expense::withSum('processPayment', 'price')->where('project_id', $id)->get();
+
+            $this->expenses = $this->expense->sum('process_payment_sum_price');
+
             $this->profit = $this->earnings - $this->expenses;
 
             $this->view = 'projects.ajax.overview';

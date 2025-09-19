@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Expense
@@ -202,6 +203,13 @@ class Expense extends BaseModel
     public function processPayment(): HasMany
     {
         return $this->hasMany(ExpenseProcessPayment::class, 'expense_id')->orderByDesc('id');
+    }
+
+    public function latestPayment(): HasOne
+    {
+        return $this->hasOne(ExpenseProcessPayment::class, 'expense_id')
+                    ->latest('id')
+                    ->select(['created_at']);// equivalent to orderByDesc('id') and limits the results to one.
     }
 
 }

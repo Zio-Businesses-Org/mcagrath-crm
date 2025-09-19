@@ -29,7 +29,7 @@ class StoreExpense extends CoreRequest
     {
         $rules = [
             'project_id' =>'required',
-            'price' => 'required|numeric',
+            // 'price' => 'required|numeric',
             
         ];
 

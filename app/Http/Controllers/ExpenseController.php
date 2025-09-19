@@ -23,7 +23,7 @@ use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
 use Illuminate\Http\Request;
 use App\Models\ExpenseStatus;
-use App\Models\ExpensePartialPay;
+
 
 class ExpenseController extends AccountBaseController
 {
@@ -107,9 +107,8 @@ class ExpenseController extends AccountBaseController
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
         $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Fetch payment methods
         $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Fetch fee methods
-
+        $this->expenseStatus = ExpenseStatus::all();
         
-
         $bankAccounts = BankAccount::where('status', 1)->where('currency_id', company()->currency_id);
 
 
@@ -169,7 +168,6 @@ class ExpenseController extends AccountBaseController
         $expense->item_name = '--';
         $expense->purchase_date = date('Y-m-d');
         $expense->purchase_from = '--';
-        $expense->price = round($request->price, 2);
         $expense->currency_id = $request->currency_id;
         $expense->category_id = $request->category_id;
         $expense->user_id = user()->id;
@@ -177,13 +175,10 @@ class ExpenseController extends AccountBaseController
         $expense->exchange_rate = $request->exchange_rate;
         $expense->description = trim_editor($request->description);
         $expense->vendor_id = $request->vendor_id;
-        $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
         $expense->wo_status = $request->wo_status;
         $expense->bid_approved_amt = $request->bid_approved_amount;
         $expense->change_amt = $request->change_order_amount;
-        $expense->additional_fee = $request->fee_method_id;
-        $expense->payment_method = $request->payment_method; // Store the name
-        $expense->status = 'Pending';
+        $expense->status = $request->status;
         // if((float)$request->pending_amount > 0)
         // {
         //     $expense->status = 'Paid Off';   
@@ -287,7 +282,6 @@ class ExpenseController extends AccountBaseController
         $expense->item_name = '--';
         $expense->purchase_date = date('Y-m-d');
         $expense->purchase_from = '--';
-        $expense->price = round($request->price, 2);
         $expense->currency_id = $request->currency_id;
         $expense->user_id = user()->id;
         $expense->category_id = $request->category_id;
@@ -295,7 +289,6 @@ class ExpenseController extends AccountBaseController
         $expense->exchange_rate = $request->exchange_rate;
         $expense->description = trim_editor($request->description);
         $expense->vendor_id = $request->vendor_id;
-        $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
         $expense->wo_status = $request->wo_status;
         $expense->bid_approved_amt = $request->bid_approved_amount;
         $expense->change_amt = $request->change_order_amount;
@@ -313,9 +306,6 @@ class ExpenseController extends AccountBaseController
             $filename = Files::uploadLocalOrS3($request->bill, Expense::FILE_PATH);
             $expense->bill = $filename;
         }
-
-        $expense->payment_method = $request->payment_method;
-        $expense->additional_fee = $request->additional_fee_id;
 
         if ($request->has('status')) {
             $expense->status = $request->status;
@@ -527,10 +517,19 @@ class ExpenseController extends AccountBaseController
         return Reply::successWithData(__('messages.importProcessStart'), ['batch' => $batch]);
     }
 
-    public function processPayment($expenseId,$projectId,$vendorId)
+    public function processPayment($expenseId)
     {
         $this->expense = Expense::findOrFail($expenseId);
-        return view('expenses.process_payment.ajax.view', $this->data);
+        $this->view = 'expenses.process_payment.ajax.view';
+
+        $this->pageTitle = 'Process Payment';
+
+        if (request()->ajax()) {
+
+            return $this->returnAjax($this->view);
+        }
+
+        return view('expenses.process_payment.show', $this->data);
     }
 
 }

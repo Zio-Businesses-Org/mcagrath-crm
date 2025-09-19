@@ -298,7 +298,9 @@ class Project extends BaseModel
     public function getTotalExpenseAttribute()
     {
         return $this->expenses()
-                    ->sum('price'); // This returns a single value, NOT a collection
+            ->withSum('processPayment', 'price')
+            ->get()
+            ->sum('process_payment_sum_price');
     }
 
     

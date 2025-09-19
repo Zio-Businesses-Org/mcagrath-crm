@@ -74,11 +74,11 @@
                             fieldRequired="false" fieldReadOnly fieldId="change_order_amount" />
                     </div>
                     
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.datepicker fieldId="pay_date" :fieldLabel="__('Payment Date')" fieldName="pay_date" fieldRequired="true"
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.price')" fieldName="price"
                             fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')" />
 
@@ -133,7 +133,7 @@
                     @else
                         <input type="hidden" name="user_id" value="{{ user()->id }}">
                     @endif
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Pending Amount')" fieldName="pending_amount"
                          fieldId="pending_amount" fieldReadOnly/>
 
@@ -162,7 +162,7 @@
                         </x-forms.input-group>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 d-none">
                         <x-forms.label class="mt-3" fieldId="payment_method" :fieldLabel="__('Payment Method')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -180,7 +180,7 @@
                         </x-forms.input-group>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 d-none">
                         <x-forms.label class="mt-3" fieldId="fee_method" :fieldLabel="__('Additional Fee Type')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -203,6 +203,27 @@
                     <div class="col-md-4 d-none">
                         <x-forms.text :fieldLabel="__('modules.expenses.purchaseFrom')" fieldName="purchase_from" fieldId="purchase_from"
                             :fieldPlaceholder="__('placeholders.expense.vendor')" />
+                    </div>
+
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.label class="mt-3" fieldId="status_id" :fieldLabel="__('Status')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select name="status" id="status_id" class="form-control select-picker">
+                                <option value=''>--</option>
+                                @foreach ($expenseStatus as $status)
+                                    <option value="{{ $status->status }}">
+                                        {{ $status->status }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-slot name="append">
+                                <button id="addExpenseStatus" type="button"
+                                    class="btn btn-outline-secondary border-grey" data-toggle="tooltip"
+                                    data-original-title="{{ __('Add Expense Status') }}">@lang('app.add')</button>
+                            </x-slot>
+                        </x-forms.input-group>
                     </div>
 
                     @if ($linkExpensePermission == 'all')
@@ -233,11 +254,11 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-12">
+                    <!-- <div class="col-lg-12">
                         <x-forms.file :fieldLabel="__('app.bill')" fieldName="bill" fieldId="bill"
                             allowedFileExtensions="txt pdf doc xls xlsx docx rtf png jpg jpeg svg"
                             :popover="__('messages.fileFormat.multipleImageFile')" />
-                    </div>
+                    </div> -->
                 </div>
                 <x-forms.custom-field :fields="$fields"></x-forms.custom-field>
 
@@ -257,7 +278,7 @@
 
 <script>
     $(document).ready(function() {
-        var pendingAmount = 0;
+       // var pendingAmount = 0;
         quillMention(null, '#description');
 
         $('.custom-date-picker').each(function(ind, el) {
@@ -282,10 +303,10 @@
             $('#mentionUserId').val(mention_user_id.join(','));
             const url = "{{ route('expenses.store') }}";
             var data = $('#save-expense-data-form').serialize();
-            var pending_amount = $('#pending_amount').val();
-            var bid_approved_amount = parseFloat($('#bid_approved_amount').val());
-            var price = parseFloat($('#price').val());
-            const fileInput = document.getElementById('bill');
+            // var pending_amount = $('#pending_amount').val();
+            // var bid_approved_amount = parseFloat($('#bid_approved_amount').val());
+            // var price = parseFloat($('#price').val());
+            //const fileInput = document.getElementById('bill');
             $.easyAjax({
                 url: url,
                 container: '#save-expense-data-form',
@@ -402,7 +423,7 @@
                     if (response.status === 'success') {
                         $('#wo_status').val(response.data.wo_status);
                         $('#bid_approved_amount').val(response.data.bid_approved_amount);
-                        pendingAmount = (parseFloat(response.data.bid_approved_amount) || 0);
+                        //pendingAmount = (parseFloat(response.data.bid_approved_amount) || 0);
                         // console.log(pendingAmount);
                         $('#change_order_amount').val(response.data.change_order_amount);
                         $('#link_status').val(response.data.link_status);
@@ -417,13 +438,13 @@
             });
         }
     });
-    $('body').on("input", '#price', function (){
-        if($('#vendor_id').val()!=''){
-        var price= parseFloat($(this).val()) || 0; 
-        amt = pendingAmount - price;
-        $('#pending_amount').val(amt);
-        }
-    });
+    // $('body').on("input", '#price', function (){
+    //     if($('#vendor_id').val()!=''){
+    //     var price= parseFloat($(this).val()) || 0; 
+    //     amt = pendingAmount - price;
+    //     $('#pending_amount').val(amt);
+    //     }
+    // });
     @if (isset($projectName))
         setExchangeRateHelp();
 

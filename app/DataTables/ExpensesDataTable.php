@@ -58,7 +58,7 @@ class ExpensesDataTable extends BaseDataTable
 
             $action .= '<a href="' . route('expenses.show', [$row->id]) . '" class="dropdown-item openRightModal"><i class="fa fa-eye mr-2"></i>' . __('app.view') . '</a>';
 
-            $action .= '<a href="' . route('expense.processPayment', [$row->id, $row->project?->id, $row->projectvendor?->id]) . '" class="dropdown-item openRightModal"><i class="fa fa-credit-card mr-2"></i>' . __('Process Payment') . '</a>';
+            $action .= '<a href="' . route('expense.processPayment', [$row->id]) . '" class="dropdown-item openRightModal"><i class="fa fa-credit-card mr-2"></i>' . __('Process Payment') . '</a>';
 
             if (is_null($row->expenses_recurring_id)) {
                 if ($this->editExpensePermission == 'all' || ($this->editExpensePermission == 'added' && user()->id == $row->added_by)) {
@@ -89,9 +89,9 @@ class ExpensesDataTable extends BaseDataTable
 
             return $action;
         });
-        $datatables->editColumn('price', function ($row) {
-            return $row->total_amount;
-        });
+        // $datatables->editColumn('price', function ($row) {
+        //     return $row->total_amount;
+        // });
 
         $datatables->editColumn('item_name', function ($row) {
             if (is_null($row->expenses_recurring_id)) {
@@ -102,15 +102,6 @@ class ExpensesDataTable extends BaseDataTable
                 <p class="mb-0"><span class="badge badge-primary"> ' . __('app.recurring') . ' </span></p>';
         });
 
-          // ✅ Additional Fee Column
-    $datatables->editColumn('additional_fee', function ($row) {
-        return $row->additional_fee ?? '--';
-    });
-
-     // ✅ Payment Method Column
-     $datatables->editColumn('payment_method', function ($row) {
-        return $row->payment_method ?? '--';
-    });
 
         $datatables->addColumn('export_item_name', function ($row) {
             return $row->item_name;
@@ -144,7 +135,7 @@ class ExpensesDataTable extends BaseDataTable
             ) {
 
                 $status = '<select class="form-control select-picker change-expense-status" data-expense-id="' . $row->id . '">';
-
+                $status .= '<option value=" ">--</option>';
                 foreach ($expenseStatus as $item) {
                     $selected = ($item->status == $row->status) ? 'selected' : '';
 
@@ -178,17 +169,22 @@ class ExpensesDataTable extends BaseDataTable
                 }
             }
         );
-        $datatables->editColumn(
-            'pay_date',
-            function ($row) {
-                if (!is_null($row->pay_date)) {
-                    return $row->pay_date->translatedFormat($this->company->date_format);
-                }
-                else{
-                    return 'N/A';
-                }
-            }
-        );
+        $datatables->editColumn('payment_date', fn($row) => $row->latestPayment?->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format));
+        $datatables->editColumn('process_price', function ($row){
+            
+            return currency_format($row->process_payment_sum_price ?? 0, $row->currency_id);
+        });
+        // $datatables->editColumn(
+        //     'pay_date',
+        //     function ($row) {
+        //         if (!is_null($row->pay_date)) {
+        //             return $row->pay_date->translatedFormat($this->company->date_format);
+        //         }
+        //         else{
+        //             return 'N/A';
+        //         }
+        //     }
+        // );
         
         // $datatables->editColumn(
         //     'purchase_from',
@@ -219,7 +215,7 @@ class ExpensesDataTable extends BaseDataTable
         $request = $this->request();
         
         $model = Expense::with('currency', 'user', 'user.employeeDetail', 'user.employeeDetail.designation', 'user.session', 'projectvendor','project')
-         ->select('expenses.id', 'expenses.project_id', 'expenses.item_name', 'expenses.category_id','expenses.vendor_id', 'expenses.created_at', 'expenses.pay_date', 'expenses.user_id', 'expenses.payment_method',  'expenses.additional_fee','expenses.price', 'users.salutation', 'users.name', 'expenses.purchase_date','expenses.bid_approved_amt', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
+         ->select('expenses.id', 'expenses.project_id', 'expenses.item_name', 'expenses.category_id','expenses.vendor_id', 'expenses.created_at', 'expenses.user_id', 'users.salutation', 'users.name', 'expenses.purchase_date','expenses.bid_approved_amt', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
 
     
             ->join('users', 'users.id', 'expenses.user_id')
@@ -228,7 +224,9 @@ class ExpensesDataTable extends BaseDataTable
             ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id')
             ->leftJoin('projects', 'projects.id', 'expenses.project_id')
             ->join('currencies', 'currencies.id', 'expenses.currency_id');
-         
+        
+        $model = $model->withSum('processPayment', 'price');
+
         if (!$this->includeSoftDeletedProjects) {
             $model->whereNull('projects.deleted_at');
         }
@@ -333,13 +331,11 @@ class ExpensesDataTable extends BaseDataTable
             __('Project') => ['data' => 'project_id', 'name' => 'project_id', 'title' => __('Project')],
             __('Vendor') => ['data' => 'vendor', 'name' => 'vendor', 'title' => __('Vendor')],
             __('Bid Approved Amt') => ['data' => 'vendor_bid_approved', 'name' => 'vendor_bid_approved', 'title' => __('Bid Approved Amt')],
-            __('Paid') => ['data' => 'price', 'name' => 'price', 'title' => __('Paid')],
+            __('Payments') => ['data' => 'process_price', 'name' => 'process_price', 'title' => __('Payments')],
+            __('Latest Payment') => ['data' => 'payment_date', 'name' => 'payment_date', 'title' => __('Latest Payment')],
             __('Created By') => ['data' => 'user_id', 'name' => 'user_id', 'exportable' => false, 'title' => __('Created By')],
             __('Expense Created By') => ['data' => 'employee_name', 'name' => 'user_id', 'visible' => false, 'title' => __('Expense Created By')],
             __('Created at') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Created at')],
-            __('Payment Date') => ['data' => 'pay_date', 'name' => 'pay_date', 'title' => __('Payment Date')],
-            __('Payment Method') => ['data' => 'payment_method', 'name' => 'expenses.payment_method', 'title' => __('Payment Method')],
-            __('Additional Fee') => ['data' => 'additional_fee', 'name' => 'additional_fee', 'title' => __('Additional Fee')], // ✅ Added column
             __('app.status') => ['data' => 'status', 'name' => 'status', 'exportable' => false, 'title' => __('app.status')],
             __('app.expense') . ' ' . __('app.status') => ['data' => 'status_export', 'name' => 'status', 'visible' => false, 'title' => __('app.expense')]
         ];

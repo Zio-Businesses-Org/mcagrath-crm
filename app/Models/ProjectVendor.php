@@ -31,6 +31,7 @@ class ProjectVendor extends BaseModel
         'cancelled_date'=>'datetime',
         'invoiced_date'=>'datetime',
         'paid_date'=>'datetime',
+        'bid_approved_amount' => 'float',
     ];
     public function project(): BelongsTo
     {

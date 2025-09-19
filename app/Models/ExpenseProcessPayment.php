@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ExpenseProcessPayment extends BaseModel
 {
@@ -17,7 +18,7 @@ class ExpenseProcessPayment extends BaseModel
 
     public function getBillUrlAttribute()
     {
-        return ($this->bill) ? asset_url_local_s3(ExpensePartialPay::FILE_PATH . '/' . $this->bill) : '';
+        return ($this->bill) ? asset_url_local_s3(ExpenseProcessPayment::FILE_PATH . '/' . $this->bill) : '';
     }
 
     public function project(): BelongsTo

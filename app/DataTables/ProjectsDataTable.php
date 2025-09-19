@@ -522,14 +522,15 @@ class ProjectsDataTable extends BaseDataTable
               projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,projects.nxt_follow_up_time,projects.nxt_follow_up_date,projects.quick_notes,
               property_details.state,property_details.city,property_details.zipcode,property_details.street_address,property_details.county,
               projects.work_schedule_re_date,projects.work_schedule_re_time,projects.work_completion_date,project_category.category_name,
-            projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
-           ( select count("id") from pinned where pinned.project_id = projects.id and pinned.user_id = ' . user()->id . ') as pinned_project'
+              projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
+            ( select count("id") from pinned where pinned.project_id = projects.id and pinned.user_id = ' . user()->id . ') as pinned_project,
+            (
+                select coalesce(sum(expense_process_payments.price), 0)
+                from expenses
+                inner join expense_process_payments on expenses.id = expense_process_payments.expense_id
+                where expenses.project_id = projects.id
+            ) as total_vendor_amt'
             );
-
-        $model = $model->addSelect([
-            'total_vendor_amt' => \App\Models\Expense::selectRaw('SUM(price)')
-            ->whereColumn('expenses.project_id', 'projects.id')
-        ]);
 
         $model = $model->withSum(['invoices' => function ($query) {
             $query->whereIn('status', ['paid', 'unpaid']);

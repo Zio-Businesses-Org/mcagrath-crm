@@ -774,7 +774,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     });
 
     Route::resource('expenses', ExpenseController::class);
-    Route::get('expenses/process-payment/{estimateId}/{vendorId}/{projectId}', [ExpenseController::class,'processPayment'])->name('expense.processPayment');
+    Route::get('expenses/process-payment/{estimateId}', [ExpenseController::class,'processPayment'])->name('expense.processPayment');
     Route::resource('expenseCategory', ExpenseCategoryController::class);
     Route::resource('expensePaymentMethod', ExpensePaymentMethodController::class);
     Route::get('expense-payment-methods/list', [ExpensePaymentMethodController::class, 'getList'])->name('expensePaymentMethod.list');

@@ -63,23 +63,23 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             fieldRequired="false" fieldReadOnly fieldId="change_order_amount" :fieldValue="$expense->change_amt"/>
                     </div>
 
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.datepicker fieldId="pay_date" 
                             :fieldLabel="__('Payment Date')" fieldName="pay_date"
                             :fieldPlaceholder="__('placeholders.date')"
                             :fieldValue="$expense->pay_date?->format(company()->date_format)"/>
                     </div>
-                    <div class="col-md-6 col-lg-3 ">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.price')" fieldName="price"
                             fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')"
                             :fieldValue="$expense->price" />
                     </div>
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Pending Amount')" fieldName="pending_amount"
                          fieldId="pending_amount" fieldReadOnly :fieldValue="floatval($expense->bid_approved_amt) - floatval($expense->price)"/>
 
                     </div>
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.label class="mt-3" fieldId="payment_method_id" :fieldLabel="__('Payment Method')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -99,7 +99,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             </x-slot>
                         </x-forms.input-group>
                     </div>
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.label class="mt-3" fieldId="additional_fee_id" :fieldLabel="__('Additional Fee Type')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -250,12 +250,12 @@ $approveExpensePermission = user()->permission('approve_expenses');
                         </div>
                     </div>
 
-                    <div class="col-lg-12">
+                    <!-- <div class="col-lg-12">
                         <x-forms.file :fieldLabel="__('app.bill')" fieldName="bill" fieldId="bill"
                             :fieldValue="$expense->bill_url" allowedFileExtensions="txt pdf doc xls xlsx docx rtf png jpg jpeg svg" :popover="__('messages.fileFormat.multipleImageFile')" />
-                    </div>
+                    </div> -->
 
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <!-- <div class="col-lg-3 col-md-6 col-sm-12">
                         @if (!is_null($expense->bill))
                             <x-file-card :fileName="$expense->bill" :dateAdded="$expense->created_at->diffForHumans()">
                                 <i class="fa fa-file text-lightest"></i>
@@ -278,8 +278,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             </x-file-card>
                         @endif
 
-                    </div>
-
+                    </div> -->
 
                 </div>
 
@@ -301,7 +300,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
 <script>
 
 $(document).ready(function() {
-    var pendingAmount = 0;
+    //var pendingAmount = 0;
     $('#addPaymentMethod').click(function () {
         const url = "{{ route('expensePaymentMethod.create') }}";
         $.ajaxModal(MODAL_LG, url);
@@ -484,7 +483,7 @@ $(document).ready(function() {
                     if (response.status === 'success') {
                         $('#wo_status').val(response.data.wo_status);
                         $('#bid_approved_amount').val(response.data.bid_approved_amount);
-                        pendingAmount = (parseFloat(response.data.bid_approved_amount) || 0);
+                        //pendingAmount = (parseFloat(response.data.bid_approved_amount) || 0);
                         $('#change_order_amount').val(response.data.change_order_amount);
                         $('#link_status').val(response.data.link_status);
                     } else {
@@ -499,14 +498,14 @@ $(document).ready(function() {
         }
     });
 
-    $('body').on("input", '#price', function (){
-        if($('#vendor_id').val()!=''){
-        pendingAmount = parseFloat("{{$expense->projectvendor->bid_approved_amount}}");
-        var price= parseFloat($(this).val()) || 0; 
-        amt = pendingAmount - price;
-        $('#pending_amount').val(amt);
-        }
-    });
+    // $('body').on("input", '#price', function (){
+    //     if($('#vendor_id').val()!=''){
+    //     pendingAmount = parseFloat("{{$expense->projectvendor->bid_approved_amount}}");
+    //     var price= parseFloat($(this).val()) || 0; 
+    //     amt = pendingAmount - price;
+    //     $('#pending_amount').val(amt);
+    //     }
+    // });
     
 });
 </script>
