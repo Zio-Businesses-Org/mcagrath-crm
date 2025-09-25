@@ -50,6 +50,7 @@ class ExpenseProcessPaymentController extends AccountBaseController
         $expensePayment->price = $request->price;
         $expensePayment->payment_method = $request->payment_method;
         $expensePayment->additional_fee = $request->fee_method_id;
+        $expensePayment->note = $request->note;
          if ($request->hasFile('bill') ) {
             $filename = Files::uploadLocalOrS3($request->bill, ExpenseProcessPayment::FILE_PATH);
             $expensePayment->bill = $filename;
@@ -82,7 +83,7 @@ class ExpenseProcessPaymentController extends AccountBaseController
         $expensePayment->price = $request->price;
         $expensePayment->payment_method = $request->payment_method;
         $expensePayment->additional_fee = $request->fee_method_id;
-
+        $expensePayment->note = $request->note;
         if ($request->bill_delete == 'yes') {
             Files::deleteFile($expensePayment->bill, ExpenseProcessPayment::FILE_PATH);
             $expensePayment->bill = null;

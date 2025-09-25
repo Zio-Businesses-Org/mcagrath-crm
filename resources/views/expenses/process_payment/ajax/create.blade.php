@@ -47,7 +47,11 @@
                     fieldId="pending_amount" :fieldPlaceholder="__('placeholders.price')" :fieldValue="$pending_price"/>
 
             </div>
-            <div class="col-md-9">
+            <div class="col-md-3">
+                <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Note')" fieldName="note"
+                    fieldId="note" :fieldPlaceholder="__('Enter a note')" />
+            </div>
+            <div class="col-md-3">
                 <x-forms.file :fieldLabel="__('app.bill')" fieldName="bill" fieldId="bill"
                     allowedFileExtensions="txt pdf doc xls xlsx docx rtf png jpg jpeg svg"
                     :popover="__('messages.fileFormat.multipleImageFile')"/>

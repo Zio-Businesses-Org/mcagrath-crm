@@ -52,8 +52,12 @@
                                 </select>
                             </x-forms.input-group>
                         </div>
+                        <div class="col-md-3">
+                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Note')" fieldName="note"
+                                fieldId="note" :fieldPlaceholder="__('Enter a note')" :fieldValue="$pending_price" :fieldValue="$expensePayment->note"/>
+                        </div>
 
-                        <div class="col-md-9">
+                        <div class="col-md-3">
                             <x-forms.file :fieldLabel="__('app.bill')" fieldName="bill" fieldId="bill"
                                 allowedFileExtensions="txt pdf doc xls xlsx docx rtf png jpg jpeg svg"
                                 :fieldValue="$expensePayment->bill_url" :popover="__('messages.fileFormat.multipleImageFile')" />
