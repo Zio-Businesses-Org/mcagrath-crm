@@ -23,7 +23,7 @@
         <div class="task_view">
             @if($item->bill)
             <a class="taskView sow-detail text-darkest-grey f-w-500"
-                target="_blank" href="{{ $item->bill_url }}">@lang('view bill')</a>
+                target="_blank" href="{{ $item->bill_url }}"><i class="fa fa-paperclip"></i></a>
             @endif
             <div class="dropdown">
                 <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"
