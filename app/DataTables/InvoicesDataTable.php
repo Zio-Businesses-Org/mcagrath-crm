@@ -364,6 +364,7 @@ class InvoicesDataTable extends BaseDataTable
                 return $row->added->name_salutation;
             }
         );
+        $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails?->property_address);
         $datatables->orderColumn('short_code', 'invoice_number $1');
         $datatables->removeColumn('currency_symbol');
         $datatables->removeColumn('currency_code');
@@ -391,7 +392,7 @@ class InvoicesDataTable extends BaseDataTable
                     $q->withTrashed();
                     $q->select('id', 'project_name', 'project_short_code', 'client_id', 'deleted_at');
                 },
-                'currency:id,currency_symbol,currency_code', 'project.client', 'client', 'payment', 'estimate', 'project.clientdetails'
+                'currency:id,currency_symbol,currency_code', 'project.client', 'client', 'payment', 'estimate', 'project.clientdetails','project.propertyDetails'
             ]
         )
             ->with('client', 'client.session', 'client.clientdetails', 'payment', 'clientdetails','added')
@@ -534,6 +535,7 @@ class InvoicesDataTable extends BaseDataTable
             __('app.invoice') . '#' => ['data' => 'invoice_number', 'name' => 'invoice_number', 'exportable' => false, 'title' => __('app.invoice')],
             __('app.invoiceNumber') . '#' => ['data' => 'invoice', 'name' => 'invoice_number', 'visible' => false, 'title' => __('app.invoiceNumber')],
             __('app.project') => ['data' => 'project_name', 'name' => 'project.project_name', 'title' => __('app.project'), 'visible' => in_array('projects', user_modules()), 'exportable' => in_array('projects', user_modules())],
+            __('Property Address') => ['data' => 'property_address', 'name' => 'property_address', 'title' => __('Property Address')],
             __('app.client') => ['data' => 'name', 'name' => 'project.client.name', 'exportable' => false, 'title' => __('app.client'), 'visible' => !in_array('client', user_roles())],
             __('app.customers') => ['data' => 'client_name', 'name' => 'project.client.name', 'visible' => false, 'title' => __('app.customers')],
             __('app.email') => ['data' => 'client_email', 'name' => 'project.client.email', 'visible' => false, 'title' => __('app.email')],

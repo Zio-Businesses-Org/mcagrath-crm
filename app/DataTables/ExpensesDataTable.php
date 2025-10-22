@@ -106,6 +106,9 @@ class ExpensesDataTable extends BaseDataTable
         $datatables->addColumn('export_item_name', function ($row) {
             return $row->item_name;
         });
+
+        $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails->property_address);
+
         $datatables->addColumn('employee_name', function ($row) {
             return $row->user->name;
         });
@@ -113,7 +116,8 @@ class ExpensesDataTable extends BaseDataTable
             return $row->projectvendor->vendor_name ?? "";
         });
         $datatables->editColumn('vendor_bid_approved', function ($row) {
-            return currency_format($row->projectvendor->bid_approved_amount, $row->currency_id);
+             $amount = $row->projectvendor?->bid_approved_amount ?? 0;
+             return currency_format($amount, $row->currency_id);
         });
         $datatables->editColumn('user_id', function ($row) {
             return view('components.employee', [
@@ -176,7 +180,7 @@ class ExpensesDataTable extends BaseDataTable
         });
 
         $datatables->editColumn('pending_price', function ($row){
-            $pending_amt = $row->projectvendor->bid_approved_amount - $row->process_payment_sum_price ?? 0;
+            $pending_amt = ( $row->projectvendor->bid_approved_amount ?? 0) - $row->process_payment_sum_price ?? 0;
             return currency_format($pending_amt, $row->currency_id);
         });
         // $datatables->editColumn(
@@ -334,6 +338,7 @@ class ExpensesDataTable extends BaseDataTable
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'exportable' => false],
             __('app.id') => ['data' => 'id', 'name' => 'expenses.id', 'title' => __('app.id'),'visible' => showId()],
             __('Project') => ['data' => 'project_id', 'name' => 'project_id', 'title' => __('Project')],
+            __('Property Address') => ['data' => 'property_address', 'name' => 'property_address', 'title' => __('Property Address')],
             __('Vendor') => ['data' => 'vendor', 'name' => 'vendor', 'title' => __('Vendor')],
             __('Bid Approved Amt') => ['data' => 'vendor_bid_approved', 'name' => 'vendor_bid_approved', 'title' => __('Bid Approved Amt')],
             __('Payments') => ['data' => 'process_price', 'name' => 'process_price', 'title' => __('Payments')],
