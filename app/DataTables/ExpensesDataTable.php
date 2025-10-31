@@ -119,6 +119,10 @@ class ExpensesDataTable extends BaseDataTable
              $amount = $row->projectvendor?->bid_approved_amount ?? 0;
              return currency_format($amount, $row->currency_id);
         });
+        $datatables->editColumn('vendor_invoiced_amount', function ($row) {
+             $amountinv = $row->projectvendor?->invoiced_amount ?? 0;
+             return currency_format($amountinv, $row->currency_id);
+        });
         $datatables->editColumn('user_id', function ($row) {
             return view('components.employee', [
                 'user' => $row->user
@@ -180,7 +184,7 @@ class ExpensesDataTable extends BaseDataTable
         });
 
         $datatables->editColumn('pending_price', function ($row){
-            $pending_amt = ( $row->projectvendor->bid_approved_amount ?? 0) - $row->process_payment_sum_price ?? 0;
+            $pending_amt = ( $row->projectvendor->invoiced_amount ?? 0) - $row->process_payment_sum_price ?? 0;
             return currency_format($pending_amt, $row->currency_id);
         });
         // $datatables->editColumn(
@@ -341,6 +345,7 @@ class ExpensesDataTable extends BaseDataTable
             __('Property Address') => ['data' => 'property_address', 'name' => 'property_address', 'title' => __('Property Address')],
             __('Vendor') => ['data' => 'vendor', 'name' => 'vendor', 'title' => __('Vendor')],
             __('Bid Approved Amt') => ['data' => 'vendor_bid_approved', 'name' => 'vendor_bid_approved', 'title' => __('Bid Approved Amt')],
+            __('Invoiced Amt') => ['data' => 'vendor_invoiced_amount', 'name' => 'vendor_invoiced_amount', 'title' => __('Invoiced Amt')],
             __('Payments') => ['data' => 'process_price', 'name' => 'process_price', 'title' => __('Payments')],
             __('Pending Amount') => ['data' => 'pending_price', 'name' => 'pending_price', 'title' => __('Pending Amount')],
             __('Latest Payment') => ['data' => 'payment_date', 'name' => 'payment_date', 'title' => __('Latest Payment')],

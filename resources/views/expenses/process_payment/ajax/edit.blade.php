@@ -52,7 +52,7 @@
                                 </select>
                             </x-forms.input-group>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Note')" fieldName="note"
                                 fieldId="note" :fieldPlaceholder="__('Enter a note')" :fieldValue="$pending_price" :fieldValue="$expensePayment->note"/>
                         </div>

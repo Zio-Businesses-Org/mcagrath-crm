@@ -98,4 +98,17 @@ class ProjectVendor extends BaseModel
         return $this->belongsTo(VendorContract::class, 'vendor_id');
     }
 
+    public function getChangeOrderAmountsAttribute()
+    {
+        return number_format(
+            $this->changenotification
+                ->where('link_status', 'Accepted')
+                ->whereNotNull('accepted_date')
+                ->pluck('project_amount')
+                ->map(fn($amount) => (float) $amount)
+                ->sum(),
+            2, '.', ''
+        );
+    }
+
 }

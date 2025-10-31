@@ -32,8 +32,8 @@ class ExpenseProcessPaymentController extends AccountBaseController
         $expense = Expense::with(['processPayment','projectvendor'])->findOrFail($this->expense_id);
 
         $processPaymentSum = $expense->processPayment->sum('price');
-        $bid_approved_amount = $expense->projectvendor->bid_approved_amount;
-        $this->pending_price = $bid_approved_amount - $processPaymentSum;
+        $this->invoiced_amount = $expense->projectvendor->invoiced_amount;
+        $this->pending_price = $this->invoiced_amount - $processPaymentSum;
         $this->paymentMethods = ExpensesPaymentMethod::all(); // ✅ Fetch payment methods
         $this->feeMethods = ExpenseAdditionalFee::all(); // ✅ Fetch fee method
         return view('expenses.process_payment.ajax.create', $this->data);

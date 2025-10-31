@@ -55,12 +55,22 @@ $approveExpensePermission = user()->permission('approve_expenses');
                     
                     <div class="col-md-6 col-lg-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')" fieldName="bid_approved_amount"
-                            fieldRequired="false" fieldReadOnly fieldId="bid_approved_amount" :fieldValue="$expense->bid_approved_amt"/>
+                            fieldRequired="false" fieldReadOnly fieldId="bid_approved_amount" :fieldValue="$expense->projectvendor->bid_approved_amount"/>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Project Amount')" fieldName="project_amount"
+                            fieldRequired="false" fieldReadOnly fieldId="project_amount" :fieldValue="$expense->projectvendor->project_amount"/>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Invoiced Amount')" fieldName="invoiced_amount"
+                            fieldRequired="false" fieldReadOnly fieldId="invoiced_amount" :fieldValue="$expense->projectvendor->invoiced_amount"/>
                     </div>
 
                     <div class="col-md-6 col-lg-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Change Order Amount')" fieldName="change_order_amount"
-                            fieldRequired="false" fieldReadOnly fieldId="change_order_amount" :fieldValue="$expense->change_amt"/>
+                            fieldRequired="false" fieldReadOnly fieldId="change_order_amount" :fieldValue="$expense->projectvendor->change_order_amounts"/>
                     </div>
 
                     <div class="col-md-6 col-lg-3 d-none">
@@ -250,12 +260,12 @@ $approveExpensePermission = user()->permission('approve_expenses');
                         </div>
                     </div>
 
-                    <!-- <div class="col-lg-12">
+                    <div class="col-lg-12">
                         <x-forms.file :fieldLabel="__('app.bill')" fieldName="bill" fieldId="bill"
                             :fieldValue="$expense->bill_url" allowedFileExtensions="txt pdf doc xls xlsx docx rtf png jpg jpeg svg" :popover="__('messages.fileFormat.multipleImageFile')" />
-                    </div> -->
+                    </div>
 
-                    <!-- <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12">
                         @if (!is_null($expense->bill))
                             <x-file-card :fileName="$expense->bill" :dateAdded="$expense->created_at->diffForHumans()">
                                 <i class="fa fa-file text-lightest"></i>
@@ -278,7 +288,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             </x-file-card>
                         @endif
 
-                    </div> -->
+                    </div>
 
                 </div>
 

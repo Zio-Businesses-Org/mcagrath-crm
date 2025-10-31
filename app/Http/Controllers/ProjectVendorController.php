@@ -267,7 +267,9 @@ class ProjectVendorController extends AccountBaseController
                 'link_status' => $projectVendor->link_status,
                 'wo_status' => $projectVendor->wo_status,
                 'bid_approved_amount' => $projectVendor->bid_approved_amount,
-                'change_order_amount' => $changeOrderAmounts
+                'change_order_amount' => $changeOrderAmounts,
+                'project_amount'=> $projectVendor->project_amount,
+                'invoiced_amount'=> $projectVendor->invoiced_amount
             ]
         ]);
         

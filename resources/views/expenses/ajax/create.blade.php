@@ -70,6 +70,16 @@
                     </div>
 
                     <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Project Amount')" fieldName="project_amount"
+                            fieldRequired="false" fieldReadOnly fieldId="project_amount" />
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Invoiced Amount')" fieldName="invoiced_amount"
+                            fieldRequired="false" fieldReadOnly fieldId="invoiced_amount" />
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Change Order Amount')" fieldName="change_order_amount"
                             fieldRequired="false" fieldReadOnly fieldId="change_order_amount" />
                     </div>
@@ -254,11 +264,11 @@
                         </div>
                     </div>
 
-                    <!-- <div class="col-lg-12">
+                    <div class="col-lg-12">
                         <x-forms.file :fieldLabel="__('app.bill')" fieldName="bill" fieldId="bill"
                             allowedFileExtensions="txt pdf doc xls xlsx docx rtf png jpg jpeg svg"
                             :popover="__('messages.fileFormat.multipleImageFile')" />
-                    </div> -->
+                    </div>
                 </div>
                 <x-forms.custom-field :fields="$fields"></x-forms.custom-field>
 
@@ -328,11 +338,6 @@
             let userId = $('#user_id').val();
             const url = "{{ route('expenseCategory.create') }}?user_id=" + userId;
             $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_LG, url);
-        });
-
-        $('#addPaymentMethod').click(function() {
-            const url = "{{ route('expensePaymentMethod.create') }}";
             $.ajaxModal(MODAL_LG, url);
         });
 
@@ -425,6 +430,8 @@
                         $('#bid_approved_amount').val(response.data.bid_approved_amount);
                         //pendingAmount = (parseFloat(response.data.bid_approved_amount) || 0);
                         // console.log(pendingAmount);
+                        $('#project_amount').val(response.data.project_amount);
+                        $('#invoiced_amount').val(response.data.invoiced_amount);
                         $('#change_order_amount').val(response.data.change_order_amount);
                         $('#link_status').val(response.data.link_status);
                     } else {
@@ -438,13 +445,7 @@
             });
         }
     });
-    // $('body').on("input", '#price', function (){
-    //     if($('#vendor_id').val()!=''){
-    //     var price= parseFloat($(this).val()) || 0; 
-    //     amt = pendingAmount - price;
-    //     $('#pending_amount').val(amt);
-    //     }
-    // });
+    
     @if (isset($projectName))
         setExchangeRateHelp();
 
@@ -458,9 +459,6 @@
         }
     @endif
 
-    $('#addFeeMethod').click(function() {
-        const url = "{{ route('expenseAdditionalFee.create') }}";
-        $.ajaxModal(MODAL_LG, url);
-    });
+    
 
 </script>

@@ -26,6 +26,11 @@
                             <option value="{{ $method->payment_method }}">{{ $method->payment_method }}</option>
                         @endforeach
                     </select>
+                    <x-slot name="append">
+                        <button id="addPaymentMethod" type="button" class="btn btn-outline-secondary border-grey">
+                            @lang('app.add')
+                        </button>
+                    </x-slot>
                 </x-forms.input-group>
             </div>
             <div class="col-md-3">
@@ -40,14 +45,19 @@
                             @endforeach
                         @endif
                     </select>
+                    <x-slot name="append">
+                        <button id="addFeeMethod" type="button" class="btn btn-outline-secondary border-grey">
+                            @lang('app.add')
+                        </button>
+                    </x-slot>
                 </x-forms.input-group>
             </div>
             <div class="col-md-3">
                 <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Pending Amount')" fieldName="pending_amount"
-                    fieldId="pending_amount" :fieldPlaceholder="__('placeholders.price')" :fieldValue="$pending_price"/>
+                    fieldId="pending_amount" :fieldPlaceholder="__('placeholders.price')" :fieldValue="$pending_price" fieldReadOnly/>
 
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Note')" fieldName="note"
                     fieldId="note" :fieldPlaceholder="__('Enter a note')" />
             </div>
@@ -74,6 +84,17 @@
             position: 'bl',
             ...datepickerConfig
         });
+        
+        $('#addFeeMethod').click(function() {
+            const url = "{{ route('expenseAdditionalFee.create') }}";
+            $.ajaxModal(MODAL_LG, url);
+        });
+
+        $('#addPaymentMethod').click(function() {
+            const url = "{{ route('expensePaymentMethod.create') }}";
+            $.ajaxModal(MODAL_LG, url);
+        });
+
         $('#save-expense-payment').click(function() {
 
             const url = "{{ route('expensePayment.store') }}";
@@ -96,6 +117,19 @@
                     $('.expense-payment tbody').prepend(response.html);
                 }
             });
+        });
+       
+        $('#addExpensePaymentInfo').on("input", '#price', function (){
+            
+            var invoiced_amount = parseFloat("{{$invoiced_amount}}") || 0;
+            var pending_price = parseFloat("{{$pending_price}}") || 0;
+            if(invoiced_amount!='' && pending_price!=0){
+
+                var price= parseFloat($(this).val()) || 0; 
+                amt = pending_price - price;
+                $('#pending_amount').val(amt);
+
+            }
         });
         
     });
