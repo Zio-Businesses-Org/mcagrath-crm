@@ -364,7 +364,12 @@ class InvoicesDataTable extends BaseDataTable
                 return $row->added->name_salutation;
             }
         );
-        $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails?->property_address);
+        $datatables->editColumn(
+            'property_address', 
+            function($row){ 
+                return $row->project?->propertyDetails?->property_address; 
+            }
+        );
         $datatables->orderColumn('short_code', 'invoice_number $1');
         $datatables->removeColumn('currency_symbol');
         $datatables->removeColumn('currency_code');
@@ -390,7 +395,7 @@ class InvoicesDataTable extends BaseDataTable
             [
                 'project' => function ($q) {
                     $q->withTrashed();
-                    $q->select('id', 'project_name', 'project_short_code', 'client_id', 'deleted_at');
+                    $q->select('id', 'project_name', 'project_short_code', 'client_id', 'deleted_at','property_details_id');
                 },
                 'currency:id,currency_symbol,currency_code', 'project.client', 'client', 'payment', 'estimate', 'project.clientdetails','project.propertyDetails'
             ]

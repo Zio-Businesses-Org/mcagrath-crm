@@ -33,7 +33,13 @@ class ExpenseProcessPaymentController extends AccountBaseController
 
         $processPaymentSum = $expense->processPayment->sum('price');
         $this->invoiced_amount = $expense->projectvendor->invoiced_amount;
-        $this->pending_price = $this->invoiced_amount - $processPaymentSum;
+        if($expense->status == 'Write Off'){
+            $this->pending_price = 0;
+        }
+        else{
+            $this->pending_price = $this->invoiced_amount - $processPaymentSum;
+        }
+        
         $this->paymentMethods = ExpensesPaymentMethod::all(); // ✅ Fetch payment methods
         $this->feeMethods = ExpenseAdditionalFee::all(); // ✅ Fetch fee method
         return view('expenses.process_payment.ajax.create', $this->data);

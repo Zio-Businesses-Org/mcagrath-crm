@@ -107,7 +107,7 @@ class ExpensesDataTable extends BaseDataTable
             return $row->item_name;
         });
 
-        $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails->property_address);
+        $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails?->property_address);
 
         $datatables->addColumn('employee_name', function ($row) {
             return $row->user->name;
@@ -185,6 +185,10 @@ class ExpensesDataTable extends BaseDataTable
 
         $datatables->editColumn('pending_price', function ($row){
             $pending_amt = ( $row->projectvendor->invoiced_amount ?? 0) - $row->process_payment_sum_price ?? 0;
+            if($row->status=='Write Off')
+            {
+                $pending_amt = 0;
+            }
             return currency_format($pending_amt, $row->currency_id);
         });
         // $datatables->editColumn(
