@@ -16,7 +16,7 @@
     </span>
 </div>
 <!-- END -->
-@foreach ($discussion->replies as $key => $message)
+@foreach ($discussion->replies->reverse() as $key => $message)
     @php
         $replyUser = $message->user;
     @endphp
