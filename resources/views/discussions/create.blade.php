@@ -26,7 +26,7 @@
 
                 <div class="col-md-12">
                     <x-forms.text :fieldLabel="__('app.title')" fieldName="title" fieldRequired="true"
-                                  fieldId="title" autocomplete="off"/>
+                                  fieldId="title" autocomplete="off" fieldReadOnly/>
                 </div>
                 <div class="col-md-12">
                     <div class="form-group my-3">
@@ -116,6 +116,12 @@
 
      });
     // Save discussion
+    $('#discussion_category_id').change(function () {
+        
+        let selectedOption = $(this).find('option:selected').data('name');
+        $('#title').val(selectedOption);
+    });
+
     $('#save-discussion').click(function () {
         var note = document.getElementById('description').children[0].innerHTML;
         document.getElementById('description-text').value = note;
