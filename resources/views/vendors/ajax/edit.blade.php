@@ -303,14 +303,14 @@
                                     fieldValue="check"
                                     :checked="in_array('check', $paymentMethods)"/>
                                 </div>
-                                <div class="col-lg-4 mt-2">
+                                <!-- <div class="col-lg-4 mt-2">
                                  <x-forms.checkbox 
                                     :fieldLabel="__('CashApp')" 
                                     fieldName="payment_methods[]" 
                                     fieldId="cashapp" 
                                     fieldValue="cashapp"
                                     :checked="in_array('cashapp', $paymentMethods)"/>
-                                </div>
+                                </div> -->
                                 <div class="col-lg-4 mt-2">
                                  <x-forms.checkbox 
                                     :fieldLabel="__('Zelle')" 

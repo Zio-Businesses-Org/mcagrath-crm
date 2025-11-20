@@ -322,13 +322,13 @@
                                     fieldValue="check" 
                                     fieldId="check" />
                                 </div>
-                                <div class="col-lg-4 mt-2">
+                                <!-- <div class="col-lg-4 mt-2">
                                  <x-forms.checkbox 
                                     :fieldLabel="__('CashApp')" 
                                     fieldName="payment_methods[]"
                                     fieldValue="cashapp" 
                                     fieldId="cashapp" />
-                                </div>
+                                </div> -->
                                 <div class="col-lg-4 mt-2">
                                  <x-forms.checkbox 
                                     :fieldLabel="__('Zelle')" 
