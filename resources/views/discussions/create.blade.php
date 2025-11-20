@@ -17,7 +17,7 @@
                             @foreach ($categories as $item)
                                 <option
                                     data-content="<i class='fa fa-circle mr-2' style='color: {{ $item->color }}'></i>{{ $item->name }}"
-                                    value="{{ $item->id }}">{{ $item->name }}
+                                    value="{{ $item->id }}" data-name="{{$item->name}}">{{ $item->name }}
                                 </option>
                             @endforeach
                         </x-forms.select>
