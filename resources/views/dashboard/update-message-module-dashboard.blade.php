@@ -1,3 +1,4 @@
+{{--
 @if (global_setting()->system_update == 1 &&  in_array('admin', user_roles()))
 
     @php
@@ -66,3 +67,4 @@
         @endforeach
     @endif
 @endif
+--}}
