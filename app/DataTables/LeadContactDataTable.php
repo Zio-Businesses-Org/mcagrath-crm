@@ -169,6 +169,7 @@ class LeadContactDataTable extends BaseDataTable
                 'leads.company_name',
                 'leads.created_at',
                 'leads.updated_at',
+                'leads.mobile',
                 'lead_sources.type as source',
                 //newly added
                 'leads.status_type',
@@ -289,6 +290,7 @@ class LeadContactDataTable extends BaseDataTable
 
             __('app.email') . ' ' . __('modules.lead.email') => ['data' => 'export_email', 'name' => 'email', 'title' => __('app.lead') . ' ' . __('modules.lead.email'), 'exportable' => true, 'visible' => false],
             __('modules.lead.email') => ['data' => 'email', 'name' => 'leads.client_email', 'title' => __('modules.lead.email')],
+            __('Mobile') => ['data' => 'mobile', 'name' => 'leads.mobile', 'title' => __('Mobile')],
             // __('modules.lead.leadCategory') => ['data' => 'category_name', 'name' => 'category_name', 'exportable' => true, 'visible' => false, 'title' => __('modules.lead.leadCategory')],
            //newly added
            __('modules.lead.position') => ['data' => 'position', 'name' => 'leads.position', 'title' => __('modules.lead.position')],
