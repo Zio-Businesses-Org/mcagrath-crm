@@ -632,10 +632,21 @@ function submit(signature,signature_type)
             contract_end:"{{$enddate}}"
         },
         success: function(response) {
-            $('#signature-modal').modal('hide');
-            setTimeout(() => {
-            history.back();
-            }, 2000);
+            Swal.fire({
+                icon: 'success',
+                text: '{{ __('Thank you for updating your profile details and Welcome to our team!') }}',
+
+                customClass: {
+                    confirmButton: 'btn btn-primary d-none',
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
         }
     });
 }

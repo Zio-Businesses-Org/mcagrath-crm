@@ -155,6 +155,7 @@ class OneTimeAgreeController extends Controller
         $vendor->save();
         //return Reply::success(__(''));
         $redirectUrl = route('front.ota.show');
-        return Reply::successWithData(__('Thank you for updating your profile details and Welcome to our team!'), ['redirectUrl' => $redirectUrl]);
+        //return Reply::successWithData(__('Thank you for updating your profile details and Welcome to our team!'), ['redirectUrl' => $redirectUrl]);
+        return Reply::dataOnly(['status' => 'success' ]);
     }
 }
