@@ -16,6 +16,31 @@
     </span>
 </div>
 <!-- END -->
+ @php
+    $discussionId = $discussion->id;
+@endphp
+<div class="col-md-12 border-top border-right mb-5 bg-white" id="reply-section">
+    <x-form id="replyDiscussion" method="POST" class="ajax-form">
+        <input type="hidden" name="discussion_id" value="{{ $discussionId }}">
+            <div class="col-md-12">
+                <div class="form-group my-3">
+                    <x-forms.label fieldReuired="true" fieldId="description" :fieldLabel="__('app.reply')">
+                    </x-forms.label>
+                    <div id="reply"></div>
+
+                    <textarea name="description" id="description-text" class="d-none"></textarea>
+                </div>
+            </div>
+            <input type="hidden" name= "discussion_type" value="discussion_reply">
+
+            <div class="col-md-12">
+                <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2"
+                    :fieldLabel="__('app.menu.addFile')" fieldName="file"
+                    fieldId="file-upload-dropzone" />
+                    <x-forms.button-primary  class="mb-2" id="save-discussion" icon="check">@lang('app.reply')</x-forms.button-primary>
+            </div>
+    </x-form>
+</div>
 @foreach ($discussion->replies->reverse() as $key => $message)
     @php
         $replyUser = $message->user;
@@ -127,31 +152,7 @@
 
 @endforeach
 
-@php
-    $discussionId = $discussion->id;
-@endphp
-<div class="col-md-12 border-top border-right mb-5 bg-white" id="reply-section">
-    <x-form id="replyDiscussion" method="POST" class="ajax-form">
-        <input type="hidden" name="discussion_id" value="{{ $discussionId }}">
-            <div class="col-md-12">
-                <div class="form-group my-3">
-                    <x-forms.label fieldReuired="true" fieldId="description" :fieldLabel="__('app.reply')">
-                    </x-forms.label>
-                    <div id="reply"></div>
 
-                    <textarea name="description" id="description-text" class="d-none"></textarea>
-                </div>
-            </div>
-            <input type="hidden" name= "discussion_type" value="discussion_reply">
-
-            <div class="col-md-12">
-                <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2"
-                    :fieldLabel="__('app.menu.addFile')" fieldName="file"
-                    fieldId="file-upload-dropzone" />
-                    <x-forms.button-primary  class="mb-2" id="save-discussion" icon="check">@lang('app.reply')</x-forms.button-primary>
-            </div>
-    </x-form>
-</div>
 
 <script>
 
