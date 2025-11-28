@@ -161,7 +161,7 @@
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('Office (Call) #')" fieldName="office"
+                            <x-forms.number :fieldLabel="__('Office (Call) #')" fieldName="office"
                                 fieldId="office" fieldRequired="true" />
                         </div>
 
@@ -284,7 +284,7 @@
                             </x-forms.select>
                         </div>
                         <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.text :fieldLabel="__('Distance covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')"/>
+                            <x-forms.number :fieldLabel="__('Distance covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')"/>
                         </div>
                         <div class="col-lg-4 col-md-6 mt-2">
                             <x-forms.text :fieldLabel="__('Coverage By County')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the Counties that you cover')"/>

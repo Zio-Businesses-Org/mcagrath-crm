@@ -152,6 +152,7 @@ Route::get('/proposal/{hash}', [HomeController::class, 'proposal'])->name('front
 Route::get('/contract/{hash}', [PublicUrlController::class, 'contractView'])->name('front.contract.show')->middleware('signed');
 Route::get('/ota', [OneTimeAgreeController::class, 'OtaView'])->name('front.ota.show')->middleware('signed');
 Route::get('/wo', [PublicWorkOrderController::class, 'WoView'])->name('front.wo.show')->middleware('signed');
+Route::get('/download-contract', [OneTimeAgreeController::class, 'downloadPdf'])->name('front.ota.download')->middleware('signed');
 Route::get('/external-file', [PublicProjectFileController::class, 'FileView'])->name('external.file.view')->middleware('signed');
 Route::resource('external-file-upload', PublicProjectFileController::class);
 Route::get('external-file/download/{id}', [PublicProjectFileController::class, 'download'])->name('external-file.download');

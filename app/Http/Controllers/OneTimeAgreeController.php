@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\File;
 use App\Helper\Reply;
 use App\Http\Requests\vendor\SaveVendorRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\VendorContractAcceptNotification;
+use Illuminate\Support\Facades\App;
+
 class OneTimeAgreeController extends Controller
 {
     public function OtaView(Request $request){
@@ -155,7 +159,33 @@ class OneTimeAgreeController extends Controller
         $vendor->save();
         //return Reply::success(__(''));
         $redirectUrl = route('front.ota.show');
+
+        if($request->vendor_email)
+        {
+            Notification::route('mail', $request->vendor_email)->notify(new VendorContractAcceptNotification($vendor));
+        }
         //return Reply::successWithData(__('Thank you for updating your profile details and Welcome to our team!'), ['redirectUrl' => $redirectUrl]);
         return Reply::dataOnly(['status' => 'success' ]);
+    }
+
+    public function downloadPdf(Request $request)
+    {
+        $this->contract = VendorContract::findOrFail($request->id);
+        $this->pageTitle = 'app.menu.contracts';
+        $this->pageIcon = 'fa fa-file';
+        $this->company = Company::find(1);
+        $pdf = app('dompdf.wrapper');
+
+        $pdf->setOption('enable_php', true);
+        $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        App::setLocale('en');
+        Carbon::setLocale('en');
+        $pdf->loadView('vendors.contract-pdf', $this->data);
+
+        $filename = 'contract-' . $this->contract->id;
+
+        return $pdf->download($filename . '.pdf');
+
     }
 }

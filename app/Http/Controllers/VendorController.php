@@ -256,6 +256,7 @@ class VendorController extends AccountBaseController
         }
     
     }
+    
     public function download($id)
     {
         $this->contract = VendorContract::findOrFail($id);
