@@ -254,7 +254,7 @@ class Project extends BaseModel
         return $this->hasOne(Invoice::class, 'project_id')
                     ->whereIn('status', ['paid', 'unpaid'])
                     ->latest('id')
-                    ->select(['project_id', 'created_at']);// equivalent to orderByDesc('id') and limits the results to one.
+                    ->select(['project_id', 'created_at', 'issue_date']);// equivalent to orderByDesc('id') and limits the results to one.
     }
     public function latestPayment(): HasOne
     {

@@ -320,7 +320,7 @@ class ProjectsDataTable extends BaseDataTable
                 </div>';
         });
         $datatables->editColumn('start_date', fn($row) => $row->start_date?->translatedFormat($this->company->date_format));
-        $datatables->editColumn('invoiced_date', fn($row) => $row->latestInvoice?->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format));
+        $datatables->editColumn('invoiced_date', fn($row) => $row->latestInvoice?->issue_date->translatedFormat($this->company->date_format));
         $datatables->editColumn('deadline', fn($row) => Common::dateColor($row->deadline));
         $datatables->editColumn('bsdate', fn($row) => $row->bid_submitted?->translatedFormat($this->company->date_format));
         $datatables->editColumn('cpaydate', fn($row) => $row->latestPayment?->paid_on->translatedFormat($this->company->date_format));
