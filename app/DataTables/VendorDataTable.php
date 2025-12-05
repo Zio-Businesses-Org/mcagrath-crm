@@ -60,12 +60,12 @@ class VendorDataTable extends BaseDataTable
                             </a>';
             // }
 
-              if (!$row->company_sign) {
-                $action .= '<a class="dropdown-item companysign" href="javascript:;" data-user-row="' . $row->id . '" data-toggle="modal" data-target="#signature-modal">
-                                <i class="fa fa-edit mr-2"></i>
-                                ' . trans('app.companysign') . '
-                            </a>';
-             }
+            //   if (!$row->company_sign) {
+            //     $action .= '<a class="dropdown-item companysign" href="javascript:;" data-user-row="' . $row->id . '" data-toggle="modal" data-target="#signature-modal">
+            //                     <i class="fa fa-edit mr-2"></i>
+            //                     ' . trans('app.companysign') . '
+            //                 </a>';
+            //  }
                 $action .= '<a class="dropdown-item" href="' . route('vendors.download', $row->id) . '">
                                 <i class="fa fa-download mr-2"></i>
                                 ' . trans('app.download') . '
@@ -90,7 +90,7 @@ class VendorDataTable extends BaseDataTable
             if ($row->contract_sign) {
                 $signed = '<span class="badge badge-secondary"><i class="fa fa-signature"></i> ' . __('app.signed') . '</span>';
             }
-            if($row->company_sign)
+            if($this->company->company_sign)
             {
                 $companysign = '<span class="badge badge-secondary"><i class="fa fa-signature"></i> ' . __('Company Signed') . '</span>';
             }

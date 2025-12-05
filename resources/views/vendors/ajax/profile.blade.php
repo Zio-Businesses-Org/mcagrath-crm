@@ -37,14 +37,7 @@
                     <p class="f-13 font-weight-normal text-dark-grey mb-0">
                         {{ $vendorDetail->company_name }}
                     </p>
-                    <p class="card-text f-12 text-lightest mb-1">@lang('app.lastLogin')
-
-                        
-                    </p>
-
-                   
-
-
+                    <p class="card-text f-12 text-lightest mb-1">@lang('app.lastLogin')</p>
                 </x-cards.user>
 
             </div>
@@ -156,9 +149,9 @@
                 <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                     Company Sign</p>
                 <p class="mb-0 text-dark-grey f-14 w-70">
-                    @if ($vendorDetail->company_sign)
+                    @if (company()->company_sign)
                         <img data-toggle="tooltip" style="height:50px;"
-                    src="{{ $vendorDetail->tertiary_image_url }}">
+                    src="{{ company()->company_signature }}">
                     @else
                     --
                     @endif

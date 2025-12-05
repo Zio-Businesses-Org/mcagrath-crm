@@ -437,6 +437,21 @@ class Company extends BaseModel
         return asset_url_local_s3('favicon/' . $this->favicon);
     }
 
+    public function getCompanySignatureAttribute()
+    {
+        return ($this->company_sign) ? asset_url_local_s3('signature/' . $this->company_sign) : null;
+    }
+
+    public function maskedImageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return ($this->company_sign) ? $this->generateMaskedImageAppUrl('signature/' . $this->company_sign) : 'https://www.gravatar.com/avatar/' . md5($this->id) . '.png?s=200&d=mp';
+            },
+        );
+
+    }
+
     public function paymentGatewayCredentials(): HasOne
     {
         return $this->hasOne(PaymentGatewayCredentials::class);

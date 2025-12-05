@@ -536,15 +536,15 @@ Neither party may assign or transfer this Agreement without the prior written co
             </div>
         @endif
 
-        @if ($contract->company_sign)
-            <div style="text-align: right; margin-top: -240px">
-                <h4 class="name" style="margin-bottom: 20px;">@lang('Company Signature')</h4>
-                <img src="{{$contract->tertiary_image_url }}" style="width: 200px;"><br>
-                <p>Company Name:- {{ $company->company_name }}<br>
-                    Date:- {{ $contract->company_sign_date }}<br>
-                </p>
-            </div>
-        @endif
+        
+        <div style="text-align: right; margin-top: -240px">
+            <h4 class="name" style="margin-bottom: 20px;">@lang('Company Signature')</h4>
+            <img src="{{ $company->company_signature }}" style="width: 200px;"><br>
+            <p>Company Name:- {{ $company->company_name }}<br>
+                Date:- {{ $contract->signed_date }}<br>
+            </p>
+        </div>
+        
     </div>
 
 </body>

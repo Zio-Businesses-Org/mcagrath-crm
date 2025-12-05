@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\Reply;
 use App\Http\Requests\Settings\UpdateOrganisationSettings;
 use App\Traits\CurrencyExchange;
+use App\Helper\Files;
 
 class SettingsController extends AccountBaseController
 {
@@ -34,11 +35,21 @@ class SettingsController extends AccountBaseController
     // phpcs:ignore
     public function update(UpdateOrganisationSettings $request, $id)
     {
+        
         $setting = \company();
         $setting->company_name = $request->company_name;
         $setting->company_email = $request->company_email;
         $setting->company_phone = $request->company_phone;
         $setting->website = $request->website;
+        if ($request->image_delete == 'yes') {
+            Files::deleteFile($setting->company_sign, 'signature');
+            $setting->company_sign = null;
+        }
+
+        if ($request->hasFile('image')) {
+            Files::deleteFile($setting->company_sign, 'signature');
+            $setting->company_sign = Files::uploadLocalOrS3($request->image, 'signature', 300);
+        }
         $setting->save();
 
         return Reply::success(__('messages.updateSuccess'));
