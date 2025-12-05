@@ -65,7 +65,7 @@ class IncomeVsExpenseReportController extends AccountBaseController
             ]);
 
         foreach ($invoices as $invoice) {
-
+            
             if((is_null($invoice->default_currency_id) && is_null($invoice->exchange_rate)) ||
             (!is_null($invoice->default_currency_id) && Company()->currency_id != $invoice->default_currency_id))
             {
@@ -88,23 +88,35 @@ class IncomeVsExpenseReportController extends AccountBaseController
                 $incomes[$invoice->date] += round($invoice->total, 2);
             }
         }
-
+        
         $expenses = [];
-        $expenseResults = Expense::join('currencies', 'currencies.id', '=', 'expenses.currency_id')
-            ->where(DB::raw('DATE(`purchase_date`)'), '>=', $fromDate)
-            ->where(DB::raw('DATE(`purchase_date`)'), '<=', $toDate)
-            ->where('expenses.status', 'approved')
-            ->get([
-                'expenses.price',
-                'expenses.purchase_Date as date',
-                DB::raw('DATE_FORMAT(purchase_date,\'%d-%M-%y\') as date'),
-                'currencies.id as currency_id',
+        $expenseResults = Expense::join('expense_process_payments', 'expense_process_payments.expense_id', '=', 'expenses.id')
+            ->join('currencies', 'currencies.id', '=', 'expenses.currency_id')
+            ->whereDate('expense_process_payments.payment_date', '>=', $fromDate)
+            ->whereDate('expense_process_payments.payment_date', '<=', $toDate)
+            ->where('expenses.status', 'Paid Off')
+            ->selectRaw('
+                expenses.id,
+                SUM(expense_process_payments.price) as price,
+                DATE(expense_process_payments.payment_date) as date,
+                DATE_FORMAT(expense_process_payments.payment_date, "%d-%M-%y") as formatted_date,
+                currencies.id as currency_id,
+                expenses.exchange_rate,
+                expenses.default_currency_id
+            ')
+            ->groupBy(
+                'expenses.id',
+                'date',
+                'formatted_date',
+                'currencies.id',
                 'expenses.exchange_rate',
                 'expenses.default_currency_id'
-            ]);
-
+            )
+            ->get();
+        
+                \Log::info($expenseResults);
         foreach ($expenseResults as $expenseResult) {
-
+            
             if((is_null($expenseResult->default_currency_id) && is_null($expenseResult->exchange_rate)) ||
             (!is_null($expenseResult->default_currency_id) && Company()->currency_id != $expenseResult->default_currency_id))
             {

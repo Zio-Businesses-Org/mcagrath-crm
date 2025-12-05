@@ -209,7 +209,7 @@ class Expense extends BaseModel
     {
         return $this->hasOne(ExpenseProcessPayment::class, 'expense_id')
                     ->latest('id')
-                    ->select(['created_at']);// equivalent to orderByDesc('id') and limits the results to one.
+                    ->select(['created_at', 'payment_date']);// equivalent to orderByDesc('id') and limits the results to one.
     }
 
 }

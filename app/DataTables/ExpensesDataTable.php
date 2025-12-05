@@ -177,7 +177,7 @@ class ExpensesDataTable extends BaseDataTable
                 }
             }
         );
-        $datatables->editColumn('payment_date', fn($row) => $row->latestPayment?->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format));
+        $datatables->editColumn('payment_date', fn($row) => $row->latestPayment?->payment_date?->translatedFormat($this->company->date_format));
         $datatables->editColumn('process_price', function ($row){
             
             return currency_format($row->process_payment_sum_price ?? 0, $row->currency_id);
