@@ -59,6 +59,15 @@
                                       fieldId="website" :fieldValue="company()->website"/>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2"
+                                      :fieldLabel="__('External File Notification Email')"
+                                      :fieldPlaceholder="__('placeholders.email')" fieldRequired="true"
+                                      fieldName="external_file_notify_email"
+                                      fieldId="external_file_notify_email"/>
+                    </div>
+                </div>
 
             </div>
 

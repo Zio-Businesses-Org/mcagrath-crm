@@ -41,6 +41,7 @@ class SettingsController extends AccountBaseController
         $setting->company_email = $request->company_email;
         $setting->company_phone = $request->company_phone;
         $setting->website = $request->website;
+        $setting->external_file_notify_email = $request->external_file_notify_email;
         if ($request->image_delete == 'yes') {
             Files::deleteFile($setting->company_sign, 'signature');
             $setting->company_sign = null;

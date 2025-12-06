@@ -11,6 +11,8 @@ use App\Models\Project;
 use App\Models\ProjectExternalFile;
 use Illuminate\Support\Facades\Cache;
 use App\Models\ExternalFileType;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ExternalFileSelfNotification;
 
 class PublicProjectFileController extends Controller
 {
@@ -26,6 +28,7 @@ class PublicProjectFileController extends Controller
     }
     public function store(Request $request)
     {
+        $company = Company::find(1);
         if ($request->hasFile('file')) {
 
             $defaultImage = null;
@@ -46,7 +49,11 @@ class PublicProjectFileController extends Controller
             }
 
         }
-
+        if($company->external_file_notify_email)
+        {
+            $project = Project::without('members')->with(['propertyDetails:id,project_id,property_address'])->select('id', 'project_short_code')->findOrFail($request->projectid);
+            Notification::route('mail', $company->external_file_notify_email)->notify(new ExternalFileSelfNotification($project, $company, $request->name));
+        }
         return Reply::success(__('messages.fileUploaded'));
     }
     public function download($id)
