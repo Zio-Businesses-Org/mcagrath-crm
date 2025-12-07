@@ -101,7 +101,7 @@ $addProductPermission = user()->permission('add_product');
                         <x-forms.select fieldId="v_status" :fieldLabel="__('Status')" fieldName="v_status" search="true">
                             <option value="">--</option>
                             @foreach ($vendorStatuses as $status)
-                                <option value="{{ $status }}">{{ ucfirst($status) }}</option>
+                                <option value="{{ $status->status }}">{{ $status->status }}</option>
                             @endforeach
                         </x-forms.select>
                     </div>

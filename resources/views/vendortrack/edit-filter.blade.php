@@ -132,12 +132,9 @@
                 <div class="mb-4">
                 <select class="form-control select-picker" name="filter_status[]" id="filter_status"
                         data-live-search="true" data-container="body" data-size="8" multiple>
-                        <option value="Accepted" {{ in_array('Accepted', $selectedLeadVendorStatus) ? 'selected' : '' }}>
-                            Accepted
-                         </option>
                         @foreach ($vendorStatuses as $category)
-                            <option value="{{ $category }}" {{ in_array($category, $selectedLeadVendorStatus) ? 'selected' : '' }}>
-                                {{ $category }}
+                            <option value="{{ $category->status }}" {{ in_array($category->status, $selectedLeadVendorStatus) ? 'selected' : '' }}>
+                                {{ $category->status }}
                             </option>
                         @endforeach
                 </select>

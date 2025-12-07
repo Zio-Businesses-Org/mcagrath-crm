@@ -26,6 +26,7 @@ use App\Imports\LeadVendorImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ContractorType;
 use App\Models\LeadVendorCustomFilter;
+use App\Models\VendorLeadStatus;
 
 class LeadVendorController extends AccountBaseController
 {
@@ -39,7 +40,7 @@ class LeadVendorController extends AccountBaseController
         $this->leadsource=LeadSource::all();
         $this->notestitle=NotesTitle::all();
         $this->location=Locations::select('state')->distinct()->get();
-        $this->vendorStatuses = Vendor::getStatuses();
+        $this->vendorStatuses = VendorLeadStatus::all();
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
        
@@ -139,7 +140,7 @@ class LeadVendorController extends AccountBaseController
             // $this->projects = Project::all();
             // $this->contracts = ContractType::all();
             // $this->countries = countries();
-            $this->vendorStatuses = Vendor::getStatuses();
+            $this->vendorStatuses = VendorLeadStatus::all();
             // $this->createdby = User::whereIn('id', $ids)->get();
             $this->leadVendorFilter = LeadVendorCustomFilter::where('user_id', user()->id)->get();
             $this->contracttype = ContractorType::all();
@@ -166,7 +167,7 @@ class LeadVendorController extends AccountBaseController
         $this->contracttype = ContractorType::all();
         $this->vendor = Vendor::where('id', '=', $id)->first();
         $this->pageTitle = __('app.update') . ' ' . __('Vendor Contact Info');
-        $this->vendorStatuses = Vendor::getStatuses();
+        $this->vendorStatuses = VendorLeadStatus::all();
         $this->leadsource=LeadSource::all(); 
         $this->view = 'vendortrack.ajax.edit';
         $this->location=Locations::select('state')->distinct()->get();

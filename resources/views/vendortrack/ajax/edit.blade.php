@@ -86,8 +86,8 @@
                             fieldName="v_status" >
                             <option value="">--</option>
                             @foreach ($vendorStatuses as $status)
-                                <option value="{{ $status }}" {{ $vendor->v_status === $status ? 'selected' : '' }}>
-                                    {{ ucfirst($status) }}
+                                <option value="{{ $status->status }}" {{ $vendor->v_status === $status->status ? 'selected' : '' }}>
+                                    {{ $status->status }}
                                 </option>
                             @endforeach
                         </x-forms.select>

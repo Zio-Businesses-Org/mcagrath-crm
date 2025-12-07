@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\NotesTitle;
 use Illuminate\Http\Request;
 use App\Models\LeadSetting;
+use App\Models\VendorLeadStatus;
 
 class LeadSettingController extends AccountBaseController
 {
@@ -42,6 +43,7 @@ class LeadSettingController extends AccountBaseController
         $this->leadCategories = LeadCategory::all();
         $this->leadSettings = LeadSetting::select('status')->where('company_id',$this->company->id)->first();
         $this->notesTitle = NotesTitle::all();
+        $this->leadvendorstatus = VendorLeadStatus::all();
         $this->employees = User::doesntHave('leadAgent')
             ->join('role_user', 'role_user.user_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
@@ -57,6 +59,7 @@ class LeadSettingController extends AccountBaseController
             'category' => 'lead-settings.ajax.category',
             'method' => 'lead-settings.ajax.method',
             'notestitle' => 'lead-settings.ajax.notestitle',
+            'leadvendorstatus' =>'lead-settings.ajax.leadvendorstatus',
             default => 'lead-settings.ajax.source',
         };
 

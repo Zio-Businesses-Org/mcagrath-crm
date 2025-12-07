@@ -166,6 +166,7 @@ use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\LeadClientCustomFilterController; 
 use App\Http\Controllers\ExpenseStatusController;
 use App\Http\Controllers\ExpenseProcessPaymentController;
+use App\Http\Controllers\VendorLeadStatusController;
 
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
@@ -600,6 +601,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('notes/{id}', [LeadVendorController::class, 'notes'])->name('vendortrack.notes');
     Route::get('notescreate/{id}', [LeadVendorController::class, 'notescreate'])->name('vendortrack.notescreate');
     Route::post('notesstore', [LeadVendorController::class, 'notesstore'])->name('vendortrack.notesstore');
+    Route::resource('VendorLeadStatus', VendorLeadStatusController::class);
     Route::resource('vendortrack', LeadVendorController::class);
     Route::resource('clients', ClientController::class);
     Route::resource('vendors', VendorController::class);

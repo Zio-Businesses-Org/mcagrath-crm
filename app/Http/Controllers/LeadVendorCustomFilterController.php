@@ -11,6 +11,7 @@ use App\Models\LeadSource;
 use App\Models\Locations;
 use App\Models\Vendor;
 use App\Models\User;
+use App\Models\VendorLeadStatus;
 
 class LeadVendorCustomFilterController extends AccountBaseController
 {
@@ -38,7 +39,7 @@ class LeadVendorCustomFilterController extends AccountBaseController
 
     public function edit($id)
     {
-        $this->vendorStatuses = Vendor::getStatuses();
+        $this->vendorStatuses = VendorLeadStatus::all();
         $this->contracttype = ContractorType::all();
         $this->state=Locations::select('state')->distinct()->get();
         $this->county=Locations::select('county')->distinct()->get();
