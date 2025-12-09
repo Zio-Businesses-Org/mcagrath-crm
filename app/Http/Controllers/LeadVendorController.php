@@ -27,6 +27,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ContractorType;
 use App\Models\LeadVendorCustomFilter;
 use App\Models\VendorLeadStatus;
+use App\Models\VendorGeneralSettings;
 
 class LeadVendorController extends AccountBaseController
 {
@@ -48,6 +49,7 @@ class LeadVendorController extends AccountBaseController
 
         return view('lead-contact.create', $this->data);
     }
+
     public function vendorcheck($email)
     {
         $users =Vendor::where('vendor_email', $email)->where('v_status', 'rejected')->exists();
@@ -58,9 +60,22 @@ class LeadVendorController extends AccountBaseController
             return Reply::dataOnly(['status' => 'failed']);
         }
     }
+
     public function store(StoreVendorRequest $request)
     {
+        $vgs = VendorGeneralSettings::first();
         $email = $request->input('vendor_email');
+        $mobile = trim($request->vendor_mobile);
+
+        $exists = Vendor::where([
+            ['vendor_email', '=', $email],
+            ['vendor_number', '=', $mobile]
+        ])->exists();
+
+        if ($exists && $vgs->duplicate_entry_check) {
+            return Reply::error(__('Duplicate Entry'));
+        }
+
         if($request[1]==1)
         {
             try{
@@ -130,6 +145,7 @@ class LeadVendorController extends AccountBaseController
             return Reply::successWithData(__('Saved'), ['redirectUrl' => $redirectUrl]);
         }
     }
+
     public function index(VendorTrackDataTable $dataTable)
     {
         $this->pageTitle = 'Vendor Leads';

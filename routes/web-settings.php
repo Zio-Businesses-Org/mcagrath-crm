@@ -277,6 +277,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::get('vendor-settings/create-sow-title', [VendorSettingsController::class, 'createSOWTitle'])->name('vendor-settings.createSOWTitle');
     Route::post('vendor-settings/save-sow-title', [VendorSettingsController::class, 'saveSOWTitle'])->name('vendor-settings.saveSOWTitle');
     Route::post('vendor-settings/self-notify-mail', [VendorSettingsController::class, 'saveSelfNotifyMail'])->name('vendor-settings.saveSelfNotifyMail');
+    Route::post('vendor-settings/toggle-duplicate-entry', [VendorSettingsController::class, 'toggleDuplicateEntry'])->name('vendor-settings.toggleDuplicateEntry');
     Route::resource('vendor-settings', VendorSettingsController::class);
 });
 

@@ -139,4 +139,13 @@ class VendorSettingsController extends AccountBaseController
             return Reply::success(__('messages.recordSaved'));
         }
     }
+
+    public function toggleDuplicateEntry(Request $request)
+    {
+        $vgs = VendorGeneralSettings::first();
+        $vgs->duplicate_entry_check = $request->value;
+        $vgs->save();
+        return Reply::success(__('messages.recordSaved'));
+        
+    }
 }
