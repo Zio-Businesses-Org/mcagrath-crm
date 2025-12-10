@@ -41,10 +41,10 @@ $mangeLeadStagePermission = user()->permission('manage_deal_stages');
                                 href="{{ route('lead-settings.index') }}?tab=notestitle" role="tab"
                                 aria-controls="nav-leadAgent" aria-selected="true">@lang('Notes Title')
                             </a>
-                            <a class="nav-item nav-link f-15 active leadvendorstatus"
+                            <!-- <a class="nav-item nav-link f-15 active leadvendorstatus"
                                href="{{ route('lead-settings.index') }}?tab=leadvendorstatus" role="tab"
                                aria-controls="nav-leadvendorstatus" aria-selected="true">@lang('Vendor Lead Status')
-                            </a>
+                            </a> -->
                         </div>
                     </nav>
                 </div>
