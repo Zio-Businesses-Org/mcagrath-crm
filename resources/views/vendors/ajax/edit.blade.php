@@ -409,7 +409,7 @@
                         },
                     success: function(response) {
                         if (response.status == 'success') {
-                            window.location.reload();
+                            window.location.href = "{{ route('vendors.index') }}";
                         } 
                     },
                 });

@@ -169,6 +169,7 @@
     $.easyAjax({
         url: "{{ route('front.waiver.store') }}",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':data,
