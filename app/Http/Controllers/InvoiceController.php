@@ -478,9 +478,9 @@ class InvoiceController extends AccountBaseController
         Carbon::setLocale($this->invoiceSetting->locale ?? 'en');
 
         // Download file uploaded
-        if ($this->invoice->file != null) {
-            return response()->download(storage_path('app/public/invoice-files') . '/' . $this->invoice->file);
-        }
+        // if ($this->invoice->file != null) {
+        //     return response()->download(storage_path('app/public/invoice-files') . '/' . $this->invoice->file);
+        // }
 
         $pdfOption = $this->domPdfObjectForDownload($id);
         $pdf = $pdfOption['pdf'];

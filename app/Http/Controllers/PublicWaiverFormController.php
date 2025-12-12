@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\App;
 use Carbon\Carbon;
 use App\Models\VendorGeneralSettings;
 use App\Jobs\SendSelfWaiverNotificationJob;
+use App\Jobs\ProcessWaiverFormUploadJob;
 
 class PublicWaiverFormController extends Controller
 {
@@ -58,6 +59,7 @@ class PublicWaiverFormController extends Controller
                     $vendor_general_settings->selfnotifymail,
                     $vendor
                 )->delay(now()->addSeconds(10));
+                //ProcessWaiverFormUploadJob::dispatch($vendor)->onConnection('database')->onQueue('waiver-form-auto-upload');
                 //Notification::route('mail', $vendor_general_settings->selfnotifymail)->notify(new WaiverFormSelfNotification($vendor));
                 return Reply::success(__('Thank You. Your Response Has Been Noted'));
             } 
