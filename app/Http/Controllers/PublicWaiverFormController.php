@@ -11,11 +11,11 @@ use App\Models\VendorWaiverFormTemplate;
 use App\Models\VendorContract;
 use App\Helper\Reply;
 use App\Notifications\WaiverFormNotification;
-use App\Notifications\WaiverFormSelfNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\App;
 use Carbon\Carbon;
 use App\Models\VendorGeneralSettings;
+use App\Jobs\SendSelfWaiverNotificationJob;
 
 class PublicWaiverFormController extends Controller
 {
@@ -54,7 +54,11 @@ class PublicWaiverFormController extends Controller
                 $vendor->save();
                 $vendor_general_settings = VendorGeneralSettings::first();
                 Notification::route('mail', $vendor->vendor_email)->notify(new WaiverFormNotification($vendor));
-                Notification::route('mail', $vendor_general_settings->selfnotifymail)->notify(new WaiverFormSelfNotification($vendor));
+                SendSelfWaiverNotificationJob::dispatch(
+                    $vendor_general_settings->selfnotifymail,
+                    $vendor
+                )->delay(now()->addSeconds(10));
+                //Notification::route('mail', $vendor_general_settings->selfnotifymail)->notify(new WaiverFormSelfNotification($vendor));
                 return Reply::success(__('Thank You. Your Response Has Been Noted'));
             } 
             elseif ($request->action == 'reject') {

@@ -164,41 +164,47 @@
 
 <script>
     $('#accept').click(function () {
-    var token="{{ csrf_token() }}";
-    var data="{{$vendorid->id}}";
-    $.easyAjax({
-        url: "{{ route('front.waiver.store') }}",
-        type: "POST",
-        blockUI: true,
-        data: {
-                '_token': token,
-                'data':data,
-                'action':'accept'
-              },
-        success: function(response) {
-            setTimeout(() => {
-                    window.location.reload();
-                   }, 1000);
-        },
+        var token="{{ csrf_token() }}";
+        var data="{{$vendorid->id}}";
+        $.easyAjax({
+            url: "{{ route('front.waiver.store') }}",
+            type: "POST",
+            blockUI: true,
+            disableButton: true,
+            buttonSelector: '#accept',
+            data: {
+                    '_token': token,
+                    'data':data,
+                    'action':'accept'
+                },
+            success: function(response) {
+                setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+            },
+        });
     });
-    });
+
     $('#reject').click(function () {
-    var token="{{ csrf_token() }}";
-    var data="{{$vendorid->id}}";
-    $.easyAjax({
-        url: "{{ route('front.waiver.store') }}",
-        type: "POST",
-        data: {
-                '_token': token,
-                'data':data,
-                'action':'reject'
-              },
-        success: function(response) {
-            setTimeout(() => {
-                    window.location.reload();
-                   }, 1000);
-        },
-    });
+        var token="{{ csrf_token() }}";
+        var data="{{$vendorid->id}}";
+        $.easyAjax({
+            url: "{{ route('front.waiver.store') }}",
+            type: "POST",
+            blockUI: true,
+            disableButton: true,
+            buttonSelector: '#reject',
+            data: {
+                    '_token': token,
+                    'data':data,
+                    'action':'reject'
+                },
+            success: function(response) {
+                setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+            },
+        });
     });
    
 
