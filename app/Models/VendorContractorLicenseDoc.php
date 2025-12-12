@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\IconTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Scopes\ActiveScope;
 
 class VendorContractorLicenseDoc extends BaseModel
 {
@@ -34,6 +35,6 @@ class VendorContractorLicenseDoc extends BaseModel
     }
     public function added(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'added_by');
+        return $this->belongsTo(User::class, 'added_by')->withoutGlobalScope(ActiveScope::class);
     }
 }

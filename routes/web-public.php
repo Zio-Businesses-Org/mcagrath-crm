@@ -21,7 +21,7 @@ use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\Payment\StripeWebhookController;
 use App\Http\Controllers\PublicLeadGdprController;
 use App\Http\Controllers\PublicWorkOrderController;
-use App\Http\Controllers\PublicWaiverFormCotnroller;
+use App\Http\Controllers\PublicWaiverFormController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PublicProjectFileController;
@@ -159,9 +159,9 @@ Route::get('external-file/download/{id}', [PublicProjectFileController::class, '
 
 Route::get('/shared-files/{key}', [PublicProjectFileController::class, 'accessSharedFiles'])->name('shared.files.access')->middleware('signed');
 Route::get('/downloadpdf', [PublicWorkOrderController::class, 'downloadPdf'])->name('front.wo.download')->middleware('signed');
-Route::get('/waiver', [PublicWaiverFormCotnroller::class, 'WaiverView'])->name('front.waiver.show')->middleware('signed');
-Route::post('/waiverstore', [PublicWaiverFormCotnroller::class, 'WaiverStore'])->name('front.waiver.store');
-Route::get('/waiver/download/{id}', [PublicWaiverFormCotnroller::class, 'downloadPdf'])->name('front.waiver.download');
+Route::get('/waiver', [PublicWaiverFormController::class, 'WaiverView'])->name('front.waiver.show')->middleware('signed');
+Route::post('/waiverstore', [PublicWaiverFormController::class, 'WaiverStore'])->name('front.waiver.store');
+Route::get('/waiver/download/{id}', [PublicWaiverFormController::class, 'downloadPdf'])->name('front.waiver.download');
 Route::get('/form-vendor', [OneTimeAgreeController::class, 'vendorfredirect'])->name('front.form.show');
 Route::post('/vendor-store', [OneTimeAgreeController::class, 'vendorstore'])->name('front.vendor.save');
 Route::post('/wostore', [PublicWorkOrderController::class, 'WoStore'])->name('front.wo.store');

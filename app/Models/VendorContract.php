@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class VendorContract extends BaseModel
 {
@@ -113,4 +114,30 @@ class VendorContract extends BaseModel
     {
         return $this->hasMany(VendorDocs::class, 'vendor_id')->orderByDesc('id');
     }
+
+    public function vendorCoiDoc(): HasOne
+    {
+        return $this->hasOne(VendorCoiDoc::class, 'vendor_id');
+    }
+
+    public function vendorWnineDoc(): HasOne
+    {
+        return $this->hasOne(VendorWnineDoc::class, 'vendor_id');
+    }
+
+    public function vendorContractorLicenseDoc(): HasOne
+    {
+        return $this->hasOne(VendorContractorLicenseDoc::class, 'vendor_id');
+    }
+
+    public function vendorWorkersCompDoc(): HasOne
+    {
+        return $this->hasOne(VendorWorkersCompDoc::class, 'vendor_id');
+    }
+
+    public function vendorBuisnessLicenseDoc(): HasOne
+    {
+        return $this->hasOne(VendorBuisnessLicenseDoc::class, 'vendor_id');
+    }
+
 }

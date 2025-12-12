@@ -103,6 +103,7 @@ class VendorDataTable extends BaseDataTable
                 </div>
               </div>';
         });
+        
         $datatables->editColumn('id', fn($row) => $row->id);
         $datatables->editColumn('created_at', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
         $datatables->editColumn('email', fn($row) => $row->vendor_email);
@@ -126,6 +127,17 @@ class VendorDataTable extends BaseDataTable
             </div>';
         
         });
+        $datatables->editColumn('coi_doc', fn($row) => $row->vendorCoiDoc ? 'Yes' : 'No' );
+        $datatables->editColumn('coi_doc_expiry', fn($row) => $row->vendorCoiDoc?->expiry_date ? Carbon::parse($row->vendorCoiDoc->expiry_date )->translatedFormat($this->company->date_format) : '--' );
+        $datatables->editColumn('wnine_doc', fn($row) => $row->vendorWnineDoc ? 'Yes' : 'No' );
+        $datatables->editColumn('wnine_doc_expiry', fn($row) => $row->vendorWnineDoc?->expiry_date ? Carbon::parse($row->vendorWnineDoc->expiry_date )->translatedFormat($this->company->date_format) : '--' );
+        $datatables->editColumn('contractor_license_doc', fn($row) => $row->vendorContractorLicenseDoc ? 'Yes' : 'No' );
+        $datatables->editColumn('contractor_license_doc_expiry', fn($row) => $row->vendorContractorLicenseDoc?->expiry_date ? Carbon::parse($row->vendorContractorLicenseDoc->expiry_date )->translatedFormat($this->company->date_format) : '--' );
+        $datatables->editColumn('workers_comp_doc', fn($row) => $row->vendorWorkersCompDoc ? 'Yes' : 'No' );
+        $datatables->editColumn('workers_comp_doc_expiry', fn($row) => $row->vendorWorkersCompDoc?->expiry_date ? Carbon::parse($row->vendorWorkersCompDoc->expiry_date )->translatedFormat($this->company->date_format) : '--' );
+        $datatables->editColumn('business_license_doc', fn($row) => $row->vendorBuisnessLicenseDoc ? 'Yes' : 'No' );
+        $datatables->editColumn('business_license_doc_expiry', fn($row) => $row->vendorBuisnessLicenseDoc?->expiry_date ? Carbon::parse($row->vendorBuisnessLicenseDoc->expiry_date )->translatedFormat($this->company->date_format) : '--' );
+        
         $datatables->addIndexColumn();
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
@@ -264,6 +276,16 @@ class VendorDataTable extends BaseDataTable
             __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],
             __('app.city') => ['data' => 'city', 'name' => 'city', 'title' => __('app.city')],
             __('app.contractor_type') => ['data' => 'contractor_type', 'name' => 'contractor_type', 'title' => __('app.contractor_type')],
+            __('Has Vendor COI') => ['data' => 'coi_doc', 'name' => 'coi_doc', 'visible' => false,'title' => __('Has Vendor COI')],
+            __('Vendor COI Expiry') => ['data' => 'coi_doc_expiry', 'name' => 'coi_doc_expiry', 'visible' => false,'title' => __('Vendor COI Expiry')],
+            __('Has Vendor Wnine') => ['data' => 'wnine_doc', 'name' => 'wnine_doc', 'visible' => true,'title' => __('Has Vendor Wnine')],
+            __('Vendor Wnine Expiry') => ['data' => 'wnine_doc_expiry', 'name' => 'coi_wnine_expiry', 'visible' => true,'title' => __('Vendor Wnine Expiry')],
+            __('Has Contractor License') => ['data' => 'contractor_license_doc', 'name' => 'contractor_license_doc', 'visible' => true,'title' => __('Has Vendor Contractor License')],
+            __('Vendor Contractor License Expiry') => ['data' => 'contractor_license_doc_expiry', 'name' => 'contractor_license_doc_expiry', 'visible' => true,'title' => __('Vendor Contractor License Expiry')],
+            __('Has WorkersComp') => ['data' => 'workers_comp_doc', 'name' => 'workers_comp_doc', 'visible' => true,'title' => __('Has WorkersComp')],
+            __('Vendor WorkersComp Expiry') => ['data' => 'workers_comp_doc_expiry', 'name' => 'workers_comp_doc_expiry', 'visible' => true,'title' => __('Vendor WorkersComp Expiry')],
+            __('Has Business License') => ['data' => 'business_license_doc', 'name' => 'business_license_doc', 'visible' => true,'title' => __('Has Business License')],
+            __('Vendor Business License Expiry') => ['data' => 'business_license_doc_expiry', 'name' => 'business_license_doc_expiry', 'visible' => true,'title' => __('Vendor Business License Expiry')],
             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
             __('app.status') => ['data' => 'v_status', 'name' => 'v_status', 'exportable' => false, 'title' => __('app.status')],
