@@ -192,72 +192,73 @@
             </x-form>
         </div>
     </div>
+
     <div class="row p-2">
-    <div class="col-12">
-        <x-form id="save-wcomp">
-            <div class="border-grey d-xl-flex">
-                <div class="d-flex flex-wrap align-items-start">
-                    <input type="hidden" name="vendor_id_wc" value="{{$vendorDetail->id}}"/>
-                    <input type="file" class="dropify w-100-md" id="wcomp" name="wcomp" 
-                        data-default-file="{{$workers_comp?->filename ? $workers_comp->wc_image_url : null}}"/>
-                </div>
-
-                <!-- Title and Details -->
-                <div class="details-section flex-grow-1 ml-3 ml-0-md">
-                    <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
-                        <p class="f-14 font-weight-bold mb-0">Workers Comp</p>
-                        @if($workers_comp?->filename)
-                        <div class="dropdown ml-auto">
-                            <button class="btn btn-lg f-14 p-0 text-lightest dropdown-toggle" type="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-h"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0">
-                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" target="_blank"
-                                    href="{{ $workers_comp->wc_image_url }}">@lang('app.view')</a>
-                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-workers-comp"
-                                    data-row-id="{{ $workers_comp->id }}" href="javascript:;">@lang('Edit')</a>
-                                <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3"
-                                    href="{{ route('vendor-workers-comp.download', md5($workers_comp->id)) }}">@lang('app.download')</a>
-                                <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-workers-comp"
-                                    data-row-id="{{ $workers_comp->id }}" href="javascript:;">@lang('Remove File')</a>
-                            </div>
-                        </div>
-                        @endif
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12 col-md-4 mb-3">
-                            <p class="f-14 text-muted mb-1">Expiry Date</p>
-                            <p class="f-14">{{ $workers_comp && $workers_comp->expiry_date ? $workers_comp->expiry_date->translatedFormat(company()->date_format) : '' }}</p>
-                        </div>
-                        <div class="col-12 col-md-4 mb-3">
-                            <p class="f-14 text-muted mb-1">Added By</p>
-                            <p class="f-14">{{ $workers_comp->added->name ?? '' }}</p>
-                        </div>
-                        <div class="col-12 col-md-4 mb-3">
-                            <p class="f-14 text-muted mb-1">Added Date</p>
-                            <p class="f-14">{{ $workers_comp && $workers_comp->created_at ? $workers_comp->created_at->translatedFormat(company()->date_format) : '' }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </x-form>
-    </div>
-</div>
-
-    <!--W9------------------------------------>
-    <div class="row p-2 " >
-    <div class="col-12">
-        <x-form id="save-wnine">
-            <div class="border-grey d-xl-flex">
-                <div class="d-flex flex-wrap align-items-start">
-                        <input type="hidden" name="vendor_id_wnine" value="{{$vendorDetail->id}}" />
-                        <input type="file" class="dropify w-100-md" id="wnine" name="wnine"
-                            data-default-file="{{$wnine?->filename ? $wnine->wnine_image_url : null}}" />
+        <div class="col-12">
+            <x-form id="save-wcomp">
+                <div class="border-grey d-xl-flex">
+                    <div class="d-flex flex-wrap align-items-start">
+                        <input type="hidden" name="vendor_id_wc" value="{{$vendorDetail->id}}"/>
+                        <input type="file" class="dropify w-100-md" id="wcomp" name="wcomp" 
+                            data-default-file="{{$workers_comp?->filename ? $workers_comp->wc_image_url : null}}"/>
                     </div>
 
                     <!-- Title and Details -->
                     <div class="details-section flex-grow-1 ml-3 ml-0-md">
+                        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
+                            <p class="f-14 font-weight-bold mb-0">Workers Comp</p>
+                            @if($workers_comp?->filename)
+                            <div class="dropdown ml-auto">
+                                <button class="btn btn-lg f-14 p-0 text-lightest dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0">
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" target="_blank"
+                                        href="{{ $workers_comp->wc_image_url }}">@lang('app.view')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-workers-comp"
+                                        data-row-id="{{ $workers_comp->id }}" href="javascript:;">@lang('Edit')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3"
+                                        href="{{ route('vendor-workers-comp.download', md5($workers_comp->id)) }}">@lang('app.download')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-workers-comp"
+                                        data-row-id="{{ $workers_comp->id }}" href="javascript:;">@lang('Remove File')</a>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 col-md-4 mb-3">
+                                <p class="f-14 text-muted mb-1">Expiry Date</p>
+                                <p class="f-14">{{ $workers_comp && $workers_comp->expiry_date ? $workers_comp->expiry_date->translatedFormat(company()->date_format) : '' }}</p>
+                            </div>
+                            <div class="col-12 col-md-4 mb-3">
+                                <p class="f-14 text-muted mb-1">Added By</p>
+                                <p class="f-14">{{ $workers_comp->added->name ?? '' }}</p>
+                            </div>
+                            <div class="col-12 col-md-4 mb-3">
+                                <p class="f-14 text-muted mb-1">Added Date</p>
+                                <p class="f-14">{{ $workers_comp && $workers_comp->created_at ? $workers_comp->created_at->translatedFormat(company()->date_format) : '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </x-form>
+        </div>
+    </div>
+
+    <!--W9------------------------------------>
+    <div class="row p-2 " >
+        <div class="col-12">
+            <x-form id="save-wnine">
+                <div class="border-grey d-xl-flex">
+                    <div class="d-flex flex-wrap align-items-start">
+                            <input type="hidden" name="vendor_id_wnine" value="{{$vendorDetail->id}}" />
+                            <input type="file" class="dropify w-100-md" id="wnine" name="wnine"
+                                data-default-file="{{$wnine?->filename ? $wnine->wnine_image_url : null}}" />
+                    </div>
+
+                        <!-- Title and Details -->
+                        <div class="details-section flex-grow-1 ml-3 ml-0-md">
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
                             <p class="f-14 font-weight-bold mb-0">W9</p>                           
                             @if($wnine?->filename)
@@ -295,77 +296,130 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </x-form>
-    </div>
-</div>
-<div class="tab-pane fade show active mt-5" role="tabpanel" aria-labelledby="nav-email-tab">
-    
-    <x-cards.data :title="__('modules.projects.files')">
-        <div class="row" id="add-btn">
-            <div class="col-md-12">
-                <a class="f-15 f-w-500" href="javascript:;" id="add-task-file"><i
-                        class="icons icon-plus font-weight-bold mr-1"></i>@lang('modules.projects.uploadFile')</a>
-            </div>
+            </x-form>
         </div>
-        <x-form id="save-taskfile-data-form" class="d-none">
-            <div class="row">
-                <div class="col-md-12">
-                    <x-forms.file-multiple :fieldLabel="__('modules.projects.uploadFile')" fieldName="file" fieldId="vendor_file" />
-                </div>
-                <div class="col-md-12">
-                    <div class="w-100 justify-content-end d-flex mt-2">
-                        <x-forms.button-cancel id="cancel-taskfile" class="border-0">@lang('app.cancel')
-                        </x-forms.button-cancel>
+    </div>
+    <!--------------------------------------------Waiver Form------------------------------------>
+    <div class="row p-2 " >
+        <div class="col-12">
+            <x-form id="save-waiver-form">
+                <div class="border-grey d-xl-flex">
+                    <div class="d-flex flex-wrap align-items-start">
+                        <input type="hidden" name="vendor_id_waiver_form" value="{{$vendorDetail->id}}" />
+                        <input type="file" class="dropify w-100-md" id="waiver_form" name="waiver_form"
+                            data-default-file="{{$waiver_form?->filename ? $waiver_form->waiver_form_image_url : null}}" />
                     </div>
-                </div>
-            </div>
-        </x-form>
-      
-        <div class="d-flex flex-wrap mt-3" id="task-file-list">
-            @forelse($vendorDetail->docs as $file)
-                <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
-                    @if ($file->icon == 'images')
-                        <img src="{{ $file->file_url }}">
-                    @else
-                        <i class="fa {{ $file->icon }} text-lightest"></i>
-                    @endif
-                    <x-slot name="action">
-                        <div class="dropdown ml-auto file-action">
-                            <button
-                                class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
-                                type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-h"></i>
-                            </button>
 
-                            <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
-                                aria-labelledby="dropdownMenuLink" tabindex="0">
-                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                        target="_blank"
-                                        href="{{ $file->file_url }}">@lang('app.view')</a>
-                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 rename-file"
-                                    data-row-id="{{ $file->id }}"
-                                    href="javascript:;">@lang('Rename')</a>
-                                <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                    href="{{ route('vendor-docs.download', md5($file->id)) }}">@lang('app.download')</a>
-                                <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                    data-row-id="{{ $file->id }}"
-                                    href="javascript:;">@lang('app.delete')</a>
+                        <!-- Title and Details -->
+                    <div class="details-section flex-grow-1 ml-3 ml-0-md">
+                        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
+                            <p class="f-14 font-weight-bold mb-0">Waiver Form</p>                           
+                            @if($waiver_form?->filename)
+                            <div class="dropdown ml-auto">
+                                <button class="btn btn-lg f-14 p-0 text-lightest dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0">
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" target="_blank"
+                                        href="{{$waiver_form->waiver_form_image_url}}">@lang('app.view')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-waiver"
+                                        data-row-id="{{$waiver_form->id}}" href="javascript:;">@lang('Edit')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3"
+                                        href="{{ route('vendor-waiver.download', md5($waiver_form->id)) }}">@lang('app.download')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-waiver"
+                                        data-row-id="{{$waiver_form->id}}" href="javascript:;">@lang('Remove File')</a>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 col-md-4  mb-3">
+                                <p class="f-14 text-muted mb-1">Expiry Date</p>
+                                <p class="f-14">{{ $waiver_form && $waiver_form->expiry_date ? $waiver_form->expiry_date->translatedFormat(company()->date_format) : '' }}</p>
+                            </div>
+                            <div class="col-12 col-md-4  mb-3">
+                                <p class="f-14 text-muted mb-1">Added By</p>
+                                <p class="f-14">{{ $waiver_form->added->name ?? '' }}</p>
+                            </div>
+                            <div class="col-12 col-md-4  mb-3">
+                                <p class="f-14 text-muted mb-1">Added Date</p>
+                                <p class="f-14">{{ $waiver_form && $waiver_form->created_at ? $waiver_form->created_at->translatedFormat(company()->date_format) : '' }}</p>
                             </div>
                         </div>
-                    </x-slot>
-                </x-file-card>
-            @empty
-                <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
-                    <i class="fa fa-file-excel f-21 w-100"></i>
-
-                    <div class="f-15 mt-4">
-                        - @lang('messages.noFileUploaded') -
                     </div>
                 </div>
-            @endforelse
+            </x-form>
         </div>
-    </x-cards.data>
+    </div>
+    <div class="tab-pane fade show active mt-5" role="tabpanel" aria-labelledby="nav-email-tab">
+        
+        <x-cards.data :title="__('modules.projects.files')">
+            <div class="row" id="add-btn">
+                <div class="col-md-12">
+                    <a class="f-15 f-w-500" href="javascript:;" id="add-task-file"><i
+                            class="icons icon-plus font-weight-bold mr-1"></i>@lang('modules.projects.uploadFile')</a>
+                </div>
+            </div>
+            <x-form id="save-taskfile-data-form" class="d-none">
+                <div class="row">
+                    <div class="col-md-12">
+                        <x-forms.file-multiple :fieldLabel="__('modules.projects.uploadFile')" fieldName="file" fieldId="vendor_file" />
+                    </div>
+                    <div class="col-md-12">
+                        <div class="w-100 justify-content-end d-flex mt-2">
+                            <x-forms.button-cancel id="cancel-taskfile" class="border-0">@lang('app.cancel')
+                            </x-forms.button-cancel>
+                        </div>
+                    </div>
+                </div>
+            </x-form>
+        
+            <div class="d-flex flex-wrap mt-3" id="task-file-list">
+                @forelse($vendorDetail->docs as $file)
+                    <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
+                        @if ($file->icon == 'images')
+                            <img src="{{ $file->file_url }}">
+                        @else
+                            <i class="fa {{ $file->icon }} text-lightest"></i>
+                        @endif
+                        <x-slot name="action">
+                            <div class="dropdown ml-auto file-action">
+                                <button
+                                    class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
+                                    type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </button>
+
+                                <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
+                                    aria-labelledby="dropdownMenuLink" tabindex="0">
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
+                                            target="_blank"
+                                            href="{{ $file->file_url }}">@lang('app.view')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 rename-file"
+                                        data-row-id="{{ $file->id }}"
+                                        href="javascript:;">@lang('Rename')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                        href="{{ route('vendor-docs.download', md5($file->id)) }}">@lang('app.download')</a>
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
+                                        data-row-id="{{ $file->id }}"
+                                        href="javascript:;">@lang('app.delete')</a>
+                                </div>
+                            </div>
+                        </x-slot>
+                    </x-file-card>
+                @empty
+                    <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
+                        <i class="fa fa-file-excel f-21 w-100"></i>
+
+                        <div class="f-15 mt-4">
+                            - @lang('messages.noFileUploaded') -
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+        </x-cards.data>
+    </div>
 </div>
 <script>
 $(document).ready(function() {
@@ -828,6 +882,74 @@ $(document).ready(function() {
 
         var id = $(this).data('row-id');
         var url = "{{ route('vendor-wnine.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+
+    //save-waiver-form
+    $('#save-waiver-form .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "{{route('vendor-waiver.store')}}",
+                container: '#save-waiver-form',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-waiver-form').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-waiver', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('vendor-waiver.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                var token = "{{ csrf_token() }}";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-waiver', function() {
+
+        var id = $(this).data('row-id');
+        var url = "{{ route('vendor-waiver.edit', ':id') }}";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);

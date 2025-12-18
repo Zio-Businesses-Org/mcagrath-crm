@@ -144,6 +144,9 @@
                                      :href="route('storage-settings.index')"
                                      :text="__('app.menu.storageSettings')"/>
             @endif
+                <x-setting-menu-item :active="$activeMenu" menu="cron_settings"
+                                     :href="route('cron-settings.index')"
+                                     :text="__('Cron Settings')"/>
 
             @if (user()->permission('manage_language_setting') == 'all')
                 <x-setting-menu-item :active="$activeMenu" menu="language_settings"

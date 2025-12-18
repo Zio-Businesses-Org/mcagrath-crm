@@ -220,7 +220,23 @@ class ProjectVendorController extends AccountBaseController
         }
         $vpro->link_status='Sent';
         $vpro->save();
-        Notification::route('mail', $vpro->vendor_email_address)->notify(new NewVendorWorkOrder($vpro->id,$vpro->project_id,$vpro->contract_id,$vpro->vendor_id));
+        $url = url()->temporarySignedRoute(
+            'external.expense.view',
+            now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),
+            ['pid' => $vpro->project_id,
+            'vid'=>$vpro->id]
+        );
+    
+        $url = getDomainSpecificUrl($url, $this->company);
+
+        $urlext = url()->temporarySignedRoute(
+            'external.file.view',
+            now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),
+            ['data' => $vpro->project_id]
+        );
+    
+        $urlext = getDomainSpecificUrl($urlext, $this->company);
+        Notification::route('mail', $vpro->vendor_email_address)->notify(new NewVendorWorkOrder($vpro->id,$vpro->project_id,$vpro->contract_id,$vpro->vendor_id,$url,$urlext));
         return Reply::success(__('Link Resend'));
     }
 

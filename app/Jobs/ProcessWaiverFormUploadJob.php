@@ -7,18 +7,26 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\VendorDocs;
+use App\Models\VendorWaiverFormDoc;
+use App\Models\VendorContract;
+use App\Models\Company;
+use App\Models\VendorWaiverFormTemplate;
+use App\Helper\Files;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\App;
+use Carbon\Carbon;
 
 class ProcessWaiverFormUploadJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $vendorId;
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct($vendorId)
     {
-        //
+        $this->vendorId = $vendorId;
     }
 
     /**
@@ -26,12 +34,12 @@ class ProcessWaiverFormUploadJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        $this->pdfGeneration($this->vendorId);
     }
 
-    public function pdfGeneration($id)
+    public function pdfGeneration($vendorId)
     {
-        $this->vendorid = VendorContract::findOrFail($id);
+        $this->vendor = VendorContract::findOrFail($vendorId);
         $this->pageTitle = 'app.menu.contracts';
         $this->pageIcon = 'fa fa-file';
         $this->company = Company::find(1);
@@ -49,23 +57,22 @@ class ProcessWaiverFormUploadJob implements ShouldQueue
             'pageIcon' => $this->pageIcon,
             'company' => $this->company,
             'templateid' => $this->templateid,
-            'vendorid' => $this->vendorid,
+            'vendorid' => $this->vendor,
         ];
 
         $pdf->loadView('vendors.waiverform-pdf', $data);
         
         $pdfContent = $pdf->download()->getOriginalContent();
-        $filePath = "app/pdf/{$id}/waiverform-{$this->vendorid->vendor_name}.pdf";
+        $filePath = "app/pdf/{$this->vendor->id}/waiverform-{$this->vendor->vendor_name}.pdf";
 
         \Storage::disk('localBackup')->put($filePath, $pdfContent);
 
-        $projectfile = VendorDocs::where('project_vendor_id', $projectvendorid)->first();
+        $waiverformfile = VendorWaiverFormDoc::where('vendor_id', $this->vendor->id)->first();
 
-        if($projectfile)
+        if($waiverformfile)
         {
-            Files::deleteFile($projectfile->hashname, ProjectFile::FILE_PATH . '/' . $this->projectid->id);
-
-            ProjectFile::where('project_vendor_id', $projectvendorid)->delete();
+            Files::deleteFile($waiverformfile->hashname, VendorWaiverFormDoc::FILE_PATH);
+            VendorWaiverFormDoc::where('vendor_id', $this->vendor->id)->delete();
 
             $filePathOnDisk = \Storage::disk('localBackup')->path($filePath);
 
@@ -77,17 +84,14 @@ class ProcessWaiverFormUploadJob implements ShouldQueue
                 true                     // Ensure it is marked as valid
             );
 
-            $pf = new ProjectFile();
-            $pf->project_id = $this->projectid->id;
-
-            $filename = Files::uploadLocalOrS3($uploadedFile, ProjectFile::FILE_PATH . '/' . $this->projectid->id);
-
-            $pf->user_id = 1;
-            $pf->project_vendor_id = $projectvendorid;
-            $pf->filename = $uploadedFile->getClientOriginalName();
-            $pf->hashname = $filename;
-            $pf->size = $uploadedFile->getSize();
-            $pf->save();
+            $file = new VendorWaiverFormDoc();
+            $file->vendor_id = $this->vendor->id;
+            $file->added_by = 1;
+            $filename = Files::uploadLocalOrS3($uploadedFile, VendorWaiverFormDoc::FILE_PATH);
+            $file->filename = $uploadedFile->getClientOriginalName();
+            $file->hashname = $filename;
+            $file->size = $uploadedFile->getSize();
+            $file->save();
             
         }
         else{
@@ -101,21 +105,15 @@ class ProcessWaiverFormUploadJob implements ShouldQueue
                 true                     // Ensure it is marked as valid
             );
 
-            $pf = new ProjectFile();
-            $pf->project_id = $this->projectid->id;
-
-            $filename = Files::uploadLocalOrS3($uploadedFile, ProjectFile::FILE_PATH . '/' . $this->projectid->id);
-
-            $pf->user_id = 1;
-            $pf->project_vendor_id = $projectvendorid;
-            $pf->filename = $uploadedFile->getClientOriginalName();
-            $pf->hashname = $filename;
-            $pf->size = $uploadedFile->getSize();
-            $pf->save();
+            $file = new VendorWaiverFormDoc();
+            $file->vendor_id = $this->vendor->id;
+            $file->added_by = 1;
+            $filename = Files::uploadLocalOrS3($uploadedFile, VendorWaiverFormDoc::FILE_PATH);
+            $file->filename = $uploadedFile->getClientOriginalName();
+            $file->hashname = $filename;
+            $file->size = $uploadedFile->getSize();
+            $file->save();
         }
-        
-    
-
         
     }
 }

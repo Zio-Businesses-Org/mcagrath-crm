@@ -178,9 +178,7 @@
                     'action':'accept'
                 },
             success: function(response) {
-                setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                window.location.reload();
             },
         });
     });
@@ -200,9 +198,7 @@
                     'action':'reject'
                 },
             success: function(response) {
-                setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                window.location.reload();
             },
         });
     });

@@ -36,6 +36,7 @@ use App\Models\VendorCoiDoc;
 use App\Models\VendorBuisnessLicenseDoc;
 use App\Models\VendorWorkersCompDoc;
 use App\Models\VendorWnineDoc;
+use App\Models\VendorWaiverFormDoc;
 
 class VendorController extends AccountBaseController
 {
@@ -86,6 +87,7 @@ class VendorController extends AccountBaseController
                 $this->buisness_license = VendorBuisnessLicenseDoc::where('vendor_id', $id)->first();
                 $this->workers_comp = VendorWorkersCompDoc::where('vendor_id', $id)->first();
                 $this->wnine = VendorWnineDoc::where('vendor_id', $id)->first();
+                $this->waiver_form = VendorWaiverFormDoc::where('vendor_id', $id)->first();
                 $this->view = 'vendors.ajax.docs';
                 break;
             default:

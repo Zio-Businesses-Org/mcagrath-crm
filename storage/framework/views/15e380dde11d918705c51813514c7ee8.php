@@ -1293,30 +1293,7 @@
 <?php unset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
 <?php endif; ?>
                 <?php endif; ?>
-
-                <?php if($sidebarUserPermissions['view_income_expense_report'] == 4 && $sidebarUserPermissions['view_income_expense_report'] != 'none' && in_array('expenses', user_modules())): ?>
-                    <?php if (isset($component)) { $__componentOriginal75a60586017d0cb41cbff8f75f4a3989 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989 = $attributes; } ?>
-<?php $component = App\View\Components\SubMenuItem::resolve(['link' => route('income-expense-report.index'),'text' => __('app.menu.incomeVsExpenseReport')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('sub-menu-item'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\SubMenuItem::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal75a60586017d0cb41cbff8f75f4a3989)): ?>
-<?php $attributes = $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
-<?php unset($__attributesOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989)): ?>
-<?php $component = $__componentOriginal75a60586017d0cb41cbff8f75f4a3989; ?>
-<?php unset($__componentOriginal75a60586017d0cb41cbff8f75f4a3989); ?>
-<?php endif; ?>
-                <?php endif; ?>
-
+                
                 <?php if($sidebarUserPermissions['view_leave_report'] != 5 && $sidebarUserPermissions['view_leave_report'] != 'none' && in_array('leaves', user_modules())): ?>
                     <?php if (isset($component)) { $__componentOriginal75a60586017d0cb41cbff8f75f4a3989 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal75a60586017d0cb41cbff8f75f4a3989 = $attributes; } ?>

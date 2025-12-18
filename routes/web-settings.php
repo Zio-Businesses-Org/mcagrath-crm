@@ -57,6 +57,7 @@ use App\Http\Controllers\UnitTypeController;
 use App\Http\Controllers\UpdateAppController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\VendorSettingsController;
+use App\Http\Controllers\CronSettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function () {
@@ -279,6 +280,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::post('vendor-settings/self-notify-mail', [VendorSettingsController::class, 'saveSelfNotifyMail'])->name('vendor-settings.saveSelfNotifyMail');
     Route::post('vendor-settings/toggle-duplicate-entry', [VendorSettingsController::class, 'toggleDuplicateEntry'])->name('vendor-settings.toggleDuplicateEntry');
     Route::resource('vendor-settings', VendorSettingsController::class);
+
+    //cron-settings
+
+    Route::resource('cron-settings', CronSettingsController::class);
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {

@@ -167,6 +167,7 @@ use App\Http\Controllers\LeadClientCustomFilterController;
 use App\Http\Controllers\ExpenseStatusController;
 use App\Http\Controllers\ExpenseProcessPaymentController;
 use App\Http\Controllers\VendorLeadStatusController;
+use App\Http\Controllers\VendorWaiverFormDocController;
 
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
@@ -1001,6 +1002,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     //Vendor W9 DOC
     Route::resource('vendor-workers-comp',  VendorWorkersCompDocController::class);
     Route::get('vendor-workers-comp/download/{id}', [VendorWorkersCompDocController::class, 'download'])->name('vendor-workers-comp.download');
+
+    //Vendor Waiver Form DOC
+    Route::resource('vendor-waiver',  VendorWaiverFormDocController::class);
+    Route::get('vendor-waiver/download/{id}', [VendorWaiverFormDocController::class, 'download'])->name('vendor-waiver.download');
 
     //Project-custom-filter 
     Route::resource('project-filter', ProjectCustomFilterController::class);

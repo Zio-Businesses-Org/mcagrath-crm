@@ -59,7 +59,7 @@ class PublicWaiverFormController extends Controller
                     $vendor_general_settings->selfnotifymail,
                     $vendor
                 )->delay(now()->addSeconds(10));
-                //ProcessWaiverFormUploadJob::dispatch($vendor)->onConnection('database')->onQueue('waiver-form-auto-upload');
+                ProcessWaiverFormUploadJob::dispatch($vendor->id)->onConnection('database')->onQueue('waiver-form-auto-upload');
                 //Notification::route('mail', $vendor_general_settings->selfnotifymail)->notify(new WaiverFormSelfNotification($vendor));
                 return Reply::success(__('Thank You. Your Response Has Been Noted'));
             } 
