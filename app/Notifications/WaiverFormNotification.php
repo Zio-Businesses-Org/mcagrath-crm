@@ -53,8 +53,8 @@ class WaiverFormNotification extends BaseNotification
 
 
         return $build
-            ->subject(__('Welcome To McGrath Consulting LLC Network'))
-            ->markdown('mail.email', [
+            ->subject(__('Workers\' Compensation Waiver - Signed Copy'))
+            ->markdown('mail.waiveremail', [
                 'notifiableName'=>$this->vendor->vendor_name,
                 'content'=>$content,
                 'url' => $url,

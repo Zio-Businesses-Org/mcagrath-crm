@@ -9,7 +9,7 @@
     <!-- Template CSS -->
     <!-- <link type="text/css" rel="stylesheet" media="all" href="css/main.css"> -->
 
-    <title>@lang('modules.contracts.contractNumber') - #{{ $vendorid->id }}</title>
+    <title>@lang('waiverform') - #{{ $vendorid->id }}</title>
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="{{ $company->favicon_url }}">
     <meta name="theme-color" content="#ffffff">
@@ -268,7 +268,7 @@
                             <td><img src="{{$company->logo_url}}" alt="{{ $company->company_name }}"
                                     class="logo"/></td>
                             <td align="right" class="font-weight-bold f-21 text-dark text-uppercase mt-4 mt-lg-0 mt-md-0">
-                                @lang('Wc Waiver Form')</td>
+                                @lang('Subcontractor Release and Waiver of Liability Form')</td>
                         </tr>
                         <tr class="inv-num">
                             <td class="f-14 text-dark">
@@ -285,7 +285,7 @@
                             <td height="20"></td>
                         </tr>
                     </table>
-                    <table width="100%">
+                    <!-- <table width="100%">
                         <tr class="inv-unpaid">
                             <td class="f-14 text-dark">
                                 <p class="mb-0 text-left"><span
@@ -302,7 +302,7 @@
                         <tr>
                             <td height="30"></td>
                         </tr>
-                    </table>
+                    </table> -->
                 </div>
 
                 <div class="d-flex flex-column">
@@ -321,11 +321,12 @@
         </div>
         <hr class="mt-1 mb-1">
         @if ($vendorid->waiver_signed_date)
-            <div style="text-align: left; margin-top: 10px">
-                <h4 class="name" style="margin-bottom: 20px;">@lang('Vendor Signature')</h4>
+            <div style="text-align: left; margin-top: 20px">
+                <h4 class="name" style="margin-bottom: 20px;">@lang('Sub Contractor Details:')</h4>
                 <img src="{{ $vendorid->secondary_image_url }}" style="width: 200px;">
                 <p>Vendor Name:- {{ $vendorid->vendor_name }}<br>
                    Company Name:- {{$vendorid->company_name}}<br>
+                   Address :- {{$vendorid->street_address}}, {{$vendorid->city}}, {{$vendorid->state}}, {{$vendorid->zip_code}}<br>
                    Date:- {{ $vendorid->waiver_signed_date}}
                 </p>
             </div>

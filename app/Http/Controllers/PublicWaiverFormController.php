@@ -47,7 +47,7 @@ class PublicWaiverFormController extends Controller
     }
 
     public function WaiverStore(Request $request){
-
+            $company = Company::find(1);
             if ($request->action == 'accept') {
                 $vendor = VendorContract::findOrFail($request->data);
                 $vendor->waiver_form_status = 'Signed';
@@ -56,7 +56,7 @@ class PublicWaiverFormController extends Controller
                 $vendor_general_settings = VendorGeneralSettings::first();
                 Notification::route('mail', $vendor->vendor_email)->notify(new WaiverFormNotification($vendor));
                 SendSelfWaiverNotificationJob::dispatch(
-                    $vendor_general_settings->selfnotifymail,
+                    $vendor_general_settings->selfwaivernotificationmail?$vendor_general_settings->selfwaivernotificationmail:$company->company_email,
                     $vendor
                 )->delay(now()->addSeconds(10));
                 ProcessWaiverFormUploadJob::dispatch($vendor->id)->onConnection('database')->onQueue('waiver-form-auto-upload');

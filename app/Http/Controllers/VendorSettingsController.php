@@ -140,6 +140,23 @@ class VendorSettingsController extends AccountBaseController
         }
     }
 
+    public function selfWaiverNotificationMail(Request $request)
+    {
+        if (VendorGeneralSettings::exists())
+        {
+            $vgs = VendorGeneralSettings::first();
+            $vgs->selfwaivernotificationmail = $request->value;
+            $vgs->save();
+            return Reply::success(__('messages.recordSaved'));
+        }
+        else{
+            $vgs = new VendorGeneralSettings();
+            $vgs->selfwaivernotificationmail = $request->value;
+            $vgs->save();
+            return Reply::success(__('messages.recordSaved'));
+        }
+    }
+
     public function toggleDuplicateEntry(Request $request)
     {
         $vgs = VendorGeneralSettings::first();

@@ -78,10 +78,10 @@ class LeadVendorController extends AccountBaseController
 
         if($request[1]==1)
         {
-            try{
-                $request->validate([
+            $request->validate([
                     'vendor_email' => 'required',
-                ]);
+            ]);
+            try{
                 $leadContact = new Vendor();
                 $leadContact->vendor_name = $request->vendor_name;
                 $leadContact->poc = $request->poc;

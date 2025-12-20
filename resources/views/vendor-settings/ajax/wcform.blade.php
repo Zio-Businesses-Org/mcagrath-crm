@@ -41,6 +41,21 @@
                 </x-slot>
             </x-forms.input-group>
         </div>
+        <div class="col-md-3 col-lg-4">
+            <x-forms.label class="mt-3" fieldId="waiver_id"
+                            :fieldLabel="__('Waiver Form Acknowledgment Email')" fieldRequired="true" :popover="__('If not specified. Default company email address will be taken')">
+            </x-forms.label>
+            <x-forms.input-group>
+                <input type="email" id="selfwaivernotificationmail" name="selfwaivernotificationmail" class="form-control" 
+                placeholder="e.g. johndoe@example.com" aria-label="Email Address" 
+                value="{{ $vendor_general_settings->selfwaivernotificationmail ?? '' }}">
+                <x-slot name="append">
+                <button id="saveselfwaivernotificationmail" type="button"
+                        class="btn btn-outline-secondary border-grey"
+                        data-toggle="tooltip" data-original-title="{{__('Save Email Address') }}">@lang('Save')</button>
+                </x-slot>
+            </x-forms.input-group>
+        </div>
         <!-- <div class="col-md-3 col-lg-4">
             <x-forms.toggle-switch class="mr-0 mr-lg-2 mr-md-2" :checked="$vendor_general_settings->duplicate_entry_check"
                 :fieldLabel="__('Vendor Lead Duplicate Entry Check')" fieldName="duplicate_entry" fieldId="duplicate_entry" />
@@ -89,6 +104,24 @@
     $('#saveselfnotifymail').click(function() {
         var mail = $('#selfnotifymail').val();
         var url="{{ route('vendor-settings.saveSelfNotifyMail') }}";
+        $.easyAjax({
+                url: url,
+                type: 'POST',
+                blockUI: true,
+                data: {
+                        _token: '{{ csrf_token() }}',
+                        value: mail,
+                    },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                    } 
+                },
+            });
+    });
+    $('#saveselfwaivernotificationmail').click(function() {
+        var mail = $('#selfwaivernotificationmail').val();
+        var url="{{ route('vendor-settings.selfWaiverNotificationMail') }}";
         $.easyAjax({
                 url: url,
                 type: 'POST',

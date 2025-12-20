@@ -74,15 +74,15 @@ class NewVendorWaiverForm extends BaseNotification
         $wvendor->form_sent_date=date("Y-m-d");
         $wvendor->waiver_signed_date=null;
         $wvendor->save();
-        $content = __('A new Wc Waiver Form has been created') . '<br>';
+        $content = __('Please review the document and click Accept. If you have any questions or need clarification, feel free to contact office.') . '<br>';
 
         return $build
-            ->subject(__('Welcome to McGrath Consulting Contractor Network!'))
-            ->markdown('mail.email', [
+            ->subject(__('Workers\' Compensation Waiver - Signature Required'))
+            ->markdown('mail.waiveremail', [
                 'content' => $content,
                 'url' => $url,
                 'themeColor' => $this->company->header_color,
-                'actionText' => __('app.view') . ' ' . __('Waver Form'),
+                'actionText' => __('app.view') . ' ' . __('Waiver Form'),
                 'notifiableName' => $wvendor->vendor_name,
                 ]);
     }

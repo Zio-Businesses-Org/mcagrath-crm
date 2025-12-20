@@ -112,7 +112,7 @@
                         <td height="20"></td>
                     </tr>
                 </table>
-                <table width="100%">
+                <!-- <table width="100%">
                     <tr class="inv-unpaid">
                         <td class="f-14 text-dark">
                             <p class="mb-0 text-left"><span
@@ -129,12 +129,12 @@
                     <tr>
                         <td height="30"></td>
                     </tr>
-                </table>
+                </table> -->
             </div>
 
             <div class="d-flex flex-column">
                 <h5>@lang('app.subject')</h5>
-                <p class="f-15">Wc Waiver Form</p>
+                <p class="f-15">Subcontractor Release and Waiver of Liability Form</p>
                 <h5>@lang('modules.contracts.notes')</h5>
                 <p class="f-15"></p>
                 <h5>@lang('app.description')</h5>
@@ -154,6 +154,18 @@
             <x-forms.button-success id="reject" class="border-0 mr-3 mb-2 btn btn-danger" icon="times">Reject
             </x-forms.button-success>
         </div>
+        @endif
+        <hr class="mt-1 mb-1">
+        @if ($vendorid->waiver_signed_date)
+            <div style="margin-left: 20px">
+                <h5 style="margin-bottom: 20px;">@lang('Sub Contractor Details:')</h5>
+                <img src="{{ $vendorid->secondary_image_url }}" style="width: 200px;">
+                <p>Vendor Name:- {{ $vendorid->vendor_name }}<br>
+                   Company Name:- {{$vendorid->company_name}}<br>
+                   Address :- {{$vendorid->street_address}}, {{$vendorid->city}}, {{$vendorid->state}}, {{$vendorid->zip_code}}<br>
+                   Date:- {{ $vendorid->waiver_signed_date}}
+                </p>
+            </div>
         @endif
         <!-- CARD FOOTER END -->
     </div>
