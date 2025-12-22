@@ -72,7 +72,7 @@ class OneTimeAgreeController extends Controller
         $pageTitle = 'app.menu.contracts';
         $contracttype = VendorContract::getContractType();
         $company = Company::find(1);
-        $location=Locations::select('state')->distinct()->get();;
+        $location=Locations::select('state')->distinct()->get();
          return view('vendorcontactform', [
             'id'=>$id,
             'startdate'=>$startdate,

@@ -307,7 +307,7 @@
 
                 <div class="d-flex flex-column">
                     <h5>@lang('app.subject')</h5>
-                    <p class="f-15">Wc Waiver Form</p>
+                    <p class="f-15">Subcontractor Release and Waiver of Liability Form</p>
                     <h5>@lang('modules.contracts.notes')</h5>
                     <p class="f-15"></p>
                     <h5>@lang('app.description')</h5>
@@ -319,6 +319,8 @@
             </div>
 
         </div>
+        <br>
+        <br>
         <hr class="mt-1 mb-1">
         @if ($vendorid->waiver_signed_date)
             <div style="text-align: left; margin-top: 20px">
@@ -328,6 +330,16 @@
                    Company Name:- {{$vendorid->company_name}}<br>
                    Address :- {{$vendorid->street_address}}, {{$vendorid->city}}, {{$vendorid->state}}, {{$vendorid->zip_code}}<br>
                    Date:- {{ $vendorid->waiver_signed_date}}
+                </p>
+            </div>
+        @endif
+
+        @if ($company->company_signature)    
+            <div style="text-align: right; margin-top: -240px">
+                <h4 class="name" style="margin-bottom: 20px;">@lang('Company Signature')</h4>
+                <img src="{{ $company->company_signature }}" style="width: 200px;"><br>
+                <p>Company Name:- {{ $company->company_name }}<br>
+                    Date:- {{ $vendorid->signed_date }}<br>
                 </p>
             </div>
         @endif

@@ -95,7 +95,7 @@
                         <td><img src="{{$company->logo_url}}" alt="{{ $company->company_name }}"
                                  class="logo"/></td>
                         <td align="right" class="font-weight-bold f-21 text-dark text-uppercase mt-4 mt-lg-0 mt-md-0">
-                            @lang('Wc Waiver Form')</td>
+                            @lang('Subcontractor Release and Waiver of Liability Form')</td>
                     </tr>
                     <tr class="inv-num">
                         <td class="f-14 text-dark">
