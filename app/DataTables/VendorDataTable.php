@@ -137,6 +137,9 @@ class VendorDataTable extends BaseDataTable
         $datatables->editColumn('workers_comp_doc_expiry', fn($row) => $row->vendorWorkersCompDoc?->expiry_date ? Carbon::parse($row->vendorWorkersCompDoc->expiry_date )->translatedFormat($this->company->date_format) : '--' );
         $datatables->editColumn('business_license_doc', fn($row) => $row->vendorBuisnessLicenseDoc ? 'Yes' : 'No' );
         $datatables->editColumn('business_license_doc_expiry', fn($row) => $row->vendorBuisnessLicenseDoc?->expiry_date ? Carbon::parse($row->vendorBuisnessLicenseDoc->expiry_date )->translatedFormat($this->company->date_format) : '--' );
+        $datatables->editColumn('waiver_signed_date', fn($row) => $row->waiver_signed_date ? Carbon::parse($row->waiver_signed_date )->translatedFormat($this->company->date_format) : '--' );
+        $datatables->editColumn('form_sent_date', fn($row) => $row->form_sent_date ? Carbon::parse($row->form_sent_date )->translatedFormat($this->company->date_format) : '--' );
+        $datatables->editColumn('waiver_form_status', fn($row) => $row->waiver_form_status ? $row->waiver_form_status : '--' );
         
         $datatables->addIndexColumn();
         $datatables->smart(false);
@@ -161,6 +164,7 @@ class VendorDataTable extends BaseDataTable
                 $query->where('vendor_name', 'like', '%' . request('searchText') . '%')
                     ->orWhere('vendor_email', 'like', '%' . request('searchText') . '%')
                     ->orWhere('cell', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('office', 'like', '%' . request('searchText') . '%')
                     ->orWhere('company_name', 'like', '%' . request('searchText') . '%')
                     ->orWhere('contractor_type', 'like', '%' . request('searchText') . '%')
                     ->orWhere('status', 'like', '%' . request('searchText') . '%')
@@ -277,16 +281,19 @@ class VendorDataTable extends BaseDataTable
             __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],
             __('app.city') => ['data' => 'city', 'name' => 'city', 'title' => __('app.city')],
             __('app.contractor_type') => ['data' => 'contractor_type', 'name' => 'contractor_type', 'title' => __('app.contractor_type')],
-            __('Has Vendor COI') => ['data' => 'coi_doc', 'name' => 'coi_doc', 'visible' => true,'title' => __('Has Vendor COI')],
-           // __('Vendor COI Expiry') => ['data' => 'coi_doc_expiry', 'name' => 'coi_doc_expiry', 'visible' => true,'title' => __('Vendor COI Expiry')],
-            __('Has Vendor W9') => ['data' => 'wnine_doc', 'name' => 'wnine_doc', 'visible' => true,'title' => __('Has Vendor W9')],
-            __('Vendor W9 Expiry') => ['data' => 'wnine_doc_expiry', 'name' => 'coi_wnine_expiry', 'visible' => true,'title' => __('Vendor W9 Expiry')],
-            __('Has CL') => ['data' => 'contractor_license_doc', 'name' => 'contractor_license_doc', 'visible' => true,'title' => __('Has Vendor CL')],
-            __('Vendor CL Expiry') => ['data' => 'contractor_license_doc_expiry', 'name' => 'contractor_license_doc_expiry', 'visible' => true,'title' => __('Vendor CL Expiry')],
-            __('Has WC') => ['data' => 'workers_comp_doc', 'name' => 'workers_comp_doc', 'visible' => true,'title' => __('Has WC')],
-            __('Vendor WC Expiry') => ['data' => 'workers_comp_doc_expiry', 'name' => 'workers_comp_doc_expiry', 'visible' => true,'title' => __('Vendor WC Expiry')],
-            __('Has BL') => ['data' => 'business_license_doc', 'name' => 'business_license_doc', 'visible' => true,'title' => __('Has BL')],
-            __('Vendor BL Expiry') => ['data' => 'business_license_doc_expiry', 'name' => 'business_license_doc_expiry', 'visible' => true,'title' => __('Vendor BL Expiry')],
+            __('Has COI') => ['data' => 'coi_doc', 'name' => 'coi_doc', 'visible' => false,'title' => __('Has COI')],
+            __('COI Expiry') => ['data' => 'coi_doc_expiry', 'name' => 'coi_doc_expiry', 'visible' => false,'title' => __('COI Expiry')],
+            __('Has W9') => ['data' => 'wnine_doc', 'name' => 'wnine_doc', 'visible' => false,'title' => __('Has W9')],
+           // __('Vendor W9 Expiry') => ['data' => 'wnine_doc_expiry', 'name' => 'coi_wnine_expiry', 'visible' => true,'title' => __('Vendor W9 Expiry')],
+            __('Has CL') => ['data' => 'contractor_license_doc', 'name' => 'contractor_license_doc', 'visible' => false,'title' => __('Has CL')],
+            __('CL Expiry') => ['data' => 'contractor_license_doc_expiry', 'name' => 'contractor_license_doc_expiry', 'visible' => false,'title' => __('CL Expiry')],
+            __('Has WC') => ['data' => 'workers_comp_doc', 'name' => 'workers_comp_doc', 'visible' => false,'title' => __('Has WC')],
+            __('WC Expiry') => ['data' => 'workers_comp_doc_expiry', 'name' => 'workers_comp_doc_expiry', 'visible' => false,'title' => __('WC Expiry')],
+            __('Has BL') => ['data' => 'business_license_doc', 'name' => 'business_license_doc', 'visible' => false,'title' => __('Has BL')],
+            __('BL Expiry') => ['data' => 'business_license_doc_expiry', 'name' => 'business_license_doc_expiry', 'visible' => false,'title' => __('BL Expiry')],
+            __('Waiver Status') => ['data' => 'waiver_form_status', 'name' => 'waiver_form_status', 'title' => __('Waiver Status')],
+            __('Waiver Sent Date') => ['data' => 'form_sent_date', 'name' => 'form_sent_date', 'title' => __('Waiver Sent Date')],
+            __('Waiver Signed Date') => ['data' => 'waiver_signed_date', 'name' => 'waiver_signed_date', 'title' => __('Waiver Signed Date')],
             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
             __('app.status') => ['data' => 'v_status', 'name' => 'v_status', 'exportable' => false, 'title' => __('app.status')],

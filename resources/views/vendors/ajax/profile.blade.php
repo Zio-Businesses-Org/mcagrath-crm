@@ -29,7 +29,8 @@
 
                                 <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
                                     aria-labelledby="dropdownMenuLink" tabindex="0">
-                                    
+                                    <a class="dropdown-item openRightModal"
+                                        href="{{ route('vendors.edit', $vendorDetail->id) }}">@lang('app.edit')</a>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +44,7 @@
             </div>
                 
                 <div class="col-xl-5 col-lg-6 col-md-6">
-                    <x-cards.widget :title="__('modules.dashboard.totalProjects')" :value="0"
+                    <x-cards.widget :title="__('modules.dashboard.totalProjects')" :value="$vendorDetail->project_vendor_count"
                         icon="layer-group" />
                 </div>
         </div>
@@ -79,12 +80,9 @@
             
             <x-cards.data-row :label="__('app.email')" :value="$vendorDetail->vendor_email" />
 
-            <x-cards.data-row :label="__('modules.client.companyName')"
-                :value="$vendorDetail->company_name" />
-            <x-cards.data-row :label="__('Website')"
-                :value="$vendorDetail->website" />     
-            <x-cards.data-row :label="__('Created At')"
-                :value="$vendorDetail->created_at" />
+            <x-cards.data-row :label="__('modules.client.companyName')" :value="$vendorDetail->company_name" />
+            <x-cards.data-row :label="__('Website')" :value="$vendorDetail->website" />     
+            <x-cards.data-row :label="__('Created At')" :value="$vendorDetail->created_at" />
 
             <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">
                 <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
@@ -96,15 +94,8 @@
                 </p>
             </div>
 
-            <x-cards.data-row :label="__('app.mobile')"
-                :value="$vendorDetail->cell" />
-
-            <!-- <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">
-                <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
-                    @lang('modules.employees.gender')</p>
-                
-            </div> -->
-
+            <x-cards.data-row :label="__('app.mobile')" :value="$vendorDetail->cell" />
+            <x-cards.data-row :label="__('office')" :value="$vendorDetail->office" />
             <x-cards.data-row :label="__('contractor type')" :value="$vendorDetail->contractor_type" />
 
             <x-cards.data-row :label="__('street address')" :value="$vendorDetail->street_address" />
@@ -112,8 +103,6 @@
             <x-cards.data-row :label="__('state')" :value="$vendorDetail->state" />
             <x-cards.data-row :label="__('county')" :value="$vendorDetail->county" />
             <x-cards.data-row :label="__('zipcode')" :value="$vendorDetail->zip_code" />
-            <x-cards.data-row :label="__('office')" :value="$vendorDetail->office" />
-            <x-cards.data-row :label="__('cell')" :value="$vendorDetail->cell" />
             <x-cards.data-row :label="__('licensed')" :value="$vendorDetail->licensed" />
             <x-cards.data-row :label="__('license expiry date')" :value="$vendorDetail->license_expiry_date" />
             <x-cards.data-row :label="__('insured')" :value="$vendorDetail->insured" />
@@ -129,6 +118,9 @@
             <x-cards.data-row :label="__('wc insurance carrier email address')" :value="$vendorDetail->wc_insurance_carrier_email_address" />
             <x-cards.data-row :label="__('wc insurance expiry date')" :value="$vendorDetail->wc_insurance_expiry_date" />
             <x-cards.data-row :label="__('wc insurance policy number')" :value="$vendorDetail->wc_insurance_policy_number" />
+            <x-cards.data-row :label="__('Waiver Status')" :value="$vendorDetail->waiver_form_status" />
+            <x-cards.data-row :label="__('Waiver Sent Date')" :value="$vendorDetail->form_sent_date" />
+            <x-cards.data-row :label="__('Waiver Signed Date')" :value="$vendorDetail->waiver_signed_date" />
             <x-cards.data-row :label="__('coverage by county')" :value="$vendorDetail->coverage_cities" />
             <x-cards.data-row :label="__('distance covered')" :value="$vendorDetail->distance_covered" />
             <x-cards.data-row :label="__('payment method')" :value="$joinedData" />

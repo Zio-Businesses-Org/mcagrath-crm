@@ -139,5 +139,14 @@ class VendorContract extends BaseModel
     {
         return $this->hasOne(VendorBuisnessLicenseDoc::class, 'vendor_id');
     }
+    public function projectVendor(): HasMany
+    {
+        return $this->hasMany(ProjectVendor::class, 'vendor_id');
+    }
+
+    public function getProjectVendorCountAttribute(): int
+    {
+        return $this->projectVendor()->count();
+    }
 
 }

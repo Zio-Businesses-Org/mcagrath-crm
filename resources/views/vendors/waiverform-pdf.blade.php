@@ -267,8 +267,8 @@
                         <tr class="inv-logo-heading">
                             <td><img src="{{$company->logo_url}}" alt="{{ $company->company_name }}"
                                     class="logo"/></td>
-                            <td align="right" class="font-weight-bold f-21 text-dark text-uppercase mt-4 mt-lg-0 mt-md-0">
-                                @lang('Subcontractor Release and Waiver of Liability Form')</td>
+                            <!-- <td align="right" class="font-weight-bold f-21 text-dark text-uppercase mt-4 mt-lg-0 mt-md-0">
+                                @lang('Subcontractor Release and Waiver of Liability Form')</td> -->
                         </tr>
                         <tr class="inv-num">
                             <td class="f-14 text-dark">
@@ -276,7 +276,7 @@
                                     {{ $company->company_name }}<br>
                                     {!! nl2br($company->defaultAddress->address) !!}<br>
                                     Phone #: {{ $company->company_phone }}<br>
-                                    Email: <a href="{{$company->website}}">{{ $company->company_email }}</a><br>
+                                    Email: <a href="{{$company->website}}">vendors@mcresi.com</a><br>
                                     Website: <a href="{{$company->website}}">{{ $company->website }}</a>
                                 </p><br>
                             </td>
@@ -308,9 +308,6 @@
                 <div class="d-flex flex-column">
                     <h5>@lang('app.subject')</h5>
                     <p class="f-15">Subcontractor Release and Waiver of Liability Form</p>
-                    <h5>@lang('modules.contracts.notes')</h5>
-                    <p class="f-15"></p>
-                    <h5>@lang('app.description')</h5>
                     <div class="ql-editor p-0 pb-3">
                         {!! $templateid->waiver_template !!}
                         
