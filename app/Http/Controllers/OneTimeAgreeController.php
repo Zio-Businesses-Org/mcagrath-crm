@@ -25,9 +25,9 @@ class OneTimeAgreeController extends Controller
         $company = Company::find(1);
         $id=$request->query('id');
         $vendorsign=Vendor::find($id);
-        $startdate=$request->query('startdate');
-        $enddate=$request->query('enddate');
-        $name=$request->query('name');
+        $startdate=$vendorsign->contract_start;
+        $enddate=$vendorsign->contract_end;
+        $name=$vendorsign->vendor_name;
         return view('vendorcontract', [
             'name'=>$name,
             'id'=>$id,
@@ -48,8 +48,8 @@ class OneTimeAgreeController extends Controller
             //     return Reply::error(__('Previously Declined Contract.'));
             // }
             // else{
-                    $startDate = $request->query('startdate');
-                    $endDate = $request->query('enddate');
+                    $startDate = $vendor->contract_start;
+                    $endDate = $vendor->contract_end;
                     
                     $vendor->v_status='Accepted';
                     $vendor->save();

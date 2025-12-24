@@ -54,9 +54,6 @@ class NewVendorContract extends BaseNotification
         
         $build = parent::build();
         $url = url()->temporarySignedRoute('front.ota.show', now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),[
-            'startdate' =>  $this->vendor->contract_start,
-            'enddate' =>  $this->vendor->contract_end,
-            'name'=> $this->vendor->vendor_name,
             'id'=>$this->vendor->id
         ]);
         $url = getDomainSpecificUrl($url, $this->company);

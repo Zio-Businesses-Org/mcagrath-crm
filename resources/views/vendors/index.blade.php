@@ -663,4 +663,14 @@
             $('.upload-image').toggleClass('d-none');
         });
     </script>
+    <script>
+    $(document).ready(function() {
+        var table = $('#vendors-table').DataTable(); // Ensure you're selecting the correct table ID
+
+        // Enable horizontal scrolling and disable automatic width
+        table.settings()[0].oFeatures.bAutoWidth = true; // Disable auto width
+        table.settings()[0].oScroll.sX = "100%"; // Enable horizontal scroll
+
+    });
+    </script>
 @endpush
