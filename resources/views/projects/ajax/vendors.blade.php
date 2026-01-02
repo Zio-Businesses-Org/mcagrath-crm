@@ -28,6 +28,7 @@
                         <th>@lang('Link Date')</th>
                         <th>@lang('Work Order Status')</th>
                         <th>@lang('Link Status')</th>
+                        <th>@lang('Change Notification Status')</th>
                         
                         <th class="text-right pr-20">@lang('app.action')</th>
                     </x-slot>
@@ -88,7 +89,9 @@
                                     Removed</option>
                                 </select>
                             </td>
-                            
+                            <td>
+                                {{ $vendor->latestChangeNotification?->status ?? '--' }}
+                            </td>
                             <td class="text-right pr-20">
                                 <a href="javascript:;" class="text-dark toggle-contact-information" data-target="#contact-information-{{ $item->id }}" data-date="{{$item->id}}">
                                     <i class="fa fa-chevron-down"></i> @lang('Show More')
@@ -96,7 +99,7 @@
                             </td>
                         </tr>
                         <tr id="contact-information-{{ $item->id }}" class="contact-information-row d-none">
-                            <td colspan="12">
+                            <td colspan="13">
                                 <x-form id="updateProjectVendor-{{ $item->id }}" method="PUT">
                                     <a href="javascript:;" class="text-dark toggle-original" data-original-id="{{ $item->id }}"><i
                                             class="fa fa-chevron-down"></i>

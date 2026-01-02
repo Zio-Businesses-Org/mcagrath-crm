@@ -61,6 +61,15 @@ class ProjectVendor extends BaseModel
     {
         return $this->hasMany(VendorChangeNotification::class, 'project_vendor_id')->orderByDesc('id');
     }
+
+    public function latestChangeNotification(): HasOne
+    {
+        return $this->hasOne(
+            VendorChangeNotification::class,
+            'project_vendor_id'
+        )->latestOfMany();
+    }
+
     
     public function linksentby(): BelongsTo
     {
