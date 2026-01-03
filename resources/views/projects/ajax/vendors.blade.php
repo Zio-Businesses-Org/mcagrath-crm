@@ -90,7 +90,7 @@
                                 </select>
                             </td>
                             <td>
-                                {{ $item->latestChangeNotification?->link_status ?? '--' }}
+                               {{ $vendpr->latestChangeNotification?->link_status ?? '--' }}
                             </td>
                             <td class="text-right pr-20">
                                 <a href="javascript:;" class="text-dark toggle-contact-information" data-target="#contact-information-{{ $item->id }}" data-date="{{$item->id}}">
