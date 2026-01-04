@@ -18,14 +18,14 @@
             <div class="col-lg-12 col-md-12 ntfcn-tab-content-left w-100 p-4 ">
                 @method('PUT')
                 <div class="row">
-                    <!-- <div class="col-lg-12">
+                    <div class="col-lg-12">
                         <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2 cropper"
                                     :fieldLabel="__('Company Signature')"
                                     :fieldValue="(company()->company_sign ? company()->masked_image_url : company()->company_signature)"
                                     fieldName="image"
                                     fieldId="company-sign" :popover="__('modules.themeSettings.logoSize')">
                         </x-forms.file>
-                    </div> -->
+                    </div>
                     <div class="col-lg-6">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2"
                                       :fieldLabel="__('modules.accountSettings.companyName')"
