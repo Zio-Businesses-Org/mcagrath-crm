@@ -130,6 +130,7 @@ class Kernel extends ConsoleKernel
 
         // Schedule the queue:work command to run without overlapping and with 3 tries
         $schedule->command('queue:work database --tries=3 --stop-when-empty')->withoutOverlapping();
+        $schedule->command('queue:work database --queue=waiver-form-auto-upload --tries=3 --stop-when-empty')->withoutOverlapping();
     }
 
     /**
