@@ -102,7 +102,15 @@ class PublicWorkOrderController extends Controller
             $vcn->accepted_date=date("Y-m-d");
             $vcn->save();
             $projectvendor = ProjectVendor::findOrFail($vcn->project_vendor_id);
-            Notification::route('mail', $projectvendor->vendor_email_address)->notify(new WorkOrderAcceptNotification($projectvendor->id,'change'));
+            $url = url()->temporarySignedRoute(
+                'external.expense.view',
+                now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),
+                ['pid' => $projectvendor->project_id,
+                'vid'=>$projectvendor->id]
+            );
+        
+            $url = getDomainSpecificUrl($url, $this->company);
+            Notification::route('mail', $projectvendor->vendor_email_address)->notify(new WorkOrderAcceptNotification($projectvendor->id,'change',$url));
             ProcessWorkOrder::dispatch($vcn->project_vendor_id)->onConnection('database')->onQueue('file-auto-upload');   
             
             return Reply::success(__('Thank You. Your Response Has Been Noted'));
