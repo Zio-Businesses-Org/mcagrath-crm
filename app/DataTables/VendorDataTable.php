@@ -85,21 +85,21 @@ class VendorDataTable extends BaseDataTable
         // $datatables->addColumn('client_name', fn($row) => $row->vendor_name);
         // $datatables->addColumn('added_by', fn($row) => optional($row->clientDetails)->addedBy ? $row->clientDetails->addedBy->name : '--');
         $datatables->editColumn('name', function ($row) {
-            $signed = '';
-            $companysign='';
-            if ($row->contract_sign) {
-                $signed = '<span class="badge badge-secondary"><i class="fa fa-signature"></i> ' . __('app.signed') . '</span>';
-            }
-            if($this->company->company_sign)
-            {
-                $companysign = '<span class="badge badge-secondary"><i class="fa fa-signature"></i> ' . __('Company Signed') . '</span>';
-            }
-
+            // $signed = '';
+            // $companysign='';
+            // if ($row->contract_sign) {
+            //     $signed = '<span class="badge badge-secondary"><i class="fa fa-signature"></i> ' . __('app.signed') . '</span>';
+            // }
+            // if($this->company->company_sign)
+            // {
+            //     $companysign = '<span class="badge badge-secondary"><i class="fa fa-signature"></i> ' . __('Company Signed') . '</span>';
+            // }
+            // <p class="mb-0">' . $signed . '</p>
+            //     <p class="mb-0">' . $companysign . '</p>
             return '<div class="media align-items-center">
                     <div class="media-body">
                 <h5 class="mb-0 f-13 text-darkest-grey"><a href="' . route('vendors.show', [$row->id]) . '">' . $row->vendor_name . '</a></h5>
-                <p class="mb-0">' . $signed . '</p>
-                <p class="mb-0">' . $companysign . '</p>
+                
                 </div>
               </div>';
         });
