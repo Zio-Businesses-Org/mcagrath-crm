@@ -284,7 +284,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
 
     //cron-settings
 
-    Route::resource('cron-settings', CronSettingsController::class);
+    Route::resource('cron-settings', CronSettingsController::class)->except(['show']);
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {

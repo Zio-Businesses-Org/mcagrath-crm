@@ -17,13 +17,13 @@
                     <td class="text-right">
                         <div class="task_view">
                             <a href="javascript:;" data-category-id="{{ $category->id }}"
-                               class="editProjectTask task_view_more d-flex align-items-center justify-content-center">
+                               class="editWorkOrderStatus task_view_more d-flex align-items-center justify-content-center">
                                 <i class="fa fa-edit icons mr-1"></i> @lang('app.edit')
                             </a>
                         </div>
                         <div class="task_view mt-1 mt-lg-0 mt-md-0 ml-1">
                             <a href="javascript:;" data-category-id="{{ $category->id }}"
-                               class="delete-project-task task_view_more d-flex align-items-center justify-content-center">
+                               class="delete-work-order-status task_view_more d-flex align-items-center justify-content-center">
                                 <i class="fa fa-trash icons mr-1"></i> @lang('app.delete')
                             </a>
                         </div>
@@ -49,7 +49,7 @@
         $.ajaxModal(MODAL_LG, url);
     });
     
-    $('.editProjectTask').click(function () {
+    $('.editWorkOrderStatus').click(function () {
 
         var id = $(this).data('category-id');
 
@@ -60,7 +60,7 @@
         $.ajaxModal(MODAL_LG, url);
     });
 
-    $('body').on('click', '.delete-project-task', function () {
+    $('body').on('click', '.delete-work-order-status', function () {
 
         var id = $(this).data('category-id');
 
