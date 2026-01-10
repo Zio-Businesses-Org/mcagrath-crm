@@ -98,8 +98,7 @@ class IncomeVsExpenseReportController extends AccountBaseController
             ->selectRaw('
                 expenses.id,
                 SUM(expense_process_payments.price) as price,
-                DATE(expense_process_payments.payment_date) as date,
-                DATE_FORMAT(expense_process_payments.payment_date, "%d-%M-%y") as formatted_date,
+                DATE_FORMAT(expense_process_payments.payment_date, "%d-%M-%y") as date,
                 currencies.id as currency_id,
                 expenses.exchange_rate,
                 expenses.default_currency_id
@@ -107,14 +106,12 @@ class IncomeVsExpenseReportController extends AccountBaseController
             ->groupBy(
                 'expenses.id',
                 'date',
-                'formatted_date',
                 'currencies.id',
                 'expenses.exchange_rate',
                 'expenses.default_currency_id'
             )
             ->get();
         
-                \Log::info($expenseResults);
         foreach ($expenseResults as $expenseResult) {
             
             if((is_null($expenseResult->default_currency_id) && is_null($expenseResult->exchange_rate)) ||
@@ -142,7 +139,7 @@ class IncomeVsExpenseReportController extends AccountBaseController
 
 
         $dates = array_keys(array_merge($incomes, $expenses));
-
+        \Log::info($dates);
         foreach ($dates as $date) {
             $graphData[] = [
                 'y' => $date,
