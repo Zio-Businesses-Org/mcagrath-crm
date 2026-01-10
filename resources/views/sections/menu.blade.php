@@ -361,12 +361,12 @@
                     <x-sub-menu-item :link="route('finance-report.index')"
                                      :text="__('app.menu.financeReport')" />
                 @endif
-                
+                {{--
                 @if ($sidebarUserPermissions['view_income_expense_report'] == 4 && $sidebarUserPermissions['view_income_expense_report'] != 'none' && in_array('expenses', user_modules()))
                     <x-sub-menu-item :link="route('income-expense-report.index')"
                                      :text="__('app.menu.incomeVsExpenseReport')" />
                 @endif
-                
+                --}}
                 @if ($sidebarUserPermissions['view_leave_report'] != 5 && $sidebarUserPermissions['view_leave_report'] != 'none' && in_array('leaves', user_modules()))
                     <x-sub-menu-item :link="route('leave-report.index')"
                                      :text="__('app.menu.leaveReport')" />
