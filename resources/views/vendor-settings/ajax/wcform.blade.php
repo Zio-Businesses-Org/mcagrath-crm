@@ -56,10 +56,10 @@
                 </x-slot>
             </x-forms.input-group>
         </div>
-        <!-- <div class="col-md-3 col-lg-4">
+        <div class="col-md-3 col-lg-4">
             <x-forms.toggle-switch class="mr-0 mr-lg-2 mr-md-2" :checked="$vendor_general_settings->duplicate_entry_check"
                 :fieldLabel="__('Vendor Lead Duplicate Entry Check')" fieldName="duplicate_entry" fieldId="duplicate_entry" />
-        </div> -->
+        </div>
     </div>
 </div>
 
