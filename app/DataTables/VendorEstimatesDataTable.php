@@ -136,6 +136,9 @@ class VendorEstimatesDataTable extends BaseDataTable
         if ($request->projectID != 'all' && !is_null($request->projectID)) {
             $users = $users->where('vendor_estimates.project_id', '=', $request->projectID);
         }
+        if ($request->vendor_id != 'all' && !is_null($request->vendor_id)) {
+            $users = $users->where('vendor_estimates.vendor_id', '=', $request->vendor_id);
+        }
 
         // if (!is_null($request->employee_id) && $request->employee_id != 'all') {
         //     $users->where(

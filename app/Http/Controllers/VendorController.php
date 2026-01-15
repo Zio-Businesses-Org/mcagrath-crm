@@ -8,6 +8,8 @@ use App\Helper\Files;
 use App\Helper\Reply;
 use App\Models\Project;
 use App\Models\ProjectVendor;
+use App\DataTables\ProjectsDataTable;
+use App\DataTables\VendorEstimatesDataTable;
 use App\Models\BaseModel;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
@@ -89,6 +91,12 @@ class VendorController extends AccountBaseController
                 $this->wnine = VendorWnineDoc::where('vendor_id', $id)->first();
                 $this->waiver_form = VendorWaiverFormDoc::where('vendor_id', $id)->first();
                 $this->view = 'vendors.ajax.docs';
+                break;
+            case 'projects':
+                return $this->projects();
+                break;
+            case 'estimates':
+                return $this->estimates();
                 break;
             default:
                 $this->view = 'vendors.ajax.profile';
@@ -322,6 +330,32 @@ class VendorController extends AccountBaseController
         $tab = request('tab');
         $this->activeTab = $tab ?: 'profile';
         $this->view = 'vendors.ajax.notes';
+        return $dataTable->render('vendors.show', $this->data);
+
+    }
+
+    public function projects()
+    {
+        
+        $dataTable = new ProjectsDataTable();
+
+        $tab = request('tab');
+        
+        $this->activeTab = $tab ?: 'profile';
+        $this->view = 'vendors.ajax.projects';
+        return $dataTable->render('vendors.show', $this->data);
+
+    }
+
+    public function estimates()
+    {
+        
+        $dataTable = new VendorEstimatesDataTable();
+
+        $tab = request('tab');
+        
+        $this->activeTab = $tab ?: 'profile';
+        $this->view = 'vendors.ajax.estimates';
         return $dataTable->render('vendors.show', $this->data);
 
     }

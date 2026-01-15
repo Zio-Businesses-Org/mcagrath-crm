@@ -146,7 +146,9 @@ class VendorContract extends BaseModel
 
     public function getProjectVendorCountAttribute(): int
     {
-        return $this->projectVendor()->count();
+        return $this->projectVendor()
+            ->distinct('project_id')
+            ->count('project_id');
     }
 
 }

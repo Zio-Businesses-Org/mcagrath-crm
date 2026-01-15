@@ -38,7 +38,7 @@
                     <p class="f-13 font-weight-normal text-dark-grey mb-0">
                         {{ $vendorDetail->company_name }}
                     </p>
-                    <p class="card-text f-12 text-lightest mb-1">@lang('app.lastLogin')</p>
+                    
                 </x-cards.user>
 
             </div>

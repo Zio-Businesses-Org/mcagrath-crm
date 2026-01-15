@@ -29,12 +29,19 @@ $viewClientOrder = user()->permission('view_order');
                     <li>
                         <x-tab :href="route('vendors.show', $vendorDetail->id)" :text="__('modules.employees.profile')" class="profile" ajax="false" />
                     </li>
+                    <!-- <li>
+                        <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=projects'" :text="__('Projects')" class="projects" ajax="false" />
+                    </li>
+                    <li>
+                        <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=estimates'" :text="__('Estimates')" class="estimates" ajax="false" />
+                    </li> -->
                     <li>
                         <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=notes'" :text="__('Notes')" class="notes" ajax="false" />
                     </li>
                     <li>
                         <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=doc'" :text="__('Files')" class="doc" ajax="false" />
                     </li>
+                   
                 </ul>
             </nav>
         </div>

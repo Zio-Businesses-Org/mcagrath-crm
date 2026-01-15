@@ -167,7 +167,7 @@ class ProjectsDataTable extends BaseDataTable
                     }
                 }
             }
-            $members .= '<br/>';
+            // $members .= '<br/>';
             foreach ($roleMembers as $key => $member) {
                 if ($member) {
                     $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
@@ -516,6 +516,7 @@ class ProjectsDataTable extends BaseDataTable
             ->leftJoin('mention_users', 'mention_users.project_id', 'projects.id')
             ->leftJoin('property_details', 'projects.property_details_id', 'property_details.id')
             ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
+            ->leftJoin('project_vendors', 'project_vendors.project_id', 'projects.id')
             ->selectRaw(
                 'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
               projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,projects.cancelled_date,projects.cancelled_reason,projects.project_coordinator_id,projects.project_scheduler_id,projects.vendor_recruiter_id,
@@ -579,6 +580,10 @@ class ProjectsDataTable extends BaseDataTable
 
         if (!is_null($request->client_id) && $request->client_id != 'all') {
             $model->where('projects.client_id', $request->client_id);
+        }
+
+        if (!is_null($request->vendor_id) && $request->vendor_id != 'all') {
+            $model->where('project_vendors.vendor_id', $request->vendor_id);
         }
 
         if (!is_null($request->team_id) && $request->team_id != 'all') {
