@@ -7,22 +7,22 @@
 @section('filter-section')
 <style>
 
-#vendors-projects-table th:nth-child(5),
-    #vendors-projects-table td:nth-child(5) {
+#vendors-projects-table th:nth-child(7),
+    #vendors-projects-table td:nth-child(7) {
         width: 300px !important; /* Force the width */
         max-width: 300px !important;
         min-width: 300px !important;
     }
 
-    #vendors-projects-table th:nth-child(11),
-    #vendors-projects-table td:nth-child(11) {
+    #vendors-projects-table th:nth-child(12),
+    #vendors-projects-table td:nth-child(12) {
         width: 300px !important; /* Force the width */
         max-width: 300px !important;
         min-width: 300px !important;
     }
 
-    #vendors-projects-table th:nth-child(10),
-    #vendors-projects-table td:nth-child(10) {
+    #vendors-projects-table th:nth-child(13),
+    #vendors-projects-table td:nth-child(13) {
         width: 300px !important; /* Force the width */
         max-width: 300px !important;
         min-width: 300px !important;

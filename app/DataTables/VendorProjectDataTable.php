@@ -38,6 +38,7 @@ class VendorProjectDataTable extends BaseDataTable
         $datatables->editColumn('vendor_status', fn($row) => $row?->vendors ? $row->vendors->status : '');
         $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails?$row->project->propertyDetails->property_address:'N/A');
         $datatables->editColumn('project_status', fn($row) => $row->project->status);
+        $datatables->editColumn('project_date', fn($row) => $row->project?->start_date?Carbon::parse($row->project?->start_date)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('created_at', fn($row) => $row->created_at?Carbon::parse($row->created_at)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('updated_at', fn($row) => $row->updated_at?Carbon::parse($row->updated_at)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('nxtfollowdt', function ($row){
@@ -204,7 +205,7 @@ class VendorProjectDataTable extends BaseDataTable
         ->leftJoin('project_emanagers', 'project_emanagers.project_id', 'projects.id')
         ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
         ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status','projects.client_id'
-        ,'projects.category_id','project_category.category_name','projects.nxt_follow_up_date','projects.nxt_follow_up_time','projects.project_coordinator_id','projects.project_scheduler_id','projects.vendor_recruiter_id')
+        ,'projects.category_id','project_category.category_name','projects.nxt_follow_up_date','projects.nxt_follow_up_time','projects.project_coordinator_id','projects.project_scheduler_id','projects.vendor_recruiter_id','projects.start_date')
         ->groupBy('project_vendors.id');
         $users = $users->orderBy('id', 'desc');
         $users = self::customFilter($users);
@@ -312,7 +313,9 @@ class VendorProjectDataTable extends BaseDataTable
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('modules.projects.members') => ['data' => 'members', 'name' => 'members', 'exportable' => false, 'width' => '15%', 'title' => __('modules.projects.members')],
             __('Internal Team') => ['data' => 'name', 'name' => 'name', 'visible'=>false, 'title' => __('Internal Team')],
+            __('Next Follow Up Date & Time') => ['data' => 'nxtfollowdt', 'name' => 'nxtfollowdt', 'title' => __('Next Follow Up Date & Time'), 'width' => '12%'],
             __('Work Order #') => ['data' => 'project', 'name' => 'project_id', 'title' => __('Work Order #')],
+            __('Project Date') => ['data' => 'project_date', 'name' => 'projects.start_date', 'title' => __('Project Date')],
             __('Vendor') => ['data' => 'vendor_id', 'name' => 'vendor_id', 'width' => '15%', 'exportable' => false, 'title' => __('Vendor')],
             __('Vendor Status') => ['data' => 'vendor_status', 'name' => 'vendor_status', 'width' => '15%', 'title' => __('Vendor status')],
             __('Vendors') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'width' => '15%', 'visible' => false, 'title' => __('Vendors')],
@@ -327,7 +330,6 @@ class VendorProjectDataTable extends BaseDataTable
             __('Project Category') => ['data' => 'category_name', 'name' => 'category_name', 'title' => __('Project Category')],
             __('Link Sent Date') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Link Sent Date')],
             __('Due Date') => ['data' => 'due_date', 'name' => 'due_date', 'title' => __('Due Date')],
-            __('Next Follow Up Date & Time') => ['data' => 'nxtfollowdt', 'name' => 'nxtfollowdt', 'title' => __('Next Follow Up Date & Time'), 'width' => '12%'],
             __('Inspection Date') => ['data' => 'inspection_date', 'name' => 'inspection_date', 'title' => __('Inspection Date')],
             __('Inspection Time') => ['data' => 'inspection_time', 'name' => 'inspection_time', 'title' => __('Inspection Time')],
             __('Re Inspection Date') => ['data' => 're_inspection_date', 'name' => 're_inspection_date', 'title' => __('Re Inspection Date')],
