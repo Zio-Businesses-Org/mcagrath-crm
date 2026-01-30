@@ -154,6 +154,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::resource('project-settings', ProjectSettingController::class);
     Route::post('project-settings/{id?}', [ProjectSettingController::class, 'statusUpdate'])->name('project-settings.statusUpdate');
     Route::put('project-settings/change-status/{id?}', [ProjectSettingController::class, 'changeStatus'])->name('project-settings.changeStatus');
+    Route::put('project-settings/change-filter-on/{id?}', [ProjectSettingController::class, 'changeFilterOn'])->name('project-settings.changeFilterOn');
     Route::post('project-settings/set-default/{id?}', [ProjectSettingController::class, 'setDefault'])->name('project-settings.setDefault');
     // Route::get('check-qr-login', [AttendanceSettingController::class, 'qrClockInOut'])->name('settings.qr-login');
     // Route::post('change-qr-code-status', [AttendanceSettingController::class, 'qrCodeStatus'])->name('settings.change-qr-code-status');
@@ -280,6 +281,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::post('vendor-settings/self-notify-mail', [VendorSettingsController::class, 'saveSelfNotifyMail'])->name('vendor-settings.saveSelfNotifyMail');
     Route::post('vendor-settings/self-waiver-mail', [VendorSettingsController::class, 'selfWaiverNotificationMail'])->name('vendor-settings.selfWaiverNotificationMail');
     Route::post('vendor-settings/toggle-duplicate-entry', [VendorSettingsController::class, 'toggleDuplicateEntry'])->name('vendor-settings.toggleDuplicateEntry');
+    Route::put('vendor-settings/change-filter-on/{id?}', [VendorSettingsController::class, 'changeFilterOn'])->name('vendor-settings.changeFilterOn');
     Route::resource('vendor-settings', VendorSettingsController::class);
 
     //cron-settings

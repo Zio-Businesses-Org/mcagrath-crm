@@ -6,6 +6,7 @@
                 <th>#</th>
                 <th>@lang('app.name')</th>
                 <th style="width: 30%;">@lang('modules.statusFields.defaultStatus')</th>
+                <th style="width: 15%;">@lang('Filter On')</th>
                 <th class="text-right">@lang('app.action')</th>
             </x-slot>
 
@@ -29,6 +30,13 @@
                     @else
                         <td>@lang('modules.statusFields.change')</td>
                     @endif
+                    <td>
+                        <select class="form-control select-picker filter-on-project" name="filter_on" id="filter_on_{{ $status->id }}" data-status-id="{{ $status->id }}">
+                            <option value="">--</option>
+                            <option value="open" @selected($status->filter_on == 'open')> Open </option>
+                            <option value="close" @selected($status->filter_on == 'close')>Close</option>
+                        </select>
+                    </td>
                     <td class="text-right">
                         <div class="task_view">
                             <a href="javascript:;" data-status-id="{{ $status->id }}"
@@ -48,7 +56,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         <x-cards.no-record icon="map-marker-alt" :message="__('messages.noRecordFound')"/>
                     </td>
                 </tr>
@@ -74,6 +82,24 @@
             type: "POST",
             blockUI: true,
             data: {'id': id, 'status': status, '_method': 'PUT', '_token': '{{ csrf_token() }}'},
+            success: function (response) {
+                if (response.status == "success") {
+                    window.location.reload();
+                }
+            }
+        })
+    });
+
+    $('.filter-on-project').change(function () {
+        var id = $(this).data('status-id');
+        var select = $(this).val();
+        var url = "{{route('project-settings.changeFilterOn', ':id')}}";
+        url = url.replace(':id', id);
+        $.easyAjax({
+            url: url,
+            type: "POST",
+            blockUI: true,
+            data: {'id':id, 'filter_on': select, '_method': 'PUT', '_token': '{{ csrf_token() }}'},
             success: function (response) {
                 if (response.status == "success") {
                     window.location.reload();

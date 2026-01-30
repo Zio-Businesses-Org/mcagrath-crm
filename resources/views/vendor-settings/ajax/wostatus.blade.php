@@ -4,7 +4,8 @@
         <x-table class="table-bordered">
             <x-slot name="thead">
                 <th>#</th>
-                <th width="35%">@lang('Work Order Status')</th>
+                <th width="40%">@lang('Work Order Status')</th>
+                <th style="width: 15%;">@lang('Filter On')</th>
                 <th class="text-right">@lang('app.action')</th>
             </x-slot>
 
@@ -14,6 +15,13 @@
                         {{ $key + 1 }}
                     </td>
                     <td> {{ $category->wo_status }} </td>
+                    <td>
+                        <select class="form-control select-picker filter-on-vendor" name="filter_on" id="filter_on_{{ $category->id }}" data-category-id="{{ $category->id }}">
+                            <option value="">--</option>
+                            <option value="open" @selected($category->filter_on == 'open')> Open </option>
+                            <option value="close" @selected($category->filter_on == 'close')>Close</option>
+                        </select>
+                    </td>
                     <td class="text-right">
                         <div class="task_view">
                             <a href="javascript:;" data-category-id="{{ $category->id }}"
@@ -104,6 +112,23 @@
                 });
             }
         });
+    });
+     $('.filter-on-vendor').change(function () {
+        var id = $(this).data('category-id');
+        var select = $(this).val();
+        var url = "{{route('vendor-settings.changeFilterOn', ':id')}}";
+        url = url.replace(':id', id);
+        $.easyAjax({
+            url: url,
+            type: "POST",
+            blockUI: true,
+            data: {'id':id, 'filter_on': select, '_method': 'PUT', '_token': '{{ csrf_token() }}'},
+            success: function (response) {
+                if (response.status == "success") {
+                    window.location.reload();
+                }
+            }
+        })
     });
 
 </script>

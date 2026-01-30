@@ -165,4 +165,15 @@ class VendorSettingsController extends AccountBaseController
         return Reply::success(__('messages.recordSaved'));
         
     }
+
+    public function changeFilterOn($id)
+    {
+        $vgs = WorkOrderStatus::findOrFail($id);
+
+        $vgs->filter_on = request()->filter_on;
+
+        $vgs->save();
+
+        return Reply::success(__('messages.recordSaved'));
+    }
 }

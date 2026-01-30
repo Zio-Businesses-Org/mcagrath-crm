@@ -161,6 +161,17 @@ class ProjectSettingController extends AccountBaseController
         return Reply::success(__('messages.recordSaved'));
     }
 
+    public function changeFilterOn($id)
+    {
+        $projectStatusSetting = ProjectStatusSetting::findOrFail($id);
+
+        $projectStatusSetting->filter_on = request()->filter_on;
+
+        $projectStatusSetting->save();
+
+        return Reply::success(__('messages.recordSaved'));
+    }
+
     public function setDefault()
     {
 
