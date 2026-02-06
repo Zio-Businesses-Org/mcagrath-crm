@@ -140,6 +140,18 @@
                 </select>
                 </div>
             </div>
+            <div class="col-md-4">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                    for="usr">@lang('Status')</label>
+                <div class="mb-4">
+                <select class="form-control select-picker" name="filter_status_oc" id="filter_status_oc"
+                    data-container="body">
+                    <option value="">--</option>
+                    <option value="open" @selected($filter->status_oc == 'open')> Open </option>
+                    <option value="close" @selected($filter->status_oc == 'close')> Close </option>
+                </select>
+                </div>
+            </div>
         </div>
     </div>
    

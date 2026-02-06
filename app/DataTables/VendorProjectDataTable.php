@@ -290,6 +290,38 @@ class VendorProjectDataTable extends BaseDataTable
                 ->get();
                 
             }
+            if($customfilter->status_oc!='')
+            {
+                if($customfilter->status_oc == 'close'){
+                    $pss = \App\Models\ProjectStatusSetting::where('filter_on','close')
+                            ->pluck('status_name')
+                            ->map('strtolower');
+
+                    $wos = \App\Models\WorkOrderStatus::where('filter_on','close')
+                            ->pluck('wo_status')
+                            ->map('strtolower');
+
+                    $users->whereIn(\DB::raw('LOWER(projects.status)'), $pss)
+                        ->whereIn(\DB::raw('LOWER(project_vendors.wo_status)'), $wos);
+
+
+                }
+                else if($customfilter->status_oc == 'open'){
+                    $pss = \App\Models\ProjectStatusSetting::where('filter_on','close')
+                            ->pluck('status_name')
+                            ->map('strtolower');
+
+                    $wos = \App\Models\WorkOrderStatus::where('filter_on','close')
+                            ->pluck('wo_status')
+                            ->map('strtolower');
+
+                    $users->whereNotIn(\DB::raw('LOWER(projects.status)'), $pss)
+                        ->whereNotIn(\DB::raw('LOWER(project_vendors.wo_status)'), $wos);
+
+                }
+                else{}
+                
+            }
         }
         catch (Exception){}
         return $users;

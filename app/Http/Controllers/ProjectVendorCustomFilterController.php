@@ -34,6 +34,7 @@ class ProjectVendorCustomFilterController extends AccountBaseController
         $pcvf->client_id = $request->filter_client;
         $pcvf->project_members = $request->filter_members;
         $pcvf->name=$request->filter_name;
+        $pcvf->status_oc=$request->filter_status_oc;
         $pcvf->save();
 
         return Reply::success(__('Filter Saved'));
@@ -68,6 +69,7 @@ class ProjectVendorCustomFilterController extends AccountBaseController
         $pcvf->client_id = $request->filter_client;
         $pcvf->project_members = $request->filter_members;
         $pcvf->name=$request->filter_name;
+        $pcvf->status_oc=$request->filter_status_oc;
         $pcvf->save();
         return Reply::success(__('Filter Updated'));
     }
