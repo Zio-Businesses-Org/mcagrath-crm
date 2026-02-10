@@ -35,7 +35,7 @@
 
     <style>
         .logo {
-            height: 51px;
+            height: 50px;
         }
 
         .signature_wrap {
