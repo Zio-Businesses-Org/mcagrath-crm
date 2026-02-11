@@ -380,10 +380,10 @@ class ProjectsDataTable extends BaseDataTable
                     </div>
                       ';
         });
-        $datatables->orderColumn('nxtfollowdt', function ($query, $order) {
-            $query->orderBy('nxt_follow_up_date', $order)
-                  ->orderBy('nxt_follow_up_time', $order);
-        });        
+        // $datatables->orderColumn('nxtfollowdt', function ($query, $order) {
+        //     $query->orderBy('nxt_follow_up_date', $order)
+        //           ->orderBy('nxt_follow_up_time', $order);
+        // });        
         $datatables->editColumn('wsdt', function ($row){
             return '
                     <div class="media align-items-center justify-content-center mr-3">
@@ -463,7 +463,7 @@ class ProjectsDataTable extends BaseDataTable
         $datatables->editColumn('project_short_code', function ($row) {
             return '<a href="' . route('projects.show', [$row->id]) . '" class="text-darkest-grey">' . $row->project_short_code . '</a>';
         });
-        $datatables->orderColumn('status', 'status $1');
+        // $datatables->orderColumn('status', 'status $1');
         $datatables->removeColumn('project_summary');
         $datatables->removeColumn('notes');
         $datatables->removeColumn('category_id');
@@ -500,36 +500,52 @@ class ProjectsDataTable extends BaseDataTable
         }
 
         $model = $model
-            ->with('members', 'members.user', 'client', 'client.clientDetails', 'currency', 'client.session', 'mentionUser','projectvendortable','acct_users','emanager_users','est_users','vendor_recruiter','project_scheduler','project_coordinator')
-            ->leftJoin('project_members', 'project_members.project_id', 'projects.id')
-            ->leftJoin('users', 'project_members.user_id', 'users.id')
-            ->leftJoin('project_estimators', 'project_estimators.project_id', 'projects.id')
-            ->leftJoin('users as estimators', 'project_estimators.user_id', 'estimators.id')
-            ->leftJoin('project_accountings', 'project_accountings.project_id', 'projects.id')
-            ->leftJoin('users as accountants', 'project_accountings.user_id', 'accountants.id')
-            ->leftJoin('project_emanagers', 'project_emanagers.project_id', 'projects.id')
-            ->leftJoin('users as emanagers', 'project_emanagers.user_id', 'emanagers.id')
-            ->leftJoin('users as client', 'projects.client_id', 'users.id')
-            ->leftJoin('mention_users', 'mention_users.project_id', 'projects.id')
-            ->leftJoin('property_details', 'projects.property_details_id', 'property_details.id')
-            ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
-            ->leftJoin('project_vendors', 'project_vendors.project_id', 'projects.id')
-            ->leftJoin('project_status_settings', 'projects.status', 'project_status_settings.status_name')
-            ->selectRaw(
-                'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
-              projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,projects.cancelled_date,projects.cancelled_reason,projects.project_coordinator_id,projects.project_scheduler_id,projects.vendor_recruiter_id,
-              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,projects.nxt_follow_up_time,projects.nxt_follow_up_date,projects.quick_notes,
-              property_details.state,property_details.city,property_details.zipcode,property_details.street_address,property_details.county,
-              projects.work_schedule_re_date,projects.work_schedule_re_time,projects.work_completion_date,project_category.category_name,
-              projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
-            ( select count("id") from pinned where pinned.project_id = projects.id and pinned.user_id = ' . user()->id . ') as pinned_project,
-            (
-                select coalesce(sum(expense_process_payments.price), 0)
-                from expenses
-                inner join expense_process_payments on expenses.id = expense_process_payments.expense_id
-                where expenses.project_id = projects.id
-            ) as total_vendor_amt'
-            );
+    ->with([
+        'members.user',
+        'client.clientDetails',
+        'currency',
+        'client.session',
+        'mentionUser',
+        'projectvendortable',
+        'acct_users',
+        'emanager_users',
+        'est_users',
+        'vendor_recruiter',
+        'project_scheduler',
+        'project_coordinator'
+    ])
+
+    // ONLY joins that are 1-to-1 (safe for sorting)
+    ->leftJoin('users as client', 'projects.client_id', 'client.id')
+    ->leftJoin('property_details', 'projects.property_details_id', 'property_details.id')
+    ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
+    ->leftJoin('project_status_settings', 'projects.status', 'project_status_settings.status_name')
+
+    ->select([
+        'projects.*',
+
+        // 1-to-1 safe columns
+        'client.name as client_name',
+        'client.email as client_email',
+        'property_details.state',
+        'property_details.city',
+        'property_details.zipcode',
+        'property_details.street_address',
+        'property_details.county',
+        'project_category.category_name',
+
+        // calculated fields (safe)
+        DB::raw('(select count(id) from pinned where pinned.project_id = projects.id and pinned.user_id = '.user()->id.') as pinned_project'),
+
+        DB::raw('(
+            select coalesce(sum(expense_process_payments.price),0)
+            from expenses
+            inner join expense_process_payments
+                on expenses.id = expense_process_payments.expense_id
+            where expenses.project_id = projects.id
+        ) as total_vendor_amt')
+    ]);
+
 
         $model = $model->withSum(['invoices' => function ($query) {
             $query->whereIn('status', ['paid', 'unpaid']);
@@ -669,12 +685,13 @@ class ProjectsDataTable extends BaseDataTable
             $model->whereBetween(DB::raw('DATE(projects.`created_at`)'), [$startDate, $endDate]);
         }
 
-        $model->groupBy('projects.id');
+        // $model->groupBy('projects.id');
         // $model->orderbyRaw('pinned_project desc');
 
         // Apply persistent custom sorting
         $activeFilter = ProjectCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
         if ($activeFilter && $activeFilter->sort_order && isset($activeFilter->sort_order['column'])) {
+            $model->reorder();
             foreach ($activeFilter->sort_order['column'] as $index => $column) {
                 $direction = $activeFilter->sort_order['direction'][$index] ?? 'asc';
                 if ($column != '') {
@@ -699,11 +716,16 @@ class ProjectsDataTable extends BaseDataTable
                     if (in_array($column, $projectsColumns)) {
                         $orderByColumn = 'projects.' . $column;
                     }
-                    
                     $model->orderBy($orderByColumn, $direction);
                 }
             }
         }
+        
+        // Log the final query for debugging
+        // \Log::info('ProjectsDataTable Query: ' . $model->toSql());
+        // \Log::info('ProjectsDataTable Bindings: ', $model->getBindings());
+        \Log::info('ProjectsDataTable Query: ' . $model->toSql());
+        \Log::info('ProjectsDataTable Bindings: ', $model->getBindings());
 
         return $model;
     }
@@ -723,43 +745,43 @@ class ProjectsDataTable extends BaseDataTable
             }
             if($customfilter->project_category!='')
             {
-                $model->whereIn('projects.category_id', $customfilter->project_category)->get();
+                $model->whereIn('projects.category_id', $customfilter->project_category);
             }
             if($customfilter->project_sub_category!='')
             {
-                $model->whereIn('projects.sub_category', $customfilter->project_sub_category)->get();
+                $model->whereIn('projects.sub_category', $customfilter->project_sub_category);
             }
             if($customfilter->project_type!='')
             {
-                $model->whereIn('projects.type', $customfilter->project_type)->get();
+                $model->whereIn('projects.type', $customfilter->project_type);
             }
             if($customfilter->project_priority!='')
             {
-                $model->whereIn('projects.priority', $customfilter->project_priority)->get();
+                $model->whereIn('projects.priority', $customfilter->project_priority);
             }
             if($customfilter->project_status!='')
             {
-                $model->whereIn('projects.status', $customfilter->project_status)->get();
+                $model->whereIn('projects.status', $customfilter->project_status);
             }
             if($customfilter->delayed_by!='')
             {
-                $model->whereIn('projects.delayed_by', $customfilter->delayed_by)->get();
+                $model->whereIn('projects.delayed_by', $customfilter->delayed_by);
             }
             if($customfilter->client_id!='')
             {
-                $model->whereIn('projects.client_id', $customfilter->client_id)->get();
+                $model->whereIn('projects.client_id', $customfilter->client_id);
             }
             if($customfilter->state!='')
             {
-                $model->whereIn('property_details.state', $customfilter->state)->get();
+                $model->whereIn('property_details.state', $customfilter->state);
             }
             if($customfilter->city!='')
             {
-                $model->whereIn('property_details.city', $customfilter->city)->get();
+                $model->whereIn('property_details.city', $customfilter->city);
             }
             if($customfilter->county!='')
             {
-                $model->whereIn('property_details.county', $customfilter->county)->get();
+                $model->whereIn('property_details.county', $customfilter->county);
             }
             if($customfilter->project_members!='')
             {
@@ -790,6 +812,8 @@ class ProjectsDataTable extends BaseDataTable
         
             ->parameters(
                 [
+                    'ordering' => false,
+                    'order' => [],
                     'initComplete' => 'function () {
                     window.LaravelDataTables["projects-table"].buttons().container()
                      .appendTo( "#table-actions")
