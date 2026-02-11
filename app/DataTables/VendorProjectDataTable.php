@@ -371,7 +371,7 @@ class VendorProjectDataTable extends BaseDataTable
             __('Vendor Invoiced Date') => ['data' => 'invoiced_date', 'name' => 'invoiced_date', 'title' => __('Vendor Invoiced Date')],
             __('Vendor Invoiced Amount') => ['data' => 'invoiced_amount', 'name' => 'invoiced_amount', 'title' => __('Vendor Invoiced Amount')],
             __('Vendor Paid Date') => ['data' => 'paid_date', 'name' => 'paid_date', 'title' => __('Vendor Paid Date')],
-            __('Vendor Paid Amount') => ['data' => 'paid_amount', 'name' => 'paid_amount', 'title' => __('Vendor Paid Amount')],
+            __('Vendor Paid Amoun') => ['data' => 'paid_amount', 'name' => 'paid_amount', 'title' => __('Vendor Paid Amount')],
         ];
 
         
