@@ -482,10 +482,7 @@ class ProjectsDataTable extends BaseDataTable
         return $datatables;
     }
 
-    /**
-     * @param Project $model
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
+
     public function query(Project $model)
     {
         $request = $this->request();
@@ -517,6 +514,7 @@ class ProjectsDataTable extends BaseDataTable
             ->leftJoin('property_details', 'projects.property_details_id', 'property_details.id')
             ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
             ->leftJoin('project_vendors', 'project_vendors.project_id', 'projects.id')
+            ->leftJoin('project_status_settings', 'projects.status', 'project_status_settings.status_name')
             ->selectRaw(
                 'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
               projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,projects.cancelled_date,projects.cancelled_reason,projects.project_coordinator_id,projects.project_scheduler_id,projects.vendor_recruiter_id,
@@ -672,7 +670,40 @@ class ProjectsDataTable extends BaseDataTable
         }
 
         $model->groupBy('projects.id');
-        $model->orderbyRaw('pinned_project desc');
+        // $model->orderbyRaw('pinned_project desc');
+
+        // Apply persistent custom sorting
+        $activeFilter = ProjectCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
+        if ($activeFilter && $activeFilter->sort_order && isset($activeFilter->sort_order['column'])) {
+            foreach ($activeFilter->sort_order['column'] as $index => $column) {
+                $direction = $activeFilter->sort_order['direction'][$index] ?? 'asc';
+                if ($column != '') {
+                    $columnMapping = [
+                        'category_name' => 'project_category.category_name',
+                        'client_id' => 'client.name',
+                        'city' => 'property_details.city',
+                        'state' => 'property_details.state',
+                        'county' => 'property_details.county',
+                        'zipcode' => 'property_details.zipcode',
+                        'street_address' => 'property_details.street_address',
+                    ];
+                    
+                    $orderByColumn = $columnMapping[$column] ?? $column;
+                    
+                    // Prefix with projects if it's a projects table column to avoid ambiguity
+                    $projectsColumns = [
+                        'project_name', 'status', 'priority', 'type', 'start_date', 'deadline', 'id', 'project_short_code',
+                        'inspection_date', 'work_schedule_date', 'work_completion_date', 'nxt_follow_up_date',
+                        'project_coordinator_id', 'project_scheduler_id', 'vendor_recruiter_id'
+                    ];
+                    if (in_array($column, $projectsColumns)) {
+                        $orderByColumn = 'projects.' . $column;
+                    }
+                    
+                    $model->orderBy($orderByColumn, $direction);
+                }
+            }
+        }
 
         return $model;
     }

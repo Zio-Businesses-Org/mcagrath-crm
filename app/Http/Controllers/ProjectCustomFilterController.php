@@ -43,6 +43,7 @@ class ProjectCustomFilterController extends AccountBaseController
             $pcf->county = $request->filter_county;
             $pcf->state = $request->filter_state;
             $pcf->project_members = $request->filter_members;
+            $pcf->sort_order = $request->sort_order;
             $pcf->name=$request->filter_name;
             $pcf->save();
     
@@ -81,6 +82,7 @@ class ProjectCustomFilterController extends AccountBaseController
     }
     public function update(Request $request, $id)
     {
+        \Log::info('ProjectCustomFilter update request:', $request->all());
         $request->validate([
             'filter_name' => 'required',
         ]);
@@ -101,6 +103,7 @@ class ProjectCustomFilterController extends AccountBaseController
         $pcf->county = $request->filter_county;
         $pcf->state = $request->filter_state;
         $pcf->project_members = $request->filter_members;
+        $pcf->sort_order = $request->sort_order;
         $pcf->name=$request->filter_name;
         $pcf->save();
         return Reply::success(__('Filter Updated'));

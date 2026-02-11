@@ -241,6 +241,16 @@
                 </select>
                 </div>
             </div>
+
+            <div class="col-md-12 mt-3">
+                <h5 class="f-14 text-dark-grey mb-12 text-capitalize">@lang('Sorting Preferences')</h5>
+                <div id="sort-rules-container-edit">
+                    <!-- Sort rules will be added here -->
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="add-sort-rule-edit">
+                    <i class="fa fa-plus"></i> @lang('Add Sort Rule')
+                </button>
+            </div>
         </div>
     </div>
     <div class="modal-footer">
@@ -314,6 +324,74 @@ $(document).ready(function() {
                 moment(startDatenxt).format('{{ company()->moment_date_format }}') + ' - ' + moment(endDatenxt).format('{{ company()->moment_date_format }}')
             );
         }
+
+    const sortableColumnsEdit = {
+        'id': '@lang("app.id")',
+        'project_name': '@lang("app.project") @lang("app.name")',
+        'client_id': '@lang("app.client")',
+        'status': '@lang("app.status")',
+        'priority': '@lang("app.priority")',
+        'type': '@lang("app.ptype")',
+        'category_name': '@lang("app.pcategory")',
+        'sub_category': '@lang("app.psubcategory")',
+        'start_date': '@lang("app.pdate")',
+        'deadline': '@lang("app.due")',
+        'city': '@lang("app.city")',
+        'state': '@lang("app.state")',
+        'county': '@lang("app.county")',
+        'project_coordinator_id': '@lang("Project Coordinator")',
+        'project_scheduler_id': '@lang("Project Scheduler")',
+        'vendor_recruiter_id': '@lang("Vendor Recruiter")',
+        'nxt_follow_up_date': '@lang("Next Follow Up Date")',
+        'inspection_date': '@lang("app.inspectiondt")',
+        'work_schedule_date': '@lang("app.wsdt")',
+        'work_completion_date': '@lang("app.wcd")'
+    };
+
+    function addSortRuleRowEdit(column = '', direction = 'asc') {
+        let options = '<option value="">@lang("app.select") @lang("app.column")</option>';
+        for (const [key, value] of Object.entries(sortableColumnsEdit)) {
+            options += `<option value="${key}" ${key === column ? 'selected' : ''}>${value}</option>`;
+        }
+
+        const html = `
+            <div class="row mb-2 sort-rule-row-edit">
+                <div class="col-md-5">
+                    <select class="form-control select-picker" name="sort_order[column][]">
+                        ${options}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <select class="form-control select-picker" name="sort_order[direction][]">
+                        <option value="asc" ${direction === 'asc' ? 'selected' : ''}>@lang("app.asc")</option>
+                        <option value="desc" ${direction === 'desc' ? 'selected' : ''}>@lang("app.desc")</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-secondary btn-sm remove-sort-rule-edit" style="margin-top: 5px;">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        $('#sort-rules-container-edit').append(html);
+        $('#sort-rules-container-edit .select-picker').selectpicker();
+    }
+
+    $('#add-sort-rule-edit').click(function() {
+        addSortRuleRowEdit();
+    });
+
+    $(document).on('click', '.remove-sort-rule-edit', function() {
+        $(this).closest('.sort-rule-row-edit').remove();
+    });
+
+    // Pre-populate sort rules
+    @if($filter->sort_order && isset($filter->sort_order['column']))
+        @foreach($filter->sort_order['column'] as $index => $column)
+            addSortRuleRowEdit('{{ $column }}', '{{ $filter->sort_order['direction'][$index] }}');
+        @endforeach
+    @endif
 
         $('#edit-filter').click(function () {
             if($('#customRangeEdit').val()=='')

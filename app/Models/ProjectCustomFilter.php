@@ -21,5 +21,6 @@ class ProjectCustomFilter extends BaseModel
         'state' => 'array',
         'county' => 'array',
         'project_members' => 'array',
+        'sort_order' => 'array',
     ];
 }
