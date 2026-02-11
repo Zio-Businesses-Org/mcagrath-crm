@@ -78,78 +78,41 @@ class VendorProjectDataTable extends BaseDataTable
                 return null;
             }
         });
-        $datatables->addColumn('members', function ($row) {
+        $datatables->addColumn('project_coordinator', function ($row) {
             if ($row->public) {
                 return '--';
             }
-            $roleMembers = [
-                0 => $row->project->project_coordinator,
-            ];           
+            $coordinator = $row->project->project_coordinator;
+            if ($coordinator) {
+                $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $coordinator->name . '" src="' . $coordinator->image_url . '">';
+                return '<div class="taskEmployeeImg rounded-circle"><a href="' . route('employees.show', $coordinator->id) . '">' . $img . '</a></div>';
+            }
+            return '--';
+        });
+
+        $datatables->addColumn('project_manager', function ($row) {
+            if ($row->public) {
+                return '--';
+            }
+            $managers = $row->project->members;
             $members = '<div class="position-relative">';
-            if (count($row->project?->members) > 0) {
-                foreach ($row->project?->members as $key => $member) {
+            if (count($managers) > 0) {
+                foreach ($managers as $key => $member) {
                     if ($key < 4) {
                         $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->user->name . '" src="' . $member->user->image_url . '">';
-
                         $position = $key > 0 ? 'position-absolute' : '';
                         $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->user->id) . '">' . $img . '</a></div> ';
                     }
-
                 }
-            }
-            if (count($row->project?->est_users) > 0) {
-                foreach ($row->project?->est_users as $key => $member) {
-                    if ($key < 4) {
-                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
-
-                        $position = $key > 0 ? 'position-absolute' : '';
-                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
-                    }
-
+                if (count($managers) > 4) {
+                    $members .= '<div class="taskEmployeeImg more-user-count text-center rounded-circle bg-amt-grey position-absolute" style="left:  52px"><a href="' . route('projects.show', $row->project_id) . '?tab=members" class="text-dark f-10">+' . (count($managers) - 4) . '</a></div> ';
                 }
+            } else {
+                return '--';
             }
-            if (count($row->project?->acct_users) > 0) {
-                foreach ($row->project?->acct_users as $key => $member) {
-                    if ($key < 4) {
-                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
-
-                        $position = $key > 0 ? 'position-absolute' : '';
-                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
-                    }
-
-                }
-            }
-            if (count($row->project?->emanager_users) > 0) {
-                foreach ($row->project?->emanager_users as $key => $member) {
-                    if ($key < 4) {
-                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
-
-                        $position = $key > 0 ? 'position-absolute' : '';
-                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
-                    }
-
-                }
-            }
-            $members .= '<br/>';
-            foreach ($roleMembers as $key => $member) {
-                
-                if ($member) {
-                    $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
-                    $position = $key > 0 ? 'position-absolute' : '';
-                    $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left: ' . ($key * 13) . 'px">
-                                    <a href="' . route('employees.show', $member->id) . '">' . $img . '</a>
-                                 </div>';
-                }
-            }
-            if (count($row->project?->members) > 4) {
-                $members .= '<div class="taskEmployeeImg more-user-count text-center rounded-circle bg-amt-grey position-absolute" style="left:  52px"><a href="' . route('projects.show', $row->id) . '?tab=members" class="text-dark f-10">+' . (count($row->members) - 4) . '</a></div> ';
-            }
-
             $members .= '</div>';
-
             return $members;
-        }
-        );
+        });
 
         // $datatables->editColumn('sow_name', function ($row) {
         //     if($row->sow_id){
@@ -180,12 +143,18 @@ class VendorProjectDataTable extends BaseDataTable
                 return $row->wo_status;
             }
         });
+
+        $datatables->addColumn('coordinator_name', function ($row) {
+            return $row->project->project_coordinator?->name ?? '--';
+        });
+
+        $datatables->editColumn('category_name', fn($row) => $row->project->category?->category_name ?? 'N/A');
         
         $datatables->addIndexColumn();
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
        
-        $datatables->rawColumns(array_merge(['project','members','check','nxtfollowdt']));
+        $datatables->rawColumns(array_merge(['project','project_coordinator', 'project_manager','check','nxtfollowdt']));
         return $datatables;
     }
 
@@ -196,18 +165,23 @@ class VendorProjectDataTable extends BaseDataTable
     public function query(ProjectVendor $model)
     {
         $request = $this->request();
-        $users = ProjectVendor::with(['client', 'project','vendors','project.members','project.project_coordinator'])
+        $users = ProjectVendor::with([
+            'client', 
+            'project', 
+            'vendors', 
+            'project.members.user', 
+            'project.project_coordinator',
+            'project.est_users',
+            'project.acct_users',
+            'project.emanager_users',
+            'project.propertyDetails',
+            'project.category'
+        ])
         ->leftJoin('projects', 'projects.id', '=', 'project_vendors.project_id')
-        ->leftJoin('property_details', 'property_details.id', '=', 'projects.property_details_id') 
-        ->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')// Join projects table
-        ->leftJoin('project_estimators', 'project_estimators.project_id', 'projects.id')
-        ->leftJoin('project_accountings', 'project_accountings.project_id', 'projects.id')
-        ->leftJoin('project_emanagers', 'project_emanagers.project_id', 'projects.id')
-        ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
-        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status','projects.client_id'
-        ,'projects.category_id','project_category.category_name','projects.nxt_follow_up_date','projects.nxt_follow_up_time','projects.project_coordinator_id','projects.project_scheduler_id','projects.vendor_recruiter_id','projects.start_date')
+        ->select('project_vendors.*', 'projects.project_short_code', 'projects.status', 'projects.client_id', 'projects.category_id', 'projects.nxt_follow_up_date', 'projects.nxt_follow_up_time', 'projects.project_coordinator_id', 'projects.project_scheduler_id', 'projects.vendor_recruiter_id', 'projects.start_date')
         ->groupBy('project_vendors.id');
-        $users = $users->orderBy('id', 'desc');
+
+        $users = $users->orderBy('project_vendors.id', 'desc');
         $users = self::customFilter($users);
 
         if ($request->searchText != '') {
@@ -215,8 +189,10 @@ class VendorProjectDataTable extends BaseDataTable
                 $query->where('projects.project_short_code', 'like', '%' . request('searchText') . '%')
                 ->orWhere('vendor_name', 'like', '%' . request('searchText') . '%')
                 ->orWhere('vendor_email_address', 'like', '%' . request('searchText') . '%')
-                ->orWhere('property_details.property_address', 'like', '%' . request('searchText') . '%')
-                ->orWhere('vendor_phone', 'like', '%' . request('searchText') . '%');
+                ->orWhere('vendor_phone', 'like', '%' . request('searchText') . '%')
+                ->orWhereHas('project.propertyDetails', function($q) {
+                    $q->where('property_address', 'like', '%' . request('searchText') . '%');
+                });
             });
         }
 
@@ -257,38 +233,45 @@ class VendorProjectDataTable extends BaseDataTable
             {
                 $users->whereBetween(DB::raw('DATE(project_vendors.`created_at`)'), [$customfilter->start_date, $customfilter->end_date]);
             }
-            if($customfilter->project_status!='')
-            {
-                $users->whereIn('projects.status', $customfilter->project_status)->get();
+            if ($customfilter->project_status != '') {
+                $users->whereIn('projects.status', $customfilter->project_status);
             }
-            if($customfilter->client_id!='')
-            {
-                $users->whereIn('projects.client_id', $customfilter->client_id)->get();
+
+            if ($customfilter->client_id != '') {
+                $users->whereIn('projects.client_id', $customfilter->client_id);
             }
-            if($customfilter->work_order_status!='')
-            {
-                $users->whereIn('project_vendors.wo_status', $customfilter->work_order_status)->get();
+
+            if ($customfilter->work_order_status != '') {
+                $users->whereIn('project_vendors.wo_status', $customfilter->work_order_status);
             }
-            if($customfilter->project_category!='')
-            {
-                $users->whereIn('projects.category_id', $customfilter->project_category)->get();
+
+            if ($customfilter->project_category != '') {
+                $users->whereIn('projects.category_id', $customfilter->project_category);
             }
-            if($customfilter->vendor_id!='')
-            {
-                $users->whereIn('project_vendors.vendor_id', $customfilter->vendor_id)->get();
+
+            if ($customfilter->vendor_id != '') {
+                $users->whereIn('project_vendors.vendor_id', $customfilter->vendor_id);
             }
-            if($customfilter->link_status!='')
-            {
-                $users->whereIn('project_vendors.link_status', $customfilter->link_status)->get();
+
+            if ($customfilter->link_status != '') {
+                $users->whereIn('project_vendors.link_status', $customfilter->link_status);
             }
-            if($customfilter->project_members!='')
-            {
-                $users->whereIn('project_members.user_id', $customfilter->project_members)
-                ->orWhereIn('project_estimators.user_id', $customfilter->project_members)
-                ->orWhereIn('project_accountings.user_id', $customfilter->project_members)
-                ->orWhereIn('project_emanagers.user_id', $customfilter->project_members)
-                ->get();
-                
+
+            if ($customfilter->project_members != '') {
+                $users->where(function ($query) use ($customfilter) {
+                    $query->whereHas('project.members', function ($q) use ($customfilter) {
+                        $q->whereIn('user_id', $customfilter->project_members);
+                    })
+                    ->orWhereHas('project.est_users', function ($q) use ($customfilter) {
+                        $q->whereIn('user_id', $customfilter->project_members);
+                    })
+                    ->orWhereHas('project.acct_users', function ($q) use ($customfilter) {
+                        $q->whereIn('user_id', $customfilter->project_members);
+                    })
+                    ->orWhereHas('project.emanager_users', function ($q) use ($customfilter) {
+                        $q->whereIn('user_id', $customfilter->project_members);
+                    });
+                });
             }
             if($customfilter->status_oc!='')
             {
@@ -342,8 +325,11 @@ class VendorProjectDataTable extends BaseDataTable
             ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
-            __('modules.projects.members') => ['data' => 'members', 'name' => 'members', 'exportable' => false, 'width' => '15%', 'title' => __('modules.projects.members')],
-            __('Internal Team') => ['data' => 'name', 'name' => 'name', 'visible'=>false, 'title' => __('Internal Team')],
+            __('Project Coordinator') => ['data' => 'project_coordinator', 'name' => 'project_id', 'exportable' => false, 'title' => __('Project Coordinator')],
+            __('Project Coordinator ') => ['data' => 'coordinator_name', 'name' => 'project_id', 'visible' => false, 'title' => __('Project Coordinator')],
+            __('Project Manager') => ['data' => 'project_manager', 'name' => 'project_id', 'exportable' => false, 'title' => __('Project Manager')],
+            __('Project Manager ') => ['data' => 'name', 'name' => 'name', 'visible' => false, 'title' => __('Project Manager')],
+            __('Internal Team') => ['data' => 'name', 'name' => 'name', 'visible'=>false, 'exportable' => false, 'title' => __('Internal Team')],
             __('Next Follow Up Date & Time') => ['data' => 'nxtfollowdt', 'name' => 'nxtfollowdt', 'title' => __('Next Follow Up Date & Time'), 'width' => '12%'],
             __('Work Order #') => ['data' => 'project', 'name' => 'project_id', 'title' => __('Work Order #')],
             __('Project Date') => ['data' => 'project_date', 'name' => 'projects.start_date', 'title' => __('Project Date')],
